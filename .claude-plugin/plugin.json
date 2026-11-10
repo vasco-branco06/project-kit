@@ -1,7 +1,7 @@
 {
   "name": "project-kit",
-  "version": "0.1.0",
-  "description": "General model for organizing any project: research, academic, code or general. Creates or reorganizes a folder with an entry file, context files and working rules, and shows every file before writing.",
+  "version": "0.2.0",
+  "description": "Professional multi-agent setup for any project: give goals, context and the end result; a coordinator proposes stack, models, subagents and worktrees, then coordinates, verifies and escalates. Also creates or reorganizes project folders.",
   "author": {
     "name": "vasco-branco06"
   },

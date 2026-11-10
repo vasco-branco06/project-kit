@@ -18,7 +18,8 @@ Talk to the owner in the language they use. Ask one question per turn, with your
 7. Ask the owner to approve the manifest, item by item where needed. Then move only the approved items. Stop at the first conflict and keep the rest pending.
 8. Fill the entry file and the context files as `new-project` does, from the old files, showing each in full and writing only what the owner approves. Do not copy old rules silently: ask which still apply.
 9. For code projects or repositories, create the ignore file (leave out `_archive/`, `.worktrees/` and PDFs everywhere except `outputs/`) and offer `git init` without a remote. Ask before any commit.
-10. Check that the manifest matches the final tree and run the placeholder test when Python is available.
+10. Write the two project agents as `new-project` does (builder and reviewer, model from the owner priority). Old fixed agents of the folder go to the archive only after the settings question.
+11. Check that the manifest matches the final tree and run the placeholder test when Python is available. Tell the owner to start work with `/project-kit:run`.
 
 ## Rules
 

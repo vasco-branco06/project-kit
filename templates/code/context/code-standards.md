@@ -9,4 +9,6 @@ Each standard names its source. A standard that does not suit the stack is repla
 - Notebooks hold experiments; reusable logic lives in code with tests.
 - Record decisions one per entry with context, options, decision and consequences (MADR 4.0.0, MIT or CC0: https://adr.github.io/madr/).
 - Typed or linted code, using the linter and formatter recorded in `architecture.md`.
+- At every API or system boundary: validate input, check permissions before any change, return consistent responses and errors. Source: owner rule.
+- Storage: one owner per piece of data, migrations versioned, no personal data without a stated reason and retention. Source: owner rule.
 - Language-specific style follows the official style guide of the language; name it here: {{STYLE_GUIDE}}.

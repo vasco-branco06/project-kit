@@ -16,5 +16,12 @@
 ## Data flow
 {{DATA_FLOW}}
 
+## Invariants
+Rules that must always hold; the reviewer checks every unit against them. At least four.
+{{INVARIANTS}}
+
+## Commands
+Build: {{BUILD_COMMAND}}. Types: {{TYPES_COMMAND}}. Lint: {{LINT_COMMAND}}. Tests: {{TEST_COMMAND}}.
+
 ## Constraints
 {{CONSTRAINTS}}
