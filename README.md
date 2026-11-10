@@ -15,7 +15,14 @@ claude plugin install project-kit@project-kit
 claude plugin list
 ```
 
-From the public repository, once it is published, replace the path with `<owner>/project-kit`. Inside a session the equivalents are `/plugin marketplace add ...` and `/plugin install project-kit@project-kit`.
+From the public repository:
+
+```
+claude plugin marketplace add vasco-branco06/project-kit
+claude plugin install project-kit@project-kit
+```
+
+The same steps work with a local path. Inside a session the equivalents are `/plugin marketplace add ...` and `/plugin install project-kit@project-kit`.
 
 ## Skills
 

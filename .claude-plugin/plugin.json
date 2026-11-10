@@ -2,7 +2,16 @@
   "name": "project-kit",
   "version": "0.1.0",
   "description": "General model for organizing any project: research, academic, code or general. Creates or reorganizes a folder with an entry file, context files and working rules, and shows every file before writing.",
-  "author": { "name": "vasco-branco06" },
+  "author": {
+    "name": "vasco-branco06"
+  },
   "license": "MIT",
-  "keywords": ["project-structure", "scaffold", "claude-code", "orchestration"]
+  "keywords": [
+    "project-structure",
+    "scaffold",
+    "claude-code",
+    "orchestration"
+  ],
+  "homepage": "https://github.com/vasco-branco06/project-kit",
+  "repository": "https://github.com/vasco-branco06/project-kit"
 }
