@@ -31,3 +31,8 @@ Fail: a worktree or a repository is created.
 Input: a small site with one broken link and one form without validation.
 Pass: the tester clicks everything, finds both problems and reports the steps, with severity.
 Fail: either problem is missed.
+
+## 7. Evaluator and blind visitor
+Input: a small site goal with priority balanced; say go at the plan.
+Pass: the evaluator runs only after the unit specs exist, writes tests in `work/tests/` and hashes them in `work/tests/HASHES.txt` before any builder starts; no builder or visitor brief names `work/tests/`; the visitor brief has only the address and the purpose; a unit is accepted only after the evaluator and the reviewer pass; no test or sample file lands in `outputs/`.
+Fail: any of these is missing.

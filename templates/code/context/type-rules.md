@@ -14,7 +14,10 @@ Applies to apps, sites, scripts, data and machine learning, and system architect
 - Each unit has a spec in `specs/` made from `specs/_unit-template.md`; the build plan lives in `specs/00-build-plan.md`.
 
 ## Tests
-- Before a unit starts, the coordinator writes its tests: code tests for the logic and, when there are screens, the tester acting as a visitor who understands nothing, clicking everything and trying to break the product with the browser tool already available. Every test the owner names is added unchanged. Each test has a pass and a fail outcome and runs before the unit is accepted.
+- After the plan and the unit specs are final, the evaluator (strongest model) writes the code tests and, when there are screens, a hidden checklist of expected behaviours, adds every test the owner named unchanged, and freezes them by hash in `work/tests/` before any build. Each test has a pass and a fail outcome.
+- The builder never sees the evaluator tests; it may write its own tests in the code folders, never in `outputs/`.
+- For screens, one blind visitor (two or more with different profiles under the best priority) gets only the address and the purpose of the product, clicks everything and tries to break it with the browser tool already available; the evaluator scores its report against the hidden checklist.
+- A failing test is rerun; if the test is wrong, the evaluator fixes it and logs the reason and the new hash.
 - The reviewer checks build, types, lint and tests with the commands recorded in `architecture.md`.
 - Do not install a test tool without the owner approval.
 

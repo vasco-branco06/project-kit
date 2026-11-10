@@ -13,13 +13,13 @@
 Never invent behaviour. Record an open question in the progress tracker and ask the owner.
 
 ## Protected files
-Workers never edit `inputs/`, generated code, vendor code or anything outside the paths in their brief.
+Workers never edit `inputs/`, generated code, vendor code or anything outside the paths in their brief. Only the evaluator reads or writes `work/tests/`.
 
 ## Before the next unit
 It works end to end, the invariants hold, the progress tracker is updated, the build passes. Update the relevant context file first, with owner approval.
 
 ## Corrections
-A correction brief says what was expected, what happened, and that only that point changes.
+A correction brief says what behaviour was expected, what happened, and that only that point changes. It never contains test code or checklist lines.
 
 ## Safety
 Subagents never decide for the coordinator. Ask before anything destructive, external or hard to reverse.
