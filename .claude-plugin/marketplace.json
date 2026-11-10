@@ -1,7 +1,7 @@
 {
   "name": "project-kit",
   "description": "Marketplace for the project-kit plugin, a general model for organizing any project.",
-  "owner": { "name": "project-kit contributors" },
+  "owner": { "name": "vasco-branco06" },
   "plugins": [
     {
       "name": "project-kit",
