@@ -1,0 +1,12 @@
+{
+  "name": "project-kit",
+  "description": "Marketplace for the project-kit plugin, a general model for organizing any project.",
+  "owner": { "name": "project-kit contributors" },
+  "plugins": [
+    {
+      "name": "project-kit",
+      "source": "./",
+      "description": "General model for organizing any project: research, academic, code or general."
+    }
+  ]
+}
