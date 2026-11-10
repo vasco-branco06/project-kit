@@ -18,7 +18,7 @@ Read these files, in this order, at the start of every session. Translate this h
 
 ## Who decides
 
-The owner gives the goal, any context, and the expected end result (how it looks and works, what counts as done), and may add rules and name tests. Start work with `/project-kit:run`. The coordinator decides the rest (stack, models, number of subagents, worktrees), proposes it in a one-page plan and waits for one go; the owner may change any choice. Every decision is logged with its reason in `context/decisions.md`. Ask the owner before any commit, push, publication, spending or scope change; an approval covers only that action.
+The owner gives the goal, any context, and the expected end result (how it looks and works, what counts as done), and may add rules and name tests. Start work with `/project-kit:run`. The coordinator decides the rest (stack, models, number of builders, worktrees), proposes it in a one-page plan and waits for one go; the owner may change any choice. The evaluator and the reviewer always take part and are not counted in the number of builders. Every decision is logged with its reason in `context/decisions.md`. Ask the owner before any commit, push, publication, spending or scope change; an approval covers only that action.
 
 ## General rules
 

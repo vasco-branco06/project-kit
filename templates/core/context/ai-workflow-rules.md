@@ -21,5 +21,8 @@ It works end to end, the invariants hold, the progress tracker is updated, the b
 ## Corrections
 A correction brief says what behaviour was expected, what happened, and that only that point changes. It never contains test code or checklist lines.
 
+## Environment check
+Before planning: approval to write `.claude/agents/`, a browser tool for projects with screens, and the commands the tests need. Anything missing is stated in the plan.
+
 ## Safety
 Subagents never decide for the coordinator. Ask before anything destructive, external or hard to reverse.
