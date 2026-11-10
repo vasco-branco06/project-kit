@@ -23,18 +23,12 @@ The same steps work with a local path. Inside a session the equivalents are `/pl
 ## How a run works
 
 1. **Intake.** Goal, context and expected end result.
-2. **Priority.** Efficient, balanced or best. If you do not know, the default table applies:
+2. **Models, chosen per unit.** The coordinator picks the model for each unit from what that unit needs, not from its type of work. Small or fully specified work goes to haiku, code included; sonnet takes several files or some judgement; opus takes architecture, unclear requirements, security or data-loss risk and high-risk review; fable is kept for the hardest units (novel problems, long reasoning across the system, decisions costly to reverse) or a unit that already failed on opus. Your priority (efficient, balanced or best) shifts these choices down or up. Every choice and its reason is in the plan and the log.
 
-   | Work | Model tier |
-   |---|---|
-   | Search, extraction, mechanical edits | haiku |
-   | Building code, writing | sonnet |
-   | Architecture, high-risk review, hard decisions | opus |
-
-3. **One-page plan**, saved in `work/`: units and their checks, stack with pinned versions (for code a researcher compares two or three options in official documentation), models per role, number of subagents and what runs in parallel, worktrees yes or no, the test plan, and a cost estimate (low, medium, high). Reply go, or change anything, including the number of subagents. A changed plan needs a new go. "Decide and go" in your prompt skips the stop.
+3. **One-page plan**, saved in `work/`: units and their checks, stack with pinned versions (for code a researcher compares two or three options in official documentation), the model of each unit, number of subagents and what runs in parallel, worktrees yes or no, the test plan, and a cost estimate (low, medium, high). Reply go, or change anything, including the number of subagents. A changed plan needs a new go. "Decide and go" in your prompt skips the stop.
 4. **Execution.** The coordinator only coordinates. Workers live in `.claude/agents/`: a builder and a reviewer in every project, a tester and a researcher when needed. Each brief carries a goal, files to read, a done check and a context package. Units run in parallel only when they share no files and no state. Worktrees are used only when two or more workers write code in parallel in a git repository.
 5. **Verification.** The coordinator runs the done check itself, then a reviewer in a fresh context checks that the brief was met and then the quality (build, types, lint, tests). Under "best", two independent reviewers must both pass. For sites and apps the tester acts as a visitor who understands nothing: it clicks everything and tries to break the product.
-6. **Escalation.** A failure goes back with a correction brief. After two failures the unit moves up one model tier; if it fails on the strongest tier, the coordinator stops and gives you two options with a recommendation.
+6. **Escalation.** A failure goes back with a correction brief. After two failures the unit moves up one model tier (haiku, sonnet, opus, fable); if it fails on fable, the coordinator stops and gives you two options with a recommendation.
 7. **Close.** Progress, decisions, models and escalations are logged in `context/`; the reflect skill proposes improvements.
 
 Commits, pushes, publication, spending and scope changes always ask first. There is no token cap; the plan shows an estimate.

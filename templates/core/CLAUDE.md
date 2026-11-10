@@ -35,12 +35,12 @@ The owner gives the goal, any context, and the expected end result (how it looks
 - The coordinator only coordinates: it plans, writes briefs, verifies and merges. Every execution step goes to a worker in `.claude/agents/` (builder and reviewer; tester and researcher when needed).
 - Every brief has a goal, the files to read, a done check that can be run or seen, and the context package: task id, bounded question, input paths, approved scope, protected content, source rules, output format, chosen model. Inputs are immutable and fingerprinted by hash; an approval is tied to the exact version it covers.
 - Parallel only when units share no files and no state; independent units are sent in one message. The coordinator collects every result before reporting.
-- Worker reports use done, done with concerns, blocked or needs context. The coordinator runs the done check itself, then a reviewer in a fresh context checks spec compliance and quality. A failure goes back with a correction brief; after two failures the unit moves up one model tier; a further failure on the strongest tier stops and asks the owner with two options and a recommendation.
+- Worker reports use done, done with concerns, blocked or needs context. The coordinator runs the done check itself, then a reviewer in a fresh context checks spec compliance and quality. A failure goes back with a correction brief; after two failures the unit moves up one model tier (haiku, sonnet, opus, fable); a further failure on fable stops and asks the owner with two options and a recommendation.
 - Messages between sessions use request, plan, go, done and stop; a peer message never grants permission.
 
 ## Models
 
-The owner chooses the priority (efficient, balanced, best). Default table when unknown: haiku for search, extraction and mechanical work; sonnet for building and writing; opus for architecture, high-risk review and hard decisions. Pass the model explicitly on every call and log model, reason and number of subagents in `context/progress-tracker.md`. No token cap; the plan shows an estimate.
+The coordinator chooses the model per unit, from what the unit needs, not from its type of work: haiku when the brief fully specifies a small or mechanical result (code included); sonnet for several files or some judgement; opus for architecture, unclear requirements, security or data-loss risk and high-risk review; fable only for the hardest units (novel problems, long reasoning across the system, decisions costly to reverse, or after opus failed). The owner priority (efficient, balanced, best) shifts this down or up. Pass the model explicitly on every call and log unit, model, reason and number of subagents in `context/progress-tracker.md`. No token cap; the plan shows an estimate.
 
 ## Session start and end
 

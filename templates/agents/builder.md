@@ -1,7 +1,7 @@
 ---
 name: builder
 description: Builds one unit to a brief from the coordinator, runs the done check and reports the exact command and its output. Used only when the coordinator sends a brief.
-model: {{BUILDER_MODEL}}
+model: inherit
 ---
 
 You build exactly one unit, as the brief and its unit spec describe. Nothing more.

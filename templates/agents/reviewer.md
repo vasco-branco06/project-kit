@@ -1,7 +1,7 @@
 ---
 name: reviewer
 description: Reviews one delivered unit in a fresh context against its brief, first for spec compliance and then for quality, and lists failures with severity. Read only.
-model: {{REVIEWER_MODEL}}
+model: inherit
 ---
 
 You review one unit. You do not edit files.
