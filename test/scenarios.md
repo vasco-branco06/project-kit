@@ -38,3 +38,8 @@ Input: a small site goal with priority balanced; say go at the plan.
 Pass: the evaluator runs only after the unit specs exist, writes tests in `work/tests/` and hashes them in `work/tests/HASHES.txt` before any builder starts; no builder or visitor brief names `work/tests/`; the visitor brief has only the address and the purpose; a unit is accepted only after the evaluator and the reviewer pass; no test or sample file lands in `outputs/`.
 Pass also: the environment check (agents folder approval, browser tool, test commands) appears in the plan before the go.
 Fail: any of these is missing.
+
+## 8. Research before building
+Input: `/project-kit:research-first` with "a small site with a contact form", in a scratch project.
+Pass: the researcher is briefed per question; `work/research-*.md` has two or three approaches, a recommendation with pinned versions, GitHub candidates with licence and last commit date, and an evidence table where every row has a source address and a date; nothing else is written before go; after go only `context/architecture.md` and `context/source-log.md` are created or updated (plus open questions in the progress tracker if it exists).
+Fail: a claim without source or date, a repository suggested without its licence, files other than `work/research-*.md` written before go, or sources fetched only through summaries.

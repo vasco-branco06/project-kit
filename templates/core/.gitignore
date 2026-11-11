@@ -1,4 +1,6 @@
-_archive/
+.env
+.env.*
+*.local
 .worktrees/
 *.pdf
 !outputs/*.pdf

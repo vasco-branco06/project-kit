@@ -8,7 +8,11 @@ Exit code 0 = pass, 1 = failures, 2 = usage error.
 
 Checks: the entry file has a read order and every file in it exists; no placeholder
 in double braces is left; every agent file has name, description and model.
+Plugin check (--self-test): plugin.json and marketplace.json parse and have their keys,
+every SKILL.md has frontmatter with name == folder name and a description, and every
+templates/ path a skill mentions exists.
 """
+import json
 import re
 import shutil
 import sys
@@ -52,6 +56,51 @@ def agent_errors(path):
     return [f"agent {path.name} lacks {k}" for k in AGENT_KEYS if k not in keys]
 
 
+def frontmatter(text):
+    m = re.match(r"---\n(.*?)\n---", text.replace("\r\n", "\n"), re.S)
+    if not m:
+        return None
+    return {k.strip(): v.strip() for k, _, v in (l.partition(":") for l in m.group(1).splitlines()) if _}
+
+
+def load_json(path, keys):
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as e:
+        return None, [f"{path.name}: {e}"]
+    return data, [f"{path.name} lacks {k}" for k in keys if not data.get(k)]
+
+
+def plugin_errors(root):
+    root, errors = Path(root), []
+    meta = root / ".claude-plugin"
+    plugin, errs = load_json(meta / "plugin.json", ("name", "version", "description"))
+    errors += errs
+    market, errs = load_json(meta / "marketplace.json", ("name", "description", "plugins"))
+    errors += errs
+    for entry in (market or {}).get("plugins") or []:
+        errors += [f"marketplace plugin lacks {k}" for k in ("name", "source", "description") if not entry.get(k)]
+        if plugin and entry.get("name") != plugin.get("name"):
+            errors.append(f"marketplace plugin {entry.get('name')} != plugin.json name {plugin.get('name')}")
+    skills = sorted((root / "skills").glob("*/SKILL.md"))
+    if not skills:
+        errors.append("no skills found")
+    for s in skills:
+        text, fm = s.read_text(encoding="utf-8"), frontmatter(s.read_text(encoding="utf-8"))
+        label = f"skill {s.parent.name}"
+        if fm is None:
+            errors.append(f"{label} has no frontmatter")
+            continue
+        if fm.get("name") != s.parent.name:
+            errors.append(f"{label}: name {fm.get('name')!r} != folder")
+        if not fm.get("description"):
+            errors.append(f"{label} lacks description")
+        for ref in sorted(set(re.findall(r"templates/[A-Za-z0-9_./-]+", text))):
+            if not (root / ref.rstrip(".,")).exists():
+                errors.append(f"{label} references missing {ref}")
+    return errors
+
+
 def check_folder(folder):
     folder, errors = Path(folder), []
     entry = folder / "CLAUDE.md"
@@ -66,7 +115,7 @@ def check_folder(folder):
         for a in sorted(agents.glob("*.md")):
             errors += agent_errors(a)
     for f in folder.rglob("*"):
-        if f.is_file() and f.suffix in {".md", ".txt", ".json", ""} and ".git" not in f.parts:
+        if f.is_file() and f.suffix in {".md", ".txt", ".json", ""} and ".git" not in f.parts and not f.name.startswith("_"):
             for m in PLACEHOLDER.findall(f.read_text(encoding="utf-8", errors="ignore")):
                 errors.append(f"unfilled placeholder {m} in {f.relative_to(folder)}")
     return errors
@@ -100,6 +149,12 @@ def self_test():
         errs = agent_errors(a)
         print(f"agent template {a.name}: {'PASS' if not errs else 'FAIL ' + '; '.join(errs)}")
         failed += bool(errs)
+    errs = plugin_errors(ROOT)
+    print(f"plugin: {'PASS' if not errs else 'FAIL ' + '; '.join(errs)}")
+    failed += bool(errs)
+    bad = plugin_errors(ROOT / "test" / "fixtures" / "bad_plugin")
+    print(f"bad_plugin: {'FAILS as expected (' + str(len(bad)) + ' errors)' if bad else 'UNEXPECTEDLY PASSES'}")
+    failed += not bad
     for fixture in ("bad_unfilled", "bad_agent"):
         bad = check_folder(ROOT / "test" / "fixtures" / fixture)
         print(f"{fixture}: {'FAILS as expected' if bad else 'UNEXPECTEDLY PASSES'}")

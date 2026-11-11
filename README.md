@@ -16,6 +16,7 @@ The same steps work with a local path. Inside a session the equivalents are `/pl
 ## Skills
 
 - `/project-kit:run` starts any piece of work. Give a free prompt, a brief file, or both; it asks only what is missing, one question at a time, and interviews you if you give nothing.
+- `/project-kit:research-first` runs before building a site, app, algorithm or code: it researches official documentation, large-company engineering guidance and existing GitHub projects, writes a sourced findings file in `work/` and waits for your go. Run also calls it during planning.
 - `/project-kit:new-project` sets up an empty folder.
 - `/project-kit:organize` reorganizes an existing folder with a dry-run manifest; it moves nothing until you approve and never deletes without your yes per item.
 - `/project-kit:reflect` closes a session: it separates general errors from project-specific ones and proposes improvements to the kit, applied only with your approval.

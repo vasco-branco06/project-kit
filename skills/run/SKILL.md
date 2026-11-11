@@ -31,7 +31,7 @@ You are the coordinator. You only coordinate: plan, write briefs, verify and mer
 
 ## 3. Stack (code projects)
 - If the prompt names a stack, use it.
-- Otherwise brief the researcher: compare two or three candidates in official documentation and current versions, scored against the goal, the end result, zero extra cost, maintenance and what the owner already uses. Pick one, pin the versions and record them with reasons in `context/architecture.md`, plus at least four invariants written as rules.
+- Otherwise follow the `research-first` skill: it briefs the researcher to compare two or three candidates in official documentation, large-company guidance and existing GitHub projects, with current versions, scored against the goal, the end result, zero extra cost, maintenance and what the owner already uses. Pick one, pin the versions and record them with reasons in `context/architecture.md`, plus at least four invariants written as rules. Called from here, `research-first` skips its own go: its findings and recommendation go into the one-page plan below, and the owner's single go on that plan covers them.
 
 ## 4. One-page plan
 Write `work/plan-YYYYMMDD-HHMM.md` with:
@@ -41,14 +41,14 @@ Write `work/plan-YYYYMMDD-HHMM.md` with:
 - The model of each unit and why.
 - Number of builders (and, for screens, blind visitors) and which units run in parallel. Parallel only when units share no files and no state. The evaluator and the reviewer are always there and are not part of this number; the coordinator never verifies alone.
 - Worktrees: yes only when two or more workers write code in parallel in a git repository; otherwise no, with the reason.
-- Test plan: the evaluator (always on the strongest model) writes the code tests and, for screens, a hidden checklist after the go, and evaluates the results; one blind visitor (two or more with different profiles under the best priority); every test the owner named, unchanged. Tests, fixtures and samples never go in `outputs/`.
+- Test plan: the evaluator (on the strongest tier available, opus by default) writes the code tests and, for screens, a hidden checklist after the go, and evaluates the results; one blind visitor (two or more with different profiles under the best priority); every test the owner named, unchanged. Tests, fixtures and samples never go in `outputs/`.
 - Cost estimate: low, medium or high, with the reason. No token cap.
 
 Show it and wait for one go. Right after the go, record the plan file, its version and who approved it in the Plans table of `context/progress-tracker.md`, and add every unit to the Units table with status planned; keep the status current as units move. The owner may change any choice, including raising or lowering the number of builders; lowering it never removes the evaluator or the reviewer; a changed plan becomes a new version and needs a new go. If the prompt said "decide and go", skip the wait. Commits, push, publication, spending and scope changes always ask, in one sentence: what, where, reversible or not.
 
 ## 5. Execution
 - For each code unit write `context/specs/<nn>-<unit>.md` from `templates/code/context/specs/_unit-template.md` (goal, design, implementation, dependencies, verify). It is the brief.
-- When every unit spec exists, brief the evaluator on the strongest model (fable; opus only if fable is unavailable, logged). It writes the tests and checklists in `work/tests/<unit>/` and freezes them in `work/tests/HASHES.txt` before any builder starts.
+- When every unit spec exists, brief the evaluator on the model set in its agent file (opus by default; the owner or the coordinator may pass fable explicitly, logged). It writes the tests and checklists in `work/tests/<unit>/` and freezes them in `work/tests/HASHES.txt` before any builder starts.
 - `work/tests/` is protected content for every other worker: never name it in a builder or visitor brief.
 - Every brief carries the context package: task id, bounded question, input paths, approved scope, protected content, source rules, output format, chosen model, and the done check.
 - Send independent units in one message so they run in parallel; send dependent units in order.

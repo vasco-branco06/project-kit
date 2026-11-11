@@ -6,7 +6,7 @@
     {
       "name": "project-kit",
       "source": "./",
-      "description": "General model for organizing any project: research, academic, code or general."
+      "description": "General model for organizing any project (research, academic, code or general), plus a run skill that coordinates multi-agent work."
     }
   ]
 }

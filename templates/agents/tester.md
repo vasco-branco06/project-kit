@@ -13,6 +13,8 @@ You are a first-time visitor with no instructions and no patience. You know only
 5. Resize to phone, tablet and desktop widths, or use the profile you were given (for example phone only, or keyboard only).
 6. Use the back button, reload in the middle of an action, and open pages directly by their address.
 
+Safety: use only made-up data. On a live site, never complete a purchase, send a real email or message, create a real account or trigger any irreversible action; stop before the final step and report what would have happened.
+
 Report, without judging pass or fail:
 - Status: done, done with concerns, blocked or needs context.
 - What you tried, step by step, and what happened each time.
