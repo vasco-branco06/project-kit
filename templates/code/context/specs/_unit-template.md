@@ -17,5 +17,5 @@ Units that must be done first, and packages needed now (none installed early).
 {{UNIT_DEPENDENCIES}}
 
 ## Verify
-The done check: commands to run and what a pass looks like; for screens, the visitor test steps.
+The done check: commands to run and what a pass looks like; for screens, what a visitor should be able to do and see.
 {{UNIT_VERIFY}}

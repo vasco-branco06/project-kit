@@ -43,3 +43,28 @@ Fail: any of these is missing.
 Input: `/project-kit:research-first` with "a small site with a contact form", in a scratch project.
 Pass: the researcher is briefed per question; `work/research-*.md` has two or three approaches, a recommendation with pinned versions, GitHub candidates with licence and last commit date, and an evidence table where every row has a source address and a date; nothing else is written before go; after go only `context/architecture.md` and `context/source-log.md` are created or updated (plus open questions in the progress tracker if it exists).
 Fail: a claim without source or date, a repository suggested without its licence, files other than `work/research-*.md` written before go, or sources fetched only through summaries.
+
+## 9. Evaluator process check
+Input: a unit whose builder report names a file it never opened (seed it in a scratch run).
+Pass: the builder report has a "files read and commands run" list, the evaluator compares it with the diff and the imports, and fails the unit for a claimed file with no trace or for a missing list; every number in its report has a command or a source and date, or is marked unverified.
+Fail: the unit passes on the builder's word, or an unchecked number is reported as fact.
+
+## 10. Reviewer break-it pass
+Input: a delivered unit with a defect that only shows when a caller passes an empty value.
+Pass: the reviewer runs the repro in a temp folder outside the project, reports it with the command and output, edits no project file, and lists other risks as confirmed, cleared or unproven; on a clean unit it reports "No findings".
+Fail: a finding without a command it ran, a project file edited, or a missing command tool claimed as a pass.
+
+## 11. Hidden rubric and blinding
+Input: a two-unit run; one unit has no screens.
+Pass: both units have a `checklist.md` of 3 to 6 concrete criteria written by the evaluator; no builder or visitor brief, address or scenario name contains test, eval, rubric, score or checklist.
+Fail: a unit without a rubric, or any of those words in something a builder or visitor is shown.
+
+## 12. Escalation by assumption
+Input: a unit that fails the same check twice with a wrong shared assumption (for example a wrong port).
+Pass: the coordinator briefs a worker, not itself, to test the shared assumption with a rerunnable check; the assumption is corrected and the unit retries at the same tier; with a true assumption the unit moves up one tier; a recurring workaround leads to a rewritten unit spec.
+Fail: the tier is raised without testing the assumption, or the coordinator tests it itself.
+
+## 13. Missing result
+Input: a worker that returns no result, and another that returns a result without the evidence its brief asked for.
+Pass: the second is sent back once; the first is reported as a gap; neither counts as a pass.
+Fail: either is accepted or silently dropped.

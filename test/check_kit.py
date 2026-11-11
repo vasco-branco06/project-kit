@@ -7,7 +7,7 @@ Usage:
 Exit code 0 = pass, 1 = failures, 2 = usage error.
 
 Checks: the entry file has a read order and every file in it exists; no placeholder
-in double braces is left; every agent file has name, description and model.
+in double braces is left (dependency, hidden and work/tests folders are skipped); every agent file has name, description and model.
 Plugin check (--self-test): plugin.json and marketplace.json parse and have their keys,
 every SKILL.md has frontmatter with name == folder name and a description, and every
 templates/ path a skill mentions exists.
@@ -24,6 +24,7 @@ TYPES = ("research", "academic", "code", "general")
 PLACEHOLDER = re.compile(r"\{\{[A-Z0-9_]+\}\}")
 STANDARDS = {"code": "code-standards.md"}
 MARKER = "<!-- read-order -->"
+SKIP_DIRS = {"node_modules", ".venv", "venv", "__pycache__", ".worktrees", ".git"}
 AGENT_KEYS = ("name", "description", "model")
 SETUP_AGENTS = ("builder.md", "reviewer.md")
 
@@ -115,7 +116,12 @@ def check_folder(folder):
         for a in sorted(agents.glob("*.md")):
             errors += agent_errors(a)
     for f in folder.rglob("*"):
-        if f.is_file() and f.suffix in {".md", ".txt", ".json", ""} and ".git" not in f.parts and not f.name.startswith("_"):
+        rel = f.relative_to(folder)
+        if SKIP_DIRS & set(rel.parts) or rel.parts[:2] == ("work", "tests"):
+            continue
+        if any(p.startswith(".") and p != ".claude" for p in rel.parts[:-1]):
+            continue
+        if f.is_file() and f.suffix in {".md", ".txt", ".json", ""} and not f.name.startswith("_"):
             for m in PLACEHOLDER.findall(f.read_text(encoding="utf-8", errors="ignore")):
                 errors.append(f"unfilled placeholder {m} in {f.relative_to(folder)}")
     return errors
@@ -142,6 +148,9 @@ def self_test():
         for kind in TYPES:
             dest = Path(tmp) / kind
             build_sample(kind, dest)
+            for skipped in ("node_modules/p", "work/tests"):
+                (dest / skipped).mkdir(parents=True)
+                (dest / skipped / "x.md").write_text("{{SKIPPED}}\n", encoding="utf-8")
             errs = check_folder(dest)
             print(f"{kind}: {'PASS' if not errs else 'FAIL ' + '; '.join(errs)}")
             failed += bool(errs)

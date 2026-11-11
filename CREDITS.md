@@ -1,6 +1,6 @@
 # Credits
 
-Ideas only. No code or text was copied. Facts below were read at the source on 2026-11-10; no page showed a last-update date unless stated.
+Ideas only, rewritten in our own words; a few short phrases overlap with the source (3 to 6 criteria, highest level that works, happened twice is a class, at least 5 alternating runs). Facts below were read at the source on 2026-11-10 (pstack on 2026-11-11); no page showed a last-update date unless stated.
 
 | Source | Licence | What the kit took |
 |---|---|---|
@@ -15,5 +15,6 @@ Ideas only. No code or text was copied. Facts below were read at the source on 2
 | claude-code-skills (Alireza Rezvani): human-gate, agent-harness | MIT | Blocker and major severities, capped retries that escalate instead of passing |
 | agentic-council | Apache-2.0 | Model profiles by priority with tier aliases |
 | From Idea to Product playbook (JavaScript Mastery) | Not stated | Unit specs (goal, design, implementation, dependencies, verify), build plan, unit sizing and build order, invariants, open questions instead of guesses, gate before the next unit, correction brief. Paraphrased only |
+| pstack (https://github.com/cursor/plugins/tree/main/pstack, Lauren Tan, 2026), accessed 2026-11-11 | MIT | Inspiration only, ideas rewritten from its skills arena, eval playbook, correct, benchmark-checklist, create-verification-skill, interrogate and blast-radius: process check of what the builder opened, hidden rubric and blinding words, honest numbers, a break-it review pass, paths not reached, run and evidence recipe, per-feature files, invariants with a failing command, assumption test before escalating, fixing a repeated mistake at the highest level that works (reflect), test expected values taken from the requirement and never from running the code (evaluator), and the benchmark timing rule of at least 5 alternating runs |
 
 Not verified: Semantic Versioning (semver.org could not be fetched because of a certificate error), so it is not cited.

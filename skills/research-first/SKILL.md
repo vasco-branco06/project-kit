@@ -18,7 +18,7 @@ Talk to the owner in the language they use. One question per turn, with a recomm
 4. Stop researching when each question has a sourced answer or one more round would not change the recommendation. Say so.
 5. Write `work/research-YYYYMMDD-HHMM.md`, the only file written before the go, because the owner must read it. It holds: the question, two or three approaches scored against the goal, expected result, zero extra cost, maintenance and what the owner already uses; the recommended approach with pinned versions; existing projects to take inspiration from or reuse, with licence and how they may be used (reuse, adapt or inspiration only); the evidence table (finding, source, date, confidence); what was not verified.
 6. Show the owner the recommendation and the main risks in a few lines. Wait for one go. When called from the `run` skill, skip this go: the findings and the recommendation go into the one-page run plan, and the owner's single go on that plan covers them.
-7. With the go, and only then: create or update `context/architecture.md` with the chosen stack, pinned versions and at least four invariants written as rules, and `context/source-log.md` with one row per source. Open questions go to `context/progress-tracker.md` when it exists; never fill them in by guessing.
+7. With the go, and only then: create or update `context/architecture.md` with the chosen stack, pinned versions and invariants as the architecture template asks (at least four, with their commands), and `context/source-log.md` with one row per source. Open questions go to `context/progress-tracker.md` when it exists; never fill them in by guessing.
 
 ## Rules
 
