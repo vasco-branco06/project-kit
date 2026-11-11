@@ -16,7 +16,7 @@ Never invent behaviour. Record an open question in the progress tracker and ask 
 Workers never edit `inputs/`, generated code, vendor code or anything outside the paths in their brief. Only the evaluator reads or writes `work/tests/`; a visitor writes only in `work/evidence-incoming/<unit>/`.
 
 ## Before the next unit
-It works end to end, the invariants hold, the progress tracker is updated, the build passes. Update the relevant context file first, with owner approval.
+It works end to end, the invariants hold, the progress tracker is updated, the build passes. Update the progress tracker first (no wait); other context files need owner approval.
 
 ## Corrections
 A correction brief says what behaviour was expected, what happened, and that only that point changes. It never contains test code or checklist lines.

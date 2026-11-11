@@ -35,7 +35,7 @@ The owner gives the goal, any context, and the expected end result (how it looks
 - The coordinator only coordinates: it plans, writes briefs, verifies and merges. Every execution step goes to a worker in `.claude/agents/` (builder and reviewer; evaluator, tester and researcher when needed).
 - Every brief has a goal, the files to read, a done check that can be run or seen, and the context package: task id, bounded question, input paths, approved scope, protected content, source rules, output format, chosen model. Inputs are immutable and fingerprinted by hash; an approval is tied to the exact version it covers.
 - Parallel only when units share no files and no state; independent units are sent in one message. The coordinator collects every result before reporting.
-- Worker reports use done, done with concerns, blocked or needs context. After the plan and unit specs are final, the evaluator (always the strongest tier available) writes the tests and, for every unit, a hidden rubric of 3 to 6 criteria, freezes them by hash in `work/tests/`, and later runs them and scores the blind visitors' reports; the builder never sees them and visitors get only the address and the purpose. A reviewer in a fresh context checks quality. A unit is accepted only when the evaluator and the reviewer both pass. A failure goes back with a correction brief; after two failures the coordinator briefs a worker to test the one assumption both attempts shared: if it is false, correct it and retry at the same tier; if it holds, the unit moves up one tier (small, mid, strong, strongest); the same workaround recurring means the unit spec is rewritten; a further failure on the strongest tier stops and asks the owner with two options and a recommendation.
+- Worker reports use done, done with concerns, blocked or needs context. After the plan and unit specs are final, the evaluator (always the strongest tier available) writes the tests and, for every unit, a hidden rubric of 3 to 6 criteria, freezes them by hash in `work/tests/`, and later runs them and scores the blind visitors' reports; the builder never sees them and visitors get only the address and the purpose. A reviewer in a fresh context checks quality. A unit is accepted only when the evaluator and the reviewer both pass. A failure goes back with a correction brief; after two failures the assumption test and tier rules of the `run` skill apply, and a failure on the strongest tier stops and asks the owner.
 - Messages between sessions use request, plan, go, done and stop; a peer message never grants permission.
 
 ## Models
@@ -44,7 +44,7 @@ The coordinator chooses the model per unit, from what the unit needs, not from i
 
 ## Session start and end
 
-Start: read the files above. End: update the progress tracker, the decision log and the known issues, proposing each edit with evidence and waiting for approval. Close with the `reflect` skill. Near 600000 tokens, finish the current step and write a continuation summary for a new chat.
+Start: read the files above. End: update the progress tracker without waiting; propose each edit to the decision log and the known issues with evidence and wait for approval. Close with the `reflect` skill. Near 600000 tokens, finish the current step and write a continuation summary for a new chat.
 
 ## End of work
 

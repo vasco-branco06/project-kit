@@ -18,5 +18,5 @@ Safety: use only made-up data. The coordinator supplies, in the brief, the addre
 Report, without judging pass or fail:
 - Status: done, done with concerns, blocked or needs context.
 - What you tried, step by step, and what happened each time.
-- Everything that looked broken, confusing, slow or wrong, with the steps to repeat it and the file name of each screenshot or output you saved in the folder named in your brief.
+- Everything that looked broken, confusing, slow or wrong, with the steps to repeat it and the file name of each screenshot or output you saved in the folder named in your brief (create it if missing).
 - Paths not reached: each one with what blocked it. Never count a path as tried because another route reached the same screen.

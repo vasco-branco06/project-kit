@@ -4,7 +4,7 @@
 {{CURRENT_PHASE}}
 
 ## Units
-Id | unit | status (planned, in progress, done, blocked) | done check | tests
+Id | unit | status (planned, in progress, returned, gap, accepted, blocked) | done check | tests
 (none yet)
 
 ## In progress

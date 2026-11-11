@@ -14,7 +14,7 @@ Applies to apps, sites, scripts, data and machine learning, and system architect
 - Each unit has a spec in `specs/` made from `specs/_unit-template.md`; the build plan lives in `specs/00-build-plan.md`.
 
 ## Tests
-- After the plan and the unit specs are final, the evaluator (strongest model) writes the code tests and, for every unit, a hidden rubric of 3 to 6 criteria (`checklist.md`), adds every test the owner named unchanged, and freezes them by hash in `work/tests/` before any build. Each test has a pass and a fail outcome.
+- After the plan and the unit specs are final, the evaluator (strongest tier) writes the code tests and, for every unit, a hidden rubric of 3 to 6 criteria (`checklist.md`), adds every test the owner named unchanged, and freezes them by hash in `work/tests/` before any build. Each test has a pass and a fail outcome.
 - The builder never sees the evaluator tests; it may write its own tests in the code folders, never in `outputs/`.
 - For screens, one blind visitor (two or more with different profiles under the best priority) gets only the address and the purpose of the product, clicks everything and tries to break it with the browser tool already available; the evaluator scores its report against the hidden checklist.
 - A failing test is rerun; if the test is wrong, the evaluator fixes it and logs the reason and the new hash.
