@@ -25,7 +25,7 @@ Fail: a tier is skipped, more than two failures at one tier, no stop after fable
 
 ## 5. Project without git
 Input: a research or academic project folder with no repository.
-Pass: no worktrees, no branches, no commit questions; work goes through workers; previous versions of deliverables are kept in `_archive/` with a date.
+Pass: no worktrees, no branches, no commit questions; work goes through workers; previous versions of deliverables go to `_archive/` with a date, which exists only once something is moved there.
 Fail: a worktree or a repository is created.
 
 ## 6. Visitor test (projects with screens)
@@ -68,3 +68,23 @@ Fail: the tier is raised without testing the assumption, or the coordinator test
 Input: a worker that returns no result, and another that returns a result without the evidence its brief asked for.
 Pass: the second is sent back once; the first is reported as a gap; neither counts as a pass.
 Fail: either is accepted or silently dropped.
+
+## 14. Folder plan, code project with a named stack
+Input: `/project-kit:new-project` for a code project whose prompt names the stack.
+Pass: the folder plan shows only necessary folders, with a reason for each created and each not created; no `app/` or `tests/` (the stack and the builder create them on first use); nothing is written, `work/` included, before go 1 (the folder plan with the mandatory agents), and the files are then shown together for one go to the files; no `research-first` call happens inside `folder-plan`.
+Fail: a folder without a reason, a stack folder in the plan, a file written before the go, or a `research-first` call from `folder-plan`.
+
+## 15. Folder plan, research project with no material
+Input: a research project started from a prompt with no source material, ending in a final report.
+Pass: no `inputs/`, `studies/`, `_archive/` or `.worktrees/`; `outputs/` is planned only because the project ends in a final report, is absent after go 1 and exists only once a deliverable does; `work/`, `context/` and `.claude/agents/` exist.
+Fail: any folder without a stated need.
+
+## 16. Folder plan in organize
+Input: `/project-kit:organize` on an untidy folder.
+Pass: the folder plan and the manifest are shown together and go 1 covers both; every manifest destination is a folder of the approved plan; `_archive/` exists only because something was moved; nothing is deleted except zero-byte files and empty folders, each approved by name.
+Fail: the manifest lists a destination folder that is not in the approved plan, or a file is written or moved before the go.
+
+## 17. Mandatory agents in a project without code
+Input: a project without code, from setup to the plan.
+Pass: after `new-project`, `.claude/agents/` has exactly reviewer, evaluator and researcher; the researcher brief names documentation, GitHub and reliable sources about method and format, never the project's content; the plan proposes other agents with a reason, and other roles are created only after the plan's go and only as it proposed.
+Fail: a builder or tester exists before the go, an unproposed role is created, or the researcher is briefed to produce content.

@@ -1,6 +1,6 @@
 ---
 name: research-first
-description: Use before choosing an approach or stack for something new to build (site, app, algorithm or code). Researches official documentation, engineering guidance from large companies and existing GitHub projects, then writes a sourced findings file and waits for the owner's go. Not for market, literature or product research.
+description: Use before choosing an approach or stack for something new to build (site, app, algorithm or code). Researches official documentation (Anthropic and OpenAI included), engineering guidance from large companies and existing GitHub projects, then writes a sourced findings file and waits for the owner's go. Not for market, literature or product research.
 ---
 
 # research-first
@@ -11,7 +11,7 @@ Talk to the owner in the language they use. One question per turn, with a recomm
 
 1. Restate the thing to build in one sentence and its type: site, app, algorithm or code. For a mixed case (for example a site with an algorithm) read every matching file in `references/`. With nothing clear to build, ask one question and stop.
 2. Brief the `researcher` agent, at most four briefs at a time, in parallel when they are independent. If `.claude/agents/researcher.md` is missing, use a general-purpose agent and put the rules of the researcher template in the plugin in the brief. Each brief names the question, the sources in this order, and the report format of the researcher template:
-   - Official documentation of the vendors or standards the work depends on (for example MDN, web.dev, the framework or cloud provider docs, the RFC or paper for an algorithm).
+   - Official documentation of the vendors or standards the work depends on (for example Anthropic and OpenAI documentation, MDN, web.dev, the framework or cloud provider docs, the RFC or paper for an algorithm).
    - Engineering guidance published by large technology companies, read at its own address, not through a summary.
    - GitHub: existing projects that solve the same problem. For each candidate record the address, the licence read from its LICENSE file, last commit date, open-issue trend, and what to borrow or avoid. Stars are a weak signal only.
 3. Verify the reports yourself: for each claim that drives the recommendation, reopen its source address and confirm it says that. Drop any claim without source and date. If sources conflict, keep both and say which to trust and why.

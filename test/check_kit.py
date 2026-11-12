@@ -7,7 +7,7 @@ Usage:
 Exit code 0 = pass, 1 = failures, 2 = usage error.
 
 Checks: the entry file has a read order and every file in it exists; no placeholder
-in double braces is left (dependency, hidden and work/tests folders are skipped); every agent file has name, description and model.
+in double braces is left (dependency, hidden and work/tests folders are skipped); every agent file has name, description and model; reviewer, evaluator and researcher exist when .claude/agents does.
 Plugin check (--self-test): plugin.json and marketplace.json parse and have their keys,
 every SKILL.md has frontmatter with name == folder name and a description, and every
 templates/ path a skill mentions exists.
@@ -26,7 +26,7 @@ STANDARDS = {"code": "code-standards.md"}
 MARKER = "<!-- read-order -->"
 SKIP_DIRS = {"node_modules", ".venv", "venv", "__pycache__", ".worktrees", ".git"}
 AGENT_KEYS = ("name", "description", "model")
-SETUP_AGENTS = ("builder.md", "reviewer.md")
+SETUP_AGENTS = ("reviewer.md", "evaluator.md", "researcher.md")
 
 
 def read_order(entry):
@@ -113,6 +113,7 @@ def check_folder(folder):
     errors += [f"read order file missing: {p}" for p in order if not (folder / p).is_file()]
     agents = folder / ".claude" / "agents"
     if agents.is_dir():
+        errors += [f"mandatory agent missing: {a}" for a in SETUP_AGENTS if not (agents / a).is_file()]
         for a in sorted(agents.glob("*.md")):
             errors += agent_errors(a)
     for f in folder.rglob("*"):
@@ -154,6 +155,11 @@ def self_test():
             errs = check_folder(dest)
             print(f"{kind}: {'PASS' if not errs else 'FAIL ' + '; '.join(errs)}")
             failed += bool(errs)
+            if kind == "research":
+                (dest / ".claude" / "agents" / "researcher.md").unlink()
+                miss = check_folder(dest)
+                print(f"missing mandatory agent: {'FAILS as expected' if miss else 'UNEXPECTEDLY PASSES'}")
+                failed += not miss
     for a in sorted((ROOT / "templates" / "agents").glob("*.md")):
         errs = agent_errors(a)
         print(f"agent template {a.name}: {'PASS' if not errs else 'FAIL ' + '; '.join(errs)}")
