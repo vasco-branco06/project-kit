@@ -6,7 +6,8 @@ Ideas only, rewritten in our own words; a few short phrases overlap with the sou
 |---|---|---|
 | agents.md (https://agents.md, repository https://github.com/agentsmd/agents.md) | Repository shows MIT; the site names no licence | A short second entry file at the root that points to the real map |
 | Cookiecutter Data Science (https://github.com/drivendataorg/cookiecutter-data-science) | MIT | Keep raw data apart from derived data and notebooks apart from reusable code |
-| MADR 4.0.0, released 2024-09-17 (https://adr.github.io/madr/) | MIT or CC0 | A decision log with one entry per decision: context, options, decision, consequences |
+| MADR 4.0.0, released 2024-09-17 (https://adr.github.io/madr/) | MIT or CC0 | Decision log inspired by MADR 4.0.0; extra fields: sources, evidence, reversibility, invalidation |
+| Methods named (ATAM, ADRs, STRIDE, C4); origins: ATAM (Software Engineering Institute, Carnegie Mellon), ADRs (Michael Nygard), STRIDE (Microsoft), C4 model (Simon Brown) | Methods only, no text copied | Quality-attribute scenarios from the ATAM utility tree, the decision record form, threat categories, structure diagrams |
 | The Turing Way, data storage page (https://book.the-turing-way.org/reproducible-research/rdm/rdm-storage/) | CC-BY-4.0 content, MIT code | File naming convention and the backup rule |
 | Conventional Commits 1.0.0 (https://www.conventionalcommits.org/en/v1.0.0/) | CC BY 3.0 | Commit message format named in the code standards |
 | Two pages on agent orchestration (murphmaxxing.com, "omega-agent-orchestration" and "folder-method-one-ai-agent") | Not stated | Coordinator and workers, briefs with a done check, builder and reviewer agent files, session files, reflect, change log with model name, model swap. Their price and token figures cite no source, so the kit does not repeat them |

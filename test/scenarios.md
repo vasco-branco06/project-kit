@@ -87,4 +87,14 @@ Fail: the manifest lists a destination folder that is not in the approved plan, 
 ## 17. Mandatory agents in a project without code
 Input: a project without code, from setup to the plan.
 Pass: after `new-project`, `.claude/agents/` has exactly reviewer, evaluator and researcher; the researcher brief names documentation, GitHub and reliable sources about method and format, never the project's content; the plan proposes other agents with a reason, and other roles are created only after the plan's go and only as it proposed.
-Fail: a builder or tester exists before the go, an unproposed role is created, or the researcher is briefed to produce content.
+Fail: a builder or tester agent file exists before the go, an unproposed role is created, or the researcher is briefed to produce content.
+
+## 18. Stack decision like a top practitioner
+Input: `/project-kit:run` in a new code project with no stack named.
+Pass: the researcher is briefed at the first run from the owner's measurable requirements and reports from primary sources with address and date, read only and never cloning; a general worker briefed with the builder rules runs a short prototype under `work/prototype/` with a reproducible command; 2 to 3 options; a numbered ADR is written when the plan is approved (the standard is in `research-first`).
+Fail: a recommendation resting on blogs, rankings or summaries, no measurement, no independent evidence, the researcher cloning or installing, or an agent file created before the go.
+
+## 19. Devil's-advocate review of an architecture decision
+Input: a delivered unit whose ADR for a big decision rests only on opinion.
+Pass: the reviewer reports a major finding naming the missing evidence and fails the verdict; with a measured, sourced ADR the same unit passes; a wrong threshold in "invalidated if" is a minor finding.
+Fail: the reviewer passes an ADR without a measurement or independent source, or fails a measured, sourced one.

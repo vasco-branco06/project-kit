@@ -7,7 +7,7 @@ Each standard names its source. A standard that does not suit the stack is repla
 - No secrets in the repository. Keep shared configuration apart from local secret configuration, and keep the local one out of version control.
 - Keep raw data apart from derived data, and keep raw data untouched (layout idea from Cookiecutter Data Science, MIT: https://github.com/drivendataorg/cookiecutter-data-science).
 - Notebooks hold experiments; reusable logic lives in code with tests.
-- Record decisions one per entry with context, options, decision and consequences (MADR 4.0.0, MIT or CC0: https://adr.github.io/madr/).
+- Record decisions in the ADR format of `context/decisions.md`.
 - Typed or linted code, using the linter and formatter recorded in `architecture.md`.
 - At every API or system boundary: validate input, check permissions before any change, return consistent responses and errors. Source: owner rule.
 - Storage: one owner per piece of data, migrations versioned, no personal data without a stated reason and retention. Source: owner rule.
