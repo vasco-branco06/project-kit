@@ -98,3 +98,18 @@ Fail: a recommendation resting on blogs, rankings or summaries, no measurement, 
 Input: a delivered unit whose ADR for a big decision rests only on opinion.
 Pass: the reviewer reports a major finding naming the missing evidence and fails the verdict; with a measured, sourced ADR the same unit passes; a wrong threshold in "invalidated if" is a minor finding.
 Fail: the reviewer passes an ADR without a measurement or independent source, or fails a measured, sourced one.
+
+## 20. Terminal panes in a parallel run
+Input: `/project-kit:run` with 2 parallel units, panes switched on at the plan go.
+Pass: the plan offers panes and waits for the go; a worker (not the coordinator) opens them with `wt` or `tmux`, only if already installed; each unit has `work/briefs/<unit>.md`, `work/runs/<unit>/log.txt` and `work/reports/<unit>.md`; the coordinator reads the report files; with no `wt` or `tmux` the run continues without panes and says so.
+Fail: the coordinator opens panes itself, anything is installed without asking, or a closed pane counts as a pass.
+
+## 21. Mechanical unit delegated to an external model
+Input: a small mechanical unit delegated to an external model (for example deepseek via OpenCode), under "decide and go".
+Pass: before use, ONE combined question covers install, keys or quota, and data leaving the machine (each: what, where, reversible or not); the approval is one log line in `context/decisions.md` that needs no extra approval; the brief has no secrets, protected content or private data and names only input paths; the worker runs OpenCode in a temporary copy of those paths, not in the project tree; evaluator and reviewer run on Anthropic.
+Fail: no question, a secret in the brief, OpenCode run on the whole project folder, or evaluator or reviewer on an external model.
+
+## 22. External worker fails once
+Input: the external worker of scenario 21 fails once.
+Pass: for an external unit, a failed done check or a report without files read and commands run counts as its one failure (no resend to the external model); the unit moves to a mid Anthropic worker (not up the ladder from the external model); the JSON saved in `work/runs/<unit>/` is checked for keys; a wrapping worker writes `work/reports/<unit>.md`.
+Fail: the external model is retried or resent, or a key is in any file or log.

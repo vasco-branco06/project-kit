@@ -18,6 +18,8 @@ The same steps work with a local path. Inside a session the equivalents are `/pl
 - `/project-kit:run` starts any piece of work. Give a free prompt, a brief file, or both; it asks only what is missing, one question at a time, and interviews you if you give nothing.
 - `/project-kit:research-first` runs before building a site, app, algorithm or code: it researches primary sources and existing GitHub projects, writes a sourced findings file in `work/` and waits for your go. Run also calls it during planning. Its Decision standard governs stack, language and architecture choices, and each big one is recorded as an ADR in `context/decisions.md`.
 - `/project-kit:folder-plan` decides which folders a project needs, with a reason for each, before new-project or organize create any.
+- `/project-kit:terminal-panes` optionally shows each parallel worker in its own Windows Terminal or tmux pane; the run works the same without it.
+- `/project-kit:external-models` sets when a small unit may go to a model outside Anthropic (OpenCode with DeepSeek, MiniMax or GLM, or the freellmapi proxy); it always asks you first.
 - `/project-kit:new-project` sets up an empty folder.
 - `/project-kit:organize` reorganizes an existing folder with a dry-run manifest; it moves nothing until you approve and never deletes without your yes per item.
 - `/project-kit:reflect` closes a session: it separates general errors from project-specific ones and proposes improvements to the kit, applied only with your approval.
@@ -55,6 +57,7 @@ The run skill asks once whether you want these; the plugin never edits your sett
 - `/effort xhigh` for the coordinator session (levels are low, medium, high, xhigh, max; ultracode is a separate setting, not a level).
 - `CLAUDE_AUTOCOMPACT_PCT_OVERRIDE=40` (60 for long jobs). It can only make compaction happen earlier.
 - `/context` shows how full the context is.
+- Optional, installed only when you ask: Windows Terminal (`wt`) or tmux for terminal panes; OpenCode and the freellmapi proxy for external models.
 - `CLAUDE_CODE_SUBAGENT_MODEL` sets a default model for subagents without one. The model chosen per call or in an agent file takes precedence (since Claude Code 2.1.251); `CLAUDE_CODE_SUBAGENT_MODEL_FORCE=1` forces the global value on every subagent and defeats per-task routing, so the kit does not use it.
 
 ## Known interaction
