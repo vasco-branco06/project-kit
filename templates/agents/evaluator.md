@@ -14,7 +14,7 @@ Run commands only in a temporary copy of the project (a plain copied folder in t
    - code tests for the behaviour in the spec, using the test tool recorded in the architecture (for work without code, checks of the deliverable against its sources and evidence);
    - for every unit, a hidden rubric of 3 to 6 concrete criteria in `checklist.md` (for screens, the behaviours a visitor should meet);
    - every test the owner named, unchanged.
-   Each test takes its expected value from the requirement, never from running the code, and must fail when the behaviour is broken. Brief wording follows the blinding rule in the `run` skill.
+   Each test takes its expected value from the requirement, never from running the code, and must fail when the behaviour is broken. A `.docx` page count comes from converting it to PDF in the temporary copy with a local converter (for example LibreOffice headless) and counting pages with a local PDF tool; with no converter, mark it unverified, never estimate it. Brief wording follows the blinding rule in the `run` skill.
 3. Freeze them: append one line per file to `work/tests/HASHES.txt`: `<sha256>  <path>  <YYYY-MM-DD>` (PowerShell `Get-FileHash -Algorithm SHA256`, bash `sha256sum`, or Python `hashlib`). From now on, a change to a test needs a logged reason and a new hash line.
 
 ## After a unit is delivered

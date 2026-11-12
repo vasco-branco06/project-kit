@@ -71,7 +71,7 @@ Fail: either is accepted or silently dropped.
 
 ## 14. Folder plan, code project with a named stack
 Input: `/project-kit:new-project` for a code project whose prompt names the stack.
-Pass: the folder plan shows only necessary folders, with a reason for each created and each not created; no `app/` or `tests/` (the stack and the builder create them on first use); nothing is written, `work/` included, before go 1 (the folder plan with the mandatory agents), and the files are then shown together for one go to the files; no `research-first` call happens inside `folder-plan`.
+Pass: the folder plan shows only necessary folders, with a reason for each created and each not created; no `app/` or `tests/` (the stack and the builder create them on first use); nothing is written, `work/` included, before go 1 (the folder plan with the mandatory agents), no file, specs included, holds a raw placeholder after go 1, and the files are then shown together for one go to the files; no `research-first` call happens inside `folder-plan`.
 Fail: a folder without a reason, a stack folder in the plan, a file written before the go, or a `research-first` call from `folder-plan`.
 
 ## 15. Folder plan, research project with no material

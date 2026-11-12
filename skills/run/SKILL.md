@@ -68,7 +68,7 @@ Show it and wait for one go. Right after the go, record the plan file, its versi
 ## 7. Merge and close
 - Merge task branches or worktrees after the tests pass; remove the worktrees. Ask before each commit.
 - Update `context/progress-tracker.md` (units, status, models with reasons and number of subagents, escalations) without waiting; propose each edit to `context/decisions.md` and `context/known-issues.md` with evidence and wait for approval.
-- Report what was tested and what was not.
+- Report what was tested and what was not. Copy source rows into `context/source-log.md` as `CLAUDE.md` says.
 - Close with the `reflect` skill.
 
 ## Handoff
