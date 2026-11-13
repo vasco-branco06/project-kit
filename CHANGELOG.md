@@ -98,3 +98,4 @@ One line per fix of a rule or template: date, model name, what changed and why.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: run section 4: a refused permission, commit or plan go leaves the affected unit planned and the coordinator asks the owner what to do next.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: run: the strongest tier under the best priority no longer promises a review of the plan, which no step performs (chose dropping the words over adding a plan-review step, the smaller change).
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: run section 1 names the project-overview sections for the three intake items (Goal, Done when, Scope in and Scope out) instead of adding sections to the template.
+- 2026-11-13 | claude-sonnet-5-5 | Unreleased: run: the merge_sources step moves from section 7 to the acceptance line in section 6, and the section 3 bullet is split so the n/a until the plan replacement applies to architecture.md only.
