@@ -9,7 +9,7 @@ Talk to the owner in the language they use. One question per turn, with a recomm
 
 ## Steps
 
-1. Investigate and write nothing: the goal, the type and language of the work, and what already exists (never open `.env` files). For `organize`, list the top level with sizes (counts for big folders). For `new-project`, ask what source material the owner has. Code folders such as `app/` or `tests/` are not decided here: they come from the stack and the builder creates them on first use. Never call `research-first` from here.
+1. Investigate and write nothing: the goal, the type and language of the work, and what already exists (never open `.env` files). For `organize`, list the top level with sizes (counts for big folders). For `new-project`, ask what source material the owner has and, if there is some, ask the owner to place the files in `inputs/` after go 1 (the skills move nothing for `new-project`). Code folders such as `app/` or `tests/` are not decided here: they come from the stack and the builder creates them on first use. Never call `research-first` from here.
 2. Decide each folder, with a one-line reason for every folder created and every folder not created.
    - Always: `context/` (the read-order files plus the source log), `work/` (`run`, `research-first`, `organize` and `reflect` depend on it) and `.claude/agents/` (the mandatory agents of `${CLAUDE_PLUGIN_ROOT}/templates/core/CLAUDE.md`, listed by name, copied unchanged).
    - `inputs/` only if the owner has source material.

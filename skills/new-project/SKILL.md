@@ -26,4 +26,4 @@ Talk to the owner in the language they use. Ask one question per turn, with your
 
 - Never delete anything. Never write secrets, keys or real personal data; use placeholders.
 - On a write error, stop, list the files written and the ones pending, and ask how to go on.
-- The always-ask list is the one in `${CLAUDE_PLUGIN_ROOT}/templates/core/CLAUDE.md`.
+- The always-ask list is the last sentence of the "Who decides" section in `${CLAUDE_PLUGIN_ROOT}/templates/core/CLAUDE.md` (commit, push, publication, spending, tool install, other model family, data leaving the machine, scope change).
