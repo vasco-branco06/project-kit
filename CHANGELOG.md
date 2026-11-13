@@ -117,3 +117,5 @@ One line per fix of a rule or template: date, model name, what changed and why.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: organize description now says it deletes only zero-byte files and empty folders approved by name, matching its steps and rule.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: organize: a conflict is a destination that already exists, the manifest sits outside the moved set (an existing work/ stays in place), and undo leaves the created files unless the owner approves removing each by name; legacy names were already kept unless asked.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: organize names the settings and hooks question (step 6), new-project points to the always-ask sentence in Who decides, and folder-plan asks the owner to place source material in inputs/.
+- 2026-11-13 | claude-sonnet-5-5 | Unreleased: research-first step 7 has a worker append the stack ADR to context/decisions.md when the skill runs outside run.
+- 2026-11-13 | claude-sonnet-5-5 | Unreleased: research-first step 7 has a worker append the stack ADR to context/decisions.md when the skill runs outside run.
