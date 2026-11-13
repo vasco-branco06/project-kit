@@ -10,7 +10,7 @@ Checks: the entry file has a read order and every file in it exists; no placehol
 in double braces is left (dependency, hidden and work/tests folders are skipped); every agent file has name, description and model; .claude/agents exists and holds reviewer, evaluator and researcher.
 Plugin check (--self-test): plugin.json and marketplace.json parse and have their keys,
 every SKILL.md has frontmatter with name == folder name and a description, and every
-templates/ path a skill mentions exists.
+templates/ path a skill mentions (and every ${CLAUDE_PLUGIN_ROOT}/scripts/ or test/ path) exists.
 Project checks (--self-test, run last, each with a bad fixture under test/fixtures): placeholder
 filler map, version alignment, changelog scenario record, vocabulary, bare templates/ paths,
 agent schema, mandatory agent set. `--strict FOLDER` also flags "n/a until" in a generated folder.
@@ -57,7 +57,8 @@ TOOLS_REQUIRED = {"reviewer", "researcher"}
 VALID_MODELS = {"inherit", "opus", "sonnet", "haiku", "fable"}
 MODEL_ID = re.compile(r"claude-[a-z0-9][a-z0-9.-]*")
 CONSTANT_FILLERS = {"STANDARDS_FILE"}  # filled by a constant in new-project, not by a described step
-BARE_TEMPLATES = re.compile(r"(?<!\$\{CLAUDE_PLUGIN_ROOT\}/)(?<![A-Za-z0-9_./-])templates/[A-Za-z0-9_./-]+")
+BARE_TEMPLATES = re.compile(r"(?<!\$\{CLAUDE_PLUGIN_ROOT\}/)(?<![A-Za-z0-9_-])templates/[A-Za-z0-9_./-]+")  # any other prefix is wrong too
+PLUGIN_FILE = re.compile(r"\$\{CLAUDE_PLUGIN_ROOT\}/((?:scripts|test)/[A-Za-z0-9_./-]+)")
 RELEASE = re.compile(r"\|\s*(\d+\.\d+\.\d+):")  # the release field release.sh writes; Unreleased lines have none
 
 
@@ -157,7 +158,7 @@ def plugin_errors(root):
             errors.append(f"{label}: name {fm.get('name')!r} != folder")
         if not fm.get("description"):
             errors.append(f"{label} lacks description")
-        for ref in sorted(set(re.findall(r"templates/[A-Za-z0-9_./-]+", text))):
+        for ref in sorted(set(re.findall(r"templates/[A-Za-z0-9_./-]+", text)) | set(PLUGIN_FILE.findall(text))):
             if not (root / ref.rstrip(".,")).exists():
                 errors.append(f"{label} references missing {ref}")
     return errors
@@ -374,7 +375,8 @@ def self_test():
                           ("bad_marketplace_name", "marketplace plugin other != plugin.json name k"),
                           ("bad_skill_name", "skill x: name 'other' != folder"),
                           ("bad_skill_desc", "skill x lacks description"),
-                          ("bad_skill_ref", "skill x references missing templates/missing/file.md")):
+                          ("bad_skill_ref", "skill x references missing templates/missing/file.md"),
+                          ("bad_skill_script", "skill x references missing scripts/missing.py")):
         failed += expect(fixture, plugin_errors(FIXTURES / fixture), text)
     for fixture, text in (("bad_unfilled", "unfilled placeholder {{OWNER_NAME}}"),
                           ("bad_readorder", "read order file missing: context/missing-file.md"),
@@ -429,6 +431,8 @@ def project_checks():
         failed += expect(fixture, vocabulary_errors(fx / fixture), text)
     report("bare templates path", bare_path_errors(ROOT), bare_path_errors(fx / "bad_barepath"),
            "skill x: bare path templates/core/CLAUDE.md")
+    failed += expect("bad_barepath_prefix", bare_path_errors(fx / "bad_barepath_prefix"),
+                     "skill x: bare path templates/core/CLAUDE.md")
     schema = [e for a in sorted((ROOT / "templates" / "agents").glob("*.md")) for e in agent_errors(a, full=True)]
     report("agent schema", schema, agent_errors(fx / "bad_schema" / "builder.md", full=True),
            "agent builder.md: name 'wrongname' != file name")
