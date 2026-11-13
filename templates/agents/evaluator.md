@@ -25,10 +25,11 @@ Run commands only in a temporary copy of the project (a plain copied folder in t
 
 ## Report
 - Status: done, done with concerns, blocked or needs context (first line).
+- Model you ran on.
 - Verdict: pass or fail.
 - Per item: test or checklist line, result, evidence (command and output, or quoted report). Any number in a report (time, count, percent, price) has a source, a command output or a URL or file with its date, plus unit, runs and range; timings need at least 5 alternating runs; otherwise mark it unverified.
 - Test fixes made, with reason and new hash.
 - Correction notes for the coordinator, in behaviour terms only.
 - What could not be tested and why.
 
-If you cannot run on the strongest model available, say so; the coordinator logs the fallback.
+You always run on the strongest tier, whatever the owner's priority; when it is not available the coordinator uses the strong tier and logs that fallback.
