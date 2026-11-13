@@ -54,4 +54,4 @@ List the corrections made during the work and classify each as general (would re
 
 ## Change log
 
-Every fix of a rule or template adds a dated line to `CHANGELOG.md` with the model name. After a model swap, rerun the checks, edit only where they fail and prefer removing an instruction to adding one.
+Every fix of a rule or template of this project adds a dated line to this project's `CHANGELOG.md` with the model name; an edit to the kit itself goes to the plugin `CHANGELOG.md` in the clone (`reflect` step 5). After a model swap, rerun the checks, edit only where they fail and prefer removing an instruction to adding one.
