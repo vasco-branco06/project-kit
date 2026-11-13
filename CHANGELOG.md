@@ -102,3 +102,4 @@ One line per fix of a rule or template: date, model name, what changed and why.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: run handoff: notes that autocompact may fire before 600000 tokens and that no context size is assumed (chose the note over stating a size, which has no source).
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: run plan fields now include risks, so run and ai-workflow-rules share one field list.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: run plan: for a big decision the plan names the prototype or measurement worker, its tools and its command.
+- 2026-11-13 | claude-sonnet-5-5 | Unreleased: organize: an existing CLAUDE.md, AGENTS.md or context file is listed in the manifest as moved to _archive/ before new ones are written, and an existing .gitignore gets only the missing template lines appended.
