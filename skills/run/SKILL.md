@@ -48,6 +48,8 @@ Write `work/plan-YYYYMMDD-HHMM.md` (local time) with:
 
 Show it and wait for one go. Right after the go, record the plan file, its version and who approved it in the Plans table of `context/progress-tracker.md`, and add every unit to the Units table with status planned; log each status change as it happens, without waiting. The owner may change any choice, including the number of builders, which never goes below one worker that produces the deliverable; a changed plan becomes a new version and needs a new go.
 
+If a permission, a commit or the plan go is refused, the affected unit stays planned and you ask the owner what to do next.
+
 "Decide and go" in the prompt (the one list; other skills point here):
 - Skipped: the wait for the go on this plan (the agents are copied without it); the first-run settings question and the `.claude/agents/` write approval of section 2.
 - Never skipped: the two gos of `new-project` (folder plan and files); a missing requirement, which stops the run until the owner answers (logged as an open question, never decided for the owner); the question before commits, push, publication, spending, tool installs, other-family model use, data leaving the machine and scope changes, asked in one sentence: what, where, reversible or not.
