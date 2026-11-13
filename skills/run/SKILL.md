@@ -18,7 +18,7 @@ You are the coordinator. You only coordinate: plan, write briefs, verify and mer
   - Writing to `.claude/agents/` may need approval. Ask for it now, in one sentence; if it is refused, pass each role in the brief to a general worker and say so in the plan.
   - For projects with screens, check that a browser tool is available. If none is, record the gap in the plan and propose a tool; install nothing without approval. The visitor then reports needs context (it is not re-briefed on the gap) and the evaluator scores the screens by reading the code.
 - Ask the priority: efficient, balanced or best (balanced if the owner does not know).
-- Choose the model per unit, from what that unit needs, not from its type of work. Code can sit on the small tier when it is small and fully specified. Tiers, cheapest first:
+- Fix the priority and the criteria below now; choose the model per unit when the units are written in section 4, from what that unit needs, not from its type of work. Code can sit on the small tier when it is small and fully specified. Tiers, cheapest first:
   - **small:** the brief fully specifies the result; one or two files; mechanical or well-trodden work (search, extraction, edits, a script or tests written from a clear spec).
   - **mid:** several files or some judgement; normal feature code; writing; most reviews.
   - **strong:** architecture or design across components; unclear requirements; security or data-loss risk; the review of high-risk units.
