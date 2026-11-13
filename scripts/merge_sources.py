@@ -5,7 +5,7 @@ Usage:
   python -I scripts/merge_sources.py --self-test
 A row is a table line starting with "|"; header, separator and rows whose first cell is "(none yet)" are skipped, and
 the "(none yet)" row of the log is dropped once real rows are added. A row whose cell count differs from the
-log header is skipped and printed to stderr. Exit 2 if the log is missing.
+log header is skipped and printed to stderr. Files are read as UTF-8 (a BOM is ignored). Exit 2 if the log is missing or a file is not UTF-8.
 """
 import re
 import sys
@@ -39,8 +39,16 @@ def width(lines):
     return None
 
 
+def read_lines(path):
+    """UTF-8 lines, a BOM ignored; a file in another encoding raises ValueError naming it."""
+    try:
+        return path.read_text(encoding="utf-8-sig").splitlines()
+    except UnicodeDecodeError:
+        raise ValueError(f"{path} is not UTF-8: save it as UTF-8")
+
+
 def rows(path):
-    lines = path.read_text(encoding="utf-8").splitlines()
+    lines = read_lines(path)
     out = []
     for i, line in enumerate(lines):
         s = line.strip()
@@ -57,7 +65,7 @@ def merge(root):
     log = root / "context" / "source-log.md"
     if not log.is_file():
         raise FileNotFoundError(log)
-    lines = log.read_text(encoding="utf-8").splitlines()
+    lines = read_lines(log)
     seen = {norm(l) for l in lines}
     cols = width(lines)
     new = []
@@ -88,6 +96,14 @@ def self_test():
         assert merge(root) == 0
         text = (root / "context" / "source-log.md").read_text(encoding="utf-8")
         assert text.count("url2") == 1 and "| (none yet) |" not in text and "| C 2022 | url3 |" in text and "url4" not in text and "url5" in text
+        (root / "work" / "sources-c.md").write_bytes(b"\xef\xbb\xbf" + (head + "| E 2024 | url6 |\n").encode("utf-8"))
+        assert merge(root) == 1  # a BOM must not hide the first row
+        (root / "work" / "sources-c.md").write_bytes((head + "| caf\xe9 2024 | url7 |\n").encode("cp1252"))
+        try:
+            merge(root)
+            raise AssertionError("a cp1252 file must be reported")
+        except ValueError as e:
+            assert "sources-c.md" in str(e)
     print("merge_sources self-test PASS")
 
 
@@ -100,6 +116,9 @@ if __name__ == "__main__":
             print(f"added {merge(a[0] if a else '.')} rows")
         except FileNotFoundError as e:
             print(f"missing {e}")
+            sys.exit(2)
+        except ValueError as e:
+            print(e)
             sys.exit(2)
     else:
         print(__doc__)
