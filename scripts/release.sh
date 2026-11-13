@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Release helper for project-kit.
 # Usage: bash scripts/release.sh X.Y.Z "what changed and why" MODEL_NAME
+# On Windows run it from Git Bash, not PowerShell or cmd. Run it on a branch, not a detached HEAD.
 # Bumps plugin.json, adds the dated CHANGELOG line, restores model lines in the agent
 # templates, runs the self-test, commits and tags. It never pushes: it prints the command.
 # Running it by hand is the owner's approval of that commit and tag. It stops if any
@@ -28,6 +29,8 @@ PY=$(command -v python3 || command -v python) || { echo "python not found" >&2; 
 TAG="v$VERSION"
 
 git rev-parse --git-dir >/dev/null 2>&1 || { echo "not a git repository" >&2; exit 1; }
+BRANCH=$(git branch --show-current)
+[ -n "$BRANCH" ] || { echo "detached HEAD: check out a branch first" >&2; exit 1; }
 if git rev-parse -q --verify "refs/tags/$TAG" >/dev/null; then
   echo "tag $TAG already exists" >&2; exit 1
 fi
@@ -129,4 +132,4 @@ git tag -a "$TAG" -m "$VERSION: $MSG" || {
 echo
 echo "Committed and tagged $TAG as: $(git log -1 --format='%an <%ae>')"
 echo "Nothing was pushed. When you approve, run:"
-echo "  git push origin \"$(git branch --show-current)\" $TAG"
+echo "  git push origin \"$BRANCH\" $TAG"
