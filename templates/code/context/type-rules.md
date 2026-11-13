@@ -11,7 +11,7 @@ Applies to apps, sites, scripts, data and machine learning, and system architect
 - If the owner names a stack, use it. Otherwise the choice follows the Decision standard of the plugin skill `research-first`: researched from primary sources, measured, recorded as an ADR in `decisions.md`, with pinned versions and a reason for each in `architecture.md`.
 
 ## Units and specs
-- Each unit has a spec in `specs/` made from `specs/_unit-template.md`; the build plan lives in `specs/00-build-plan.md`.
+- Each unit has a spec in `context/specs/` made from `context/specs/_unit-template.md` (the one file that keeps its placeholders); the build plan lives in `context/specs/00-build-plan.md`.
 
 ## Tests (evaluator and coordinator; never named in a builder brief)
 - Once every unit has a spec, the evaluator (strongest tier) writes the code tests and, for every unit, a hidden rubric of 3 to 6 criteria (`checklist.md`), adds every test the owner named unchanged, and freezes them by hash in `work/tests/` before any build. Each test has a pass and a fail outcome.
