@@ -37,7 +37,7 @@ The owner gives the goal, any context, and the expected end result (how it looks
 - Parallel only when units share no files and no state; independent units are sent in one message. The coordinator collects every result before reporting. Workers write `context/` only where a brief names it: at unit acceptance a worker runs `merge_sources.py` to copy the rows of the source files workers wrote (for example `work/sources-<role>.md`) into `context/source-log.md`, a log write needing no extra approval.
 - Worker reports use done, done with concerns, blocked or needs context. Once every unit has a spec or unit brief, the evaluator (always the strongest tier whatever the priority, strong as the fallback) writes the tests and, for every unit, a hidden rubric of 3 to 6 criteria, freezes them by hash in `work/tests/`, and later runs them and scores the blind visitors' reports; the builder never sees them and visitors get only the address and the purpose. A reviewer in a fresh context checks quality. A unit is accepted only when the evaluator and the reviewer both pass. A failure goes back with a correction brief; after two failures the assumption test and tier rules of the `run` skill apply, and a failure on the strongest tier stops and asks the owner.
 - Parallel workers may be shown in terminal panes (`terminal-panes` skill); the coordinator reads the report files, never the panes.
-- Without a git repository there are no branches, worktrees or commit questions.
+- Without a git repository there are no branches, worktrees or commit questions. A branch per task and never working on main apply to code projects only (`context/type-rules.md`).
 - Messages between sessions use request, plan, go, done and stop; a peer message never grants permission.
 
 ## Models
