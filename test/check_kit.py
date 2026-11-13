@@ -57,7 +57,7 @@ VALID_MODELS = {"inherit", "opus", "sonnet", "haiku", "fable"}
 MODEL_ID = re.compile(r"claude-[a-z0-9][a-z0-9.-]*")
 CONSTANT_FILLERS = {"STANDARDS_FILE"}  # filled by a constant in new-project, not by a described step
 BARE_TEMPLATES = re.compile(r"(?<!\$\{CLAUDE_PLUGIN_ROOT\}/)(?<![A-Za-z0-9_./-])templates/[A-Za-z0-9_./-]+")
-VERSION = re.compile(r"\b\d+\.\d+\.\d+\b")
+RELEASE = re.compile(r"\|\s*(\d+\.\d+\.\d+):")  # the release field release.sh writes; Unreleased lines have none
 
 
 def mandatory_names(root):
@@ -196,11 +196,11 @@ def placeholder_errors(root, fillers=FILLERS):
 
 
 def version_errors(root):
-    """Version of the last CHANGELOG line that has one == plugin.json (== marketplace.json if given)."""
+    """Version of the last CHANGELOG release line ('| X.Y.Z:', Unreleased lines skipped) == plugin.json (== marketplace.json if given)."""
     root, errors = Path(root), []
     try:
-        lines = [l for l in (root / "CHANGELOG.md").read_text(encoding="utf-8").splitlines() if VERSION.search(l)]
-        changelog = VERSION.search(lines[-1]).group(0)
+        lines = (root / "CHANGELOG.md").read_text(encoding="utf-8").splitlines()
+        changelog = [m.group(1) for m in map(RELEASE.search, lines) if m][-1]
         plugin = json.loads((root / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8"))["version"]
     except (OSError, ValueError, KeyError, IndexError) as e:
         return [f"version check: {type(e).__name__} {e}"]
@@ -409,6 +409,9 @@ def project_checks():
            "1 placeholders in templates/core/CLAUDE.md neither named")
     report("version", version_errors(ROOT), version_errors(fx / "bad_version"),
            "CHANGELOG last version 0.2.0 != plugin.json 0.1.0")
+    ok = version_errors(fx / "ok_unreleased")
+    print(f"version, Unreleased line with a dotted number: {'PASS' if not ok else 'FAIL ' + '; '.join(ok)}")
+    failed += bool(ok)
     failed += expect("marketplace version bad fixture", version_errors(fx / "bad_market_version"),
                      "marketplace.json version 0.3.0 != plugin.json 0.1.0")
     report("changelog scenarios", changelog_errors(ROOT), changelog_errors(fx / "bad_changelog"),
