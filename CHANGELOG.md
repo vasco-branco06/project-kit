@@ -85,3 +85,4 @@ One line per fix of a rule or template: date, model name, what changed and why.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: merge_sources self-test: the BOM case now puts the BOM before a data row, so the assert fails when utf-8-sig is reverted (checked on a deleted scratch copy).
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: the C-099 line no longer holds a dotted version number: the actions are pinned by the tag named in ci.yml.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: README Scripts and release: freeze_tests.py and merge_sources.py are written with the python -I form.
+- 2026-11-13 | claude-sonnet-5-5 | Unreleased: evaluator.md: an added: line from --verify means a new test file, which needs a new freeze.
