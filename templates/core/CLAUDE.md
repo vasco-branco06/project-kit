@@ -46,7 +46,7 @@ The coordinator chooses the model per unit, from what the unit needs, not from i
 
 ## Session start and end
 
-Start: read the files above. End: update the progress tracker without waiting (see section 7 of the `run` skill); propose each edit to the decision log and the known issues with evidence and wait for approval. Close with the `reflect` skill. Near 600000 tokens, finish the current step and write a continuation summary for a new chat.
+Start: read the files above. End: update the progress tracker without waiting (see section 7 of the `run` skill); propose each edit to the decision log and the known issues with evidence and wait for approval. Close with the `reflect` skill. Once autocompact has fired, or when the owner asks, finish the current step and write a continuation summary for a new chat.
 
 ## End of work
 
