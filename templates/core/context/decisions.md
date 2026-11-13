@@ -1,6 +1,6 @@
 # Decisions
 
-One entry per decision, append only, every entry in the ADR fields below (a big decision, defined in the reviewer, fills every field; any other entry writes n/a where a field does not apply), except the one-line external model approval of the `external-models` skill, the only non-ADR entry (the Decision standard is in the `research-first` skill). 0001 is type, language and citation style; the stack ADR comes next.
+One entry per decision, append only, every entry in the ADR fields below (a big decision, defined in the reviewer, fills every field, and under Measurement or prototype gives the reproducible command and its result, or one line on why it cannot be measured; any other entry writes n/a where a field does not apply), except the one-line external model approval of the `external-models` skill, the only non-ADR entry (the Decision standard is in the `research-first` skill). 0001 is type, language and citation style; the stack ADR comes next.
 
 ## 0001 {{FIRST_DECISION_TITLE}}
 - Date: {{DATE}}. Decided by: {{DECIDED_BY}}
@@ -12,5 +12,5 @@ One entry per decision, append only, every entry in the ADR fields below (a big 
 - Trade-offs: {{DECISION_TRADEOFFS}}
 - Reversibility: {{DECISION_REVERSIBILITY}}
 - Evidence from outside the assistant and the owner: {{DECISION_EVIDENCE}}
-- Measurement or prototype: n/a (a big decision: the reproducible command and its result, or one line on why it cannot be measured)
+- Measurement or prototype: n/a
 - Invalidated if: {{DECISION_INVALIDATION}}
