@@ -7,7 +7,7 @@ The kit is Markdown, JSON and a few scripts that use only the Python standard li
 1. Run `python -I test/check_kit.py --self-test`. It must exit 0. CI runs the same command on Linux and Windows.
 2. If you changed a rule that a behaviour scenario covers, read the scenario in `test/scenarios.md` and run it by hand. Add a scenario when you add a rule that nothing covers.
 3. Add one line to `CHANGELOG.md` that starts with `Unreleased`, after the date and model name: date, model name, `Unreleased`, what changed and why. Never write a new version number there: the version check compares the last versioned line with `plugin.json`, and only `scripts/release.sh` bumps the version. The owner folds the Unreleased lines into the release line.
-4. Do not edit `version` in `plugin.json` or `marketplace.json` by hand.
+4. Do not edit `version` in `plugin.json` by hand (`marketplace.json` has no version field).
 
 ## Rules for the files
 

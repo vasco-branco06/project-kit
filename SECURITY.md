@@ -8,4 +8,4 @@ Do not post details in a public issue. Open an issue titled "Security contact re
 
 ## Supported versions
 
-Only the latest tagged release gets fixes.
+Only the latest version gets fixes. The version is the `version` field of `.claude-plugin/plugin.json`.
