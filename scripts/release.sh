@@ -53,6 +53,7 @@ COMMITTED=0
 restore() {
   rc=$?
   if [ "$rc" -ne 0 ] && [ "$COMMITTED" -eq 0 ]; then
+    git reset -q -- "${EDITED[@]}" 2>/dev/null || true  # unstage what a failed commit left staged
     for f in "${EDITED[@]}"; do cp "$BACKUP/$f" "$f"; done
     echo "release failed; plugin.json, CHANGELOG.md and the agent templates were restored" >&2
   fi
@@ -119,7 +120,11 @@ PYEOF
 git add -- "${EDITED[@]}"
 git commit -q -m "$VERSION: $MSG"
 COMMITTED=1
-git tag -a "$TAG" -m "$VERSION: $MSG"
+git tag -a "$TAG" -m "$VERSION: $MSG" || {
+  echo "the release commit was made but the tag failed; fix the cause, then run:" >&2
+  printf '  git tag -a %q -m %q\n' "$TAG" "$VERSION: $MSG" >&2
+  exit 1
+}
 
 echo
 echo "Committed and tagged $TAG as: $(git log -1 --format='%an <%ae>')"
