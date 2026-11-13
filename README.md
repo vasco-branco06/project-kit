@@ -72,6 +72,7 @@ Some plugins run a hook after every file write that removes metadata keys from M
 - The claim that the native agent-team split panes of Claude Code do not work in Windows Terminal (code.claude.com/docs/en/agent-teams) has no recorded read date.
 - Neither install path (the marketplace add and install, and the local path) has been run, and the in-session forms were not checked. CI has never run. The result of `claude plugin validate` is the author's own report, not a CI result.
 - Windows Terminal panes, tmux, OpenCode and freellmapi have not been run by the kit's tests; the skills describe them from their documentation.
+- The Windows dialog name and click steps for setting an environment variable key in `external-models` (the "Edit environment variables for your account" dialog) were not checked on Windows.
 - The behaviour scenarios are run as desk checks by agents that read the kit's files, or as real sessions where `test/scenarios.md` requires one. `CHANGELOG.md` records what was run for each release.
 
 ## Tests
