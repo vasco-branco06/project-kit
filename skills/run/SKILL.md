@@ -87,4 +87,4 @@ If a permission, a commit or the plan go is refused, the affected unit stays pla
 - Close with the `reflect` skill.
 
 ## Handoff
-Near 600000 tokens of conversation, finish the step in progress, write a continuation summary (goal, current task, state, decisions with reasons, files, next steps, constraints) and tell the owner to open a new chat with it. Do not hand off twice for the same task.
+Near 600000 tokens of conversation (autocompact at 40 or 60 percent may fire first; the context size is not assumed here, and a handoff then follows the compaction), finish the step in progress, write a continuation summary (goal, current task, state, decisions with reasons, files, next steps, constraints) and tell the owner to open a new chat with it. Do not hand off twice for the same task.
