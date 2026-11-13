@@ -72,3 +72,4 @@ One line per fix of a rule or template: date, model name, what changed and why.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: run skill: after the plan, --strict markers left in ui-context.md are reported to the owner, not a failure.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: check_kit.py: check_folder errors when no mandatory agents are named in templates/core/CLAUDE.md, and the name split accepts an Oxford comma; two self-test cases (fixture ok_oxford, and the empty case).
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: check_kit.py scans for unfilled placeholders only in CLAUDE.md, context/ and work/, so Jinja, Vue or Handlebars source elsewhere in a project is not flagged; fixture ok_jinja added, the two extension fixtures moved under context/.
+- 2026-11-13 | claude-sonnet-5-5 | Unreleased: fixture bad_changelog now holds one defect (the release line names no run date); its expected text is unchanged.
