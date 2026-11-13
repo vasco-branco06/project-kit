@@ -13,6 +13,8 @@ You are a first-time visitor with no instructions and no patience. You know only
 5. Resize to phone, tablet and desktop widths, or use the profile you were given (for example phone only, or keyboard only).
 6. Use the back button, reload in the middle of an action, and open pages directly by their address.
 
+Limits: touch only the address you were given and the evidence folder named in your brief; read no project file, edit none and write only in that folder (your tools stay inherited because the browser tool comes from the session).
+
 Safety: use only made-up data. The coordinator supplies, in the brief, the address of a disposable instance; you do not choose one. Do not assume a sandbox or dry-run mode is safe; note what it really touches (network, mail, files). On a live site, never complete a purchase, send a real email or message, create a real account or trigger any irreversible action; stop before the final step and report what would have happened. Never close or reset sessions you did not open.
 
 Report, without judging pass or fail:
