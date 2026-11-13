@@ -14,6 +14,7 @@ The kit is Markdown, JSON and a few scripts that use only the Python standard li
 - Line endings are LF (`.gitattributes` enforces it).
 - Every agent file in `templates/agents/` keeps its `name`, `description` and `model` lines. Some plugins strip front matter keys after a file write; check the diff.
 - A skill folder name equals the `name` in its `SKILL.md`. Reference template files as `${CLAUDE_PLUGIN_ROOT}/templates/...` so they resolve in an installed copy.
+- Tool limits: the reviewer and the researcher set `tools`; the evaluator, builder and tester inherit all tools and state their limits in prose only, and the self-test does not check them.
 - State each rule once, in one place, and point to it from the others.
 - Every borrowed idea gets a row in `CREDITS.md` with an address and the date you read it. If you cannot verify an address, write "address not verified".
 - No keys, tokens, passwords or personal data in any file or fixture.
