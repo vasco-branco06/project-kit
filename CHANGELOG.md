@@ -146,3 +146,4 @@ One line per fix of a rule or template: date, model name, what changed and why.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: organize undo leaves the files the run created (context files, agents, .gitignore, work/manifest.md) in place for the owner to delete, so it no longer deletes files by name and matches the zero-byte rule in step 5 and in the description.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: organize step 9 says "code projects" only, dropping "or repositories", because new-project and organize write .gitignore and .gitattributes for the code type only (the smaller change: kept the code-only rule).
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: run section 3 puts the "right after the stack is chosen" permission check above the post-go strict check, so the bullets follow the order they happen in.
+- 2026-11-13 | claude-sonnet-5-5 | Unreleased: new-project step 8 merges the two consecutive parentheticals (same-path rule and ui-context.md) into one.
