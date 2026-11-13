@@ -1,7 +1,7 @@
 """Freeze and verify the evaluator's tests. Standard library only.
 
 Usage:
-  python -I scripts/freeze_tests.py --freeze [PROJECT_ROOT]   write work/tests/HASHES.txt
+  python -I scripts/freeze_tests.py --freeze [PROJECT_ROOT]   write work/tests/HASHES.txt (exit 2 if work/ or the test files are missing)
   python -I scripts/freeze_tests.py --verify [PROJECT_ROOT]   exit 1 listing changed, missing or added files
   python -I scripts/freeze_tests.py --self-test
 PROJECT_ROOT defaults to ".". Files are read and hashed in binary, so CRLF cannot change a hash.
@@ -25,8 +25,12 @@ def hashes(tests):
 
 def freeze(root):
     tests = Path(root) / "work" / "tests"
-    tests.mkdir(parents=True, exist_ok=True)
-    lines = [f"# frozen {date.today().isoformat()}"] + [f"{h}  {n}" for n, h in hashes(tests).items()]
+    if not (Path(root) / "work").is_dir():
+        raise ValueError(f"no work/ folder in {root}: check PROJECT_ROOT")
+    found = hashes(tests) if tests.is_dir() else {}
+    if not found:
+        raise ValueError(f"no test files in {tests}: nothing to freeze")
+    lines = [f"# frozen {date.today().isoformat()}"] + [f"{h}  {n}" for n, h in found.items()]
     (tests / "HASHES.txt").write_bytes(("\n".join(lines) + "\n").encode("utf-8"))
     return len(lines) - 1
 
@@ -47,6 +51,8 @@ def verify(root):
         else:
             bad.append(f"malformed: {line.strip()[:80]}")
     now = hashes(tests)
+    if not frozen:
+        bad.append("HASHES.txt lists no files")
     return (bad + [f"missing: {n}" for n in frozen if n not in now]
             + [f"changed: {n}" for n in frozen if n in now and now[n] != frozen[n]]
             + [f"added: {n}" for n in now if n not in frozen])
@@ -59,6 +65,9 @@ def self_test():
         (t / "a.txt").write_bytes(b"one\r\n")
         (t / "b.txt").write_bytes(b"two\n")
         assert freeze(tmp) == 2 and verify(tmp) == []
+        (t / "HASHES.txt").write_bytes(b"# frozen 2026-01-01\n")
+        assert "HASHES.txt lists no files" in verify(tmp)  # a header-only file must not verify
+        freeze(tmp)
         (t / "a.txt").write_bytes(b"one\n")
         assert verify(tmp) == ["changed: a.txt"]
         (t / "a.txt").write_bytes(b"one\r\n")
@@ -78,6 +87,15 @@ def self_test():
         assert verify(tmp) == ["added: c.txt", "added: sub/HASHES.txt"]  # files added after the freeze
         (t / "HASHES.txt").unlink()
         assert verify(tmp) == ["HASHES.txt missing: run --freeze first"]
+    with tempfile.TemporaryDirectory() as tmp:
+        for setup in (lambda: None, lambda: (Path(tmp) / "work").mkdir()):  # mistyped root, then no test files
+            setup()
+            try:
+                freeze(tmp)
+                raise AssertionError("freeze must refuse")
+            except ValueError:
+                pass
+        assert not (Path(tmp) / "work" / "tests").exists()
     print("freeze_tests self-test PASS")
 
 
@@ -88,7 +106,11 @@ if __name__ == "__main__":
     elif a[:1] in (["--freeze"], ["--verify"]) and len(a) <= 2:
         root = a[1] if len(a) == 2 else "."
         if a[0] == "--freeze":
-            print(f"frozen {freeze(root)} files in {Path(root) / 'work' / 'tests' / 'HASHES.txt'}")
+            try:
+                print(f"frozen {freeze(root)} files in {Path(root) / 'work' / 'tests' / 'HASHES.txt'}")
+            except ValueError as e:
+                print(f"refused: {e}")
+                sys.exit(2)
         else:
             errs = verify(root)
             print("\n".join(errs) or "PASS: tests match HASHES.txt")
