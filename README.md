@@ -67,7 +67,7 @@ Some plugins run a hook after every file write that removes metadata keys from M
 ## Not verified
 
 - The orchestration practices draw on third-party pages and plugins listed in `CREDITS.md`. Their price and token figures cite no source and were not checked against Anthropic sources, so this README does not repeat them.
-- Two credit rows have no verified address (agentic-council and the JavaScript Mastery playbook); see `CREDITS.md`.
+- Four credit rows have no verified address (agentic-council, the JavaScript Mastery playbook, the Methods row and the example tools row); see `CREDITS.md`.
 - Semantic Versioning is not cited: semver.org could not be fetched on 2026-11-10 because of a certificate error.
 - The autocompact values 40 and 60 are our choice, not measured or taken from the docs.
 - The claim that the native agent-team split panes of Claude Code do not work in Windows Terminal (code.claude.com/docs/en/agent-teams) has no recorded read date.
