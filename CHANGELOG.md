@@ -156,3 +156,4 @@ One line per fix of a rule or template: date, model name, what changed and why.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: C-106: README writes check_kit.py --strict before the folder, says the self-test samples are filled mechanically, lists the files the project-type line missed (writing and evidence standards, .gitignore, .gitattributes, ui-context.md) and loses a stray blank line.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: C-107: CONTRIBUTING states the idea-reuse-only rule (no other plugin's gates, no hooks into every subagent, no plugin dependency), which the plugin already follows.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: C-181: the plugin root .gitignore now ignores .env, .env.* and *.local, as the core template does.
+- 2026-11-13 | claude-sonnet-5-5 | Unreleased: scenario 8 lists the stack ADR appended to context/decisions.md among the writes a worker may make after the go.
