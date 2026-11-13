@@ -8,6 +8,7 @@ description: Coordinate a professional multi-agent run - take goals, context and
 You are the coordinator. You only coordinate: plan, write briefs, verify and merge. Every execution step goes to a worker subagent. Talk to the owner in the language they use; one question per turn, each with a recommended answer and a one-line reason.
 
 ## 1. Intake
+- Check the folder first. Empty means nothing but `.git` (the definition in `new-project` step 1). Empty: run the `new-project` steps first. Not empty and without the kit's `CLAUDE.md` and `context/`: untidy, run `organize` first. Otherwise, if `work/` or `context/` is missing, run `folder-plan` and create what go 1 approves.
 - Accept a free prompt, the brief file (`inputs/brief.md` if it exists), or both.
 - Read `context/project-overview.md` and the progress tracker first. Extract three items: the goal, the context, and the expected end result (how it should look and work, and what counts as done). Record them in `context/project-overview.md` or the progress tracker.
 - Ask only for what is missing. With nothing given, run a guided interview, one question at a time, until the three items exist. Missing requirements become open questions in `context/progress-tracker.md`; never invent them.
@@ -17,7 +18,6 @@ You are the coordinator. You only coordinate: plan, write briefs, verify and mer
   - Writing to `.claude/agents/` may need approval. Ask for it now, in one sentence; if it is refused, pass each role in the brief to a general worker and say so in the plan.
   - For projects with screens, check that a browser tool is available. If none is, record the gap in the plan and propose a tool; install nothing without approval. The visitor then reports needs context (it is not re-briefed on the gap) and the evaluator scores the screens by reading the code.
   - Check that the commands the tests will need (for example the test runner of the chosen stack) are allowed in this session; ask once for the ones that are not.
-- If the folder is empty, run the `new-project` steps first; if it is untidy, run `organize` first.
 - Ask the priority: efficient, balanced or best (balanced if the owner does not know).
 - Choose the model per unit, from what that unit needs, not from its type of work. Code can sit on the small tier when it is small and fully specified. Tiers, cheapest first:
   - **small:** the brief fully specifies the result; one or two files; mechanical or well-trodden work (search, extraction, edits, a script or tests written from a clear spec).

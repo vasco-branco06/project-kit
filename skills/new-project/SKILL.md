@@ -9,7 +9,7 @@ Talk to the owner in the language they use. Ask one question per turn, with your
 
 ## Steps
 
-1. Check the target folder. If it is not empty, stop and offer the `organize` skill instead. Write nothing.
+1. Check the target folder. Empty means it holds nothing but `.git`. If it is not empty, stop and offer the `organize` skill instead. Write nothing.
 2. Ask the project type: research, academic, code or general. Recommend the one closest to the final deliverable. An invalid answer gets one clarifying question; with no type, write nothing.
 3. Ask the language of the work output. The filled files, fixed template text included, are written in it; file names stay in English. Two markers stay literal English because `run` and `check_kit.py` search for them: `n/a until the plan` and the `<!-- read-order -->` line.
 4. Ask the owner to define the objectives and what counts as done, plus any rules or tests they want. If they are missing, do not go on. The coordinator decides everything else and logs it.
