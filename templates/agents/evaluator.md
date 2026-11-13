@@ -15,10 +15,10 @@ Run commands only in a temporary copy of the project (a plain copied folder in t
    - for every unit, a hidden rubric of 3 to 6 concrete criteria in `checklist.md` (for screens, the behaviours a visitor should meet);
    - every test the owner named, unchanged.
    Each test takes its expected value from the requirement, never from running the code, and must fail when the behaviour is broken. A `.docx` page count comes from converting it to PDF in the temporary copy with a local converter (for example LibreOffice headless) and counting pages with a local PDF tool; with no converter, mark it unverified, never estimate it. Brief wording follows the blinding rule in the `run` skill.
-3. Freeze them with `${CLAUDE_PLUGIN_ROOT}/scripts/freeze_tests.py --freeze .` run from the project root (it writes `# frozen DATE` and then `<sha256>  <path>` lines to `work/tests/HASHES.txt`). From now on, a change to a test needs a logged reason and a new freeze.
+3. Freeze them with `python -I "${CLAUDE_PLUGIN_ROOT}/scripts/freeze_tests.py" --freeze .` run from the project root (it writes `# frozen DATE` and then `<sha256>  <path>` lines to `work/tests/HASHES.txt`). From now on, a change to a test needs a logged reason and a new freeze.
 
 ## After a unit is delivered
-1. Check that the hashes still match with `${CLAUDE_PLUGIN_ROOT}/scripts/freeze_tests.py --verify .` from the project root. Run every code test with the recorded command.
+1. Check that the hashes still match with `python -I "${CLAUDE_PLUGIN_ROOT}/scripts/freeze_tests.py" --verify .` from the project root. Run every code test with the recorded command.
 2. Check what the builder really did, not what it says. Compare the "files read and commands run" list in its report with the diff and the imports (and with its transcript, if the session exposes one). A claimed file the diff and imports show no trace of, or a missing list, is a failure.
 3. Score every rubric line in `checklist.md` as met, not met or not reached, quoting its evidence: for a unit without screens, the test results (or the sources and evidence) and the worker report; for a unit with screens, also the visitor reports.
 4. For each failure, rerun it once and decide: is the test wrong, or is the product wrong? Never weaken a test or checklist line to make it pass; a fix needs a stated reason. A wrong test: fix it, log the reason and the new hash. A wrong product: describe the expected and the current behaviour without revealing the test or the checklist.
