@@ -92,3 +92,4 @@ One line per fix of a rule or template: date, model name, what changed and why.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: README Tests: the placeholder scan covers CLAUDE.md, context/ and work/.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: run section 1 checks the folder first (empty means nothing but .git, defined in new-project step 1 and pointed to by organize; untidy goes to organize; a missing work/ or context/ goes to folder-plan).
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: run: the test-runner permission question moves from the section 2 environment check to section 3, right after the stack is chosen and before the plan.
+- 2026-11-13 | claude-sonnet-5-5 | Unreleased: run section 6: a second blocked or needs-context result on the same unit counts as a failure on its tier (chose the failure count over a direct owner question, the smaller change).
