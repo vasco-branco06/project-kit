@@ -20,10 +20,10 @@ The kit is Markdown, JSON and a few scripts that use only the Python standard li
 
 ## Release
 
-Only the owner releases.
+Only the owner releases. Running the script by hand is the owner's approval of the release commit and tag it makes; it asks nothing more.
 
 ```
 scripts/release.sh X.Y.Z "what changed and why" MODEL_NAME
 ```
 
-The script stops if files outside the expected set are changed, bumps `plugin.json`, adds the changelog line, restores missing `model:` lines in the agent templates, runs the self-test, commits and tags `vX.Y.Z`. It never pushes. It prints the push command, and the owner runs it after review. CI then checks that the tag equals the `plugin.json` version.
+The script stops with an error if any file other than the ones it edits (`plugin.json`, `CHANGELOG.md`, the agent templates) is changed or untracked, so commit other work first. It bumps `plugin.json`, adds the changelog line, restores missing `model:` lines in the agent templates, runs the self-test, commits and tags `vX.Y.Z`. It never pushes. It prints the push command, and the owner runs it after review. CI then checks that the tag equals the `plugin.json` version.

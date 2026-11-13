@@ -3,6 +3,8 @@
 # Usage: scripts/release.sh X.Y.Z "what changed and why" MODEL_NAME
 # Bumps plugin.json, adds the dated CHANGELOG line, restores model lines in the agent
 # templates, runs the self-test, commits and tags. It never pushes: it prints the command.
+# Running it by hand is the owner's approval of that commit and tag. It stops if any
+# file other than the ones it edits is changed or untracked.
 # If the self-test or any step fails, the files it edited are restored.
 set -euo pipefail
 
@@ -25,23 +27,22 @@ if git rev-parse -q --verify "refs/tags/$TAG" >/dev/null; then
   echo "tag $TAG already exists" >&2; exit 1
 fi
 
-# Files a release may include. Anything else changed or untracked stops the release.
-EXPECTED=(skills templates test scripts .github .claude-plugin
-  README.md CHANGELOG.md CREDITS.md CONTRIBUTING.md SECURITY.md LICENSE .gitattributes .gitignore)
+# The files this script edits; the release commit holds only these.
+# Any other changed or untracked file stops the release.
+EDITED=(.claude-plugin/plugin.json CHANGELOG.md templates/agents/*.md)
 STRAY=$(git status --porcelain --untracked-files=all | cut -c4- | while IFS= read -r f; do
-  f=${f#\"}; f=${f%\"}; top=${f%%/*}
-  ok=0; for e in "${EXPECTED[@]}"; do [ "$top" = "$e" ] && ok=1; done
+  f=${f#\"}; f=${f%\"}
+  ok=0; for e in "${EDITED[@]}"; do [ "$f" = "$e" ] && ok=1; done
   [ "$ok" -eq 1 ] || echo "$f"
 done)
 if [ -n "$STRAY" ]; then
-  echo "files outside the expected set; move, commit or ignore them first:" >&2
+  echo "changed or untracked files the release does not edit; commit, stash or ignore them first:" >&2
   echo "$STRAY" >&2
   exit 1
 fi
 
 # Back up what the script edits; restore it if anything fails before the commit.
 BACKUP=$(mktemp -d)
-EDITED=(.claude-plugin/plugin.json CHANGELOG.md templates/agents/*.md)
 for f in "${EDITED[@]}"; do mkdir -p "$BACKUP/$(dirname "$f")"; cp "$f" "$BACKUP/$f"; done
 COMMITTED=0
 restore() {
@@ -110,7 +111,7 @@ PYEOF
 "$PY" -I test/check_kit.py --self-test
 
 # 3. commit and tag
-for e in "${EXPECTED[@]}"; do [ -e "$e" ] && git add -A -- "$e"; done
+git add -- "${EDITED[@]}"
 git commit -q -m "$VERSION: $MSG"
 COMMITTED=1
 git tag -a "$TAG" -m "$VERSION: $MSG"
