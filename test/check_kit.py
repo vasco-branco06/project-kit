@@ -2,9 +2,10 @@
 
 Usage:
   python -I test/check_kit.py FOLDER       check one generated folder
+  python -I test/check_kit.py --strict FOLDER  the same, and flag "n/a until" left in it
   python -I test/check_kit.py --self-test  build one sample folder per type and check it,
                                            then confirm the bad fixtures fail
-Exit code 0 = pass, 1 = failures, 2 = usage error.
+Exit code 0 = pass, 1 = failures, 2 = usage error (bad option, no folder, not a folder).
 
 Checks: the entry file has a read order and every file in it exists; no placeholder
 in double braces (any spacing or case) is left in any text file (skipped: dependency and hidden folders, inputs/,
@@ -16,6 +17,7 @@ Project checks (--self-test, run last, each with a bad fixture under test/fixtur
 filler map, version alignment, changelog scenario record, vocabulary, bare templates/ paths,
 agent schema, mandatory agent set. `--strict FOLDER` also flags "n/a until" (any case) in a generated folder; `run` calls it after filling the plan.
 """
+import argparse
 import json
 import re
 import shutil
@@ -313,9 +315,9 @@ def check_folder(folder, strict=False):
             continue
         text = data.decode("utf-8", errors="ignore")
         for m in UNFILLED.findall(text):
-            errors.append(f"unfilled placeholder {m} in {rel}")
+            errors.append(f"unfilled placeholder {m} in {rel.as_posix()}")
         if strict and "n/a until" in text.lower():
-            errors.append(f"strict: 'n/a until' left in {rel}")
+            errors.append(f"strict: 'n/a until' left in {rel.as_posix()}")
     return errors
 
 
@@ -458,6 +460,14 @@ def project_checks():
                      "agent builder.md: report section lacks Status:")
     report("mandatory agents", mandatory_errors() + ([] if SETUP_AGENTS else ["no mandatory agents"]),
            mandatory_errors(fx / "bad_mandatory"), "template missing for mandatory agent builder.md")
+    for args, code, text in (([], 2, "give a FOLDER"), (["--help"], 0, "--strict FOLDER"),
+                             (["no-such-folder"], 2, "not a folder"), (["--bogus"], 2, "unrecognized arguments"),
+                             ([str(fx / "bad_strict"), "--strict"], 1, "strict: 'n/a until' left in")):
+        r = subprocess.run([sys.executable, "-I", "-B", __file__, *args], capture_output=True, text=True)
+        bad = r.returncode != code or text not in r.stdout + r.stderr
+        print(f"usage {' '.join(Path(a).name for a in args) or '(no arguments)'}: "
+              f"{'WRONG, exit ' + str(r.returncode) if bad else 'exit ' + str(code) + ' as expected'}")
+        failed += bad
     off = fixture_errors("bad_strict")
     print(f"bad_strict without --strict: {'PASS' if not off else 'FAIL ' + '; '.join(off)}")
     failed += bool(off)
@@ -466,14 +476,25 @@ def project_checks():
     return failed
 
 
-if __name__ == "__main__":
-    if sys.argv[1:] == ["--self-test"]:
-        sys.exit(self_test())
-    strict = sys.argv[1:2] == ["--strict"]
-    args = sys.argv[2:] if strict else sys.argv[1:]
-    if len(args) != 1:
-        print(__doc__)
-        sys.exit(2)
-    errs = check_folder(args[0], strict=strict)
+def main(argv=None):
+    ap = argparse.ArgumentParser(prog="check_kit.py", description=__doc__,
+                                 formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("folder", nargs="?", help="a generated project folder")
+    ap.add_argument("--self-test", action="store_true", help="check the kit itself")
+    ap.add_argument("--strict", action="store_true", help='also flag "n/a until" left in FOLDER')
+    a = ap.parse_args(argv)
+    if a.self_test:
+        if a.folder or a.strict:
+            ap.error("--self-test takes no folder and no --strict")
+        return self_test()
+    if not a.folder:
+        ap.error("give a FOLDER or --self-test")
+    if not Path(a.folder).is_dir():
+        ap.error(f"not a folder: {a.folder}")
+    errs = check_folder(a.folder, strict=a.strict)
     print("\n".join(errs) or "PASS")
-    sys.exit(1 if errs else 0)
+    return 1 if errs else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
