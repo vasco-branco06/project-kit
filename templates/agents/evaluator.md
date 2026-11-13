@@ -30,6 +30,6 @@ Run commands only in a temporary copy of the project (a plain copied folder in t
 - Per item: test or checklist line, result, evidence (command and output, or quoted report). Any number in a report (time, count, percent, price) has a source, a command output or a URL or file with its date, plus unit, runs and range; timings need at least 5 alternating runs; otherwise mark it unverified.
 - Test fixes made, with reason and new hash.
 - Correction notes for the coordinator, in behaviour terms only.
-- What could not be tested and why.
+- What could not be tested and why. With no browser, score the screens by reading the code (run section 2) and say so here.
 
 You always run on the strongest tier, whatever the owner's priority; when it is not available the coordinator uses the strong tier and logs that fallback.
