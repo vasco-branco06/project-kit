@@ -99,9 +99,9 @@ def model_line(path):
 
     def fn(text):
         m = re.match(r"---\n(.*?)\n---", text, re.S)
-        if not m or re.search(r"^model:[ \t]*\S", m.group(1), re.M):
+        if not m or re.search(r"^model:[ \t]*(?!([\"']{2})?[ \t]*$)\S", m.group(1), re.M):
             return text
-        lines = [l for l in m.group(1).split("\n") if not re.match(r"model:[ \t]*$", l)]  # an empty value counts as missing
+        lines = [l for l in m.group(1).split("\n") if not re.match(r"model:[ \t]*([\"']{2})?[ \t]*$", l)]  # an empty or quoted-empty value counts as missing
         at = next((i for i, l in enumerate(lines) if l.startswith("description:")), None)
         if at is None:
             at = next((i for i, l in enumerate(lines) if l.startswith("name:")), len(lines) - 1)
