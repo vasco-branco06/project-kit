@@ -70,3 +70,4 @@ One line per fix of a rule or template: date, model name, what changed and why.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: scenario 17 fail clause names the visitor (tester.md) agent file instead of tester.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: core CLAUDE.md and reflect now point to section 7 of the run skill for the writes that need no owner approval.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: run skill: after the plan, --strict markers left in ui-context.md are reported to the owner, not a failure.
+- 2026-11-13 | claude-sonnet-5-5 | Unreleased: check_kit.py: check_folder errors when no mandatory agents are named in templates/core/CLAUDE.md, and the name split accepts an Oxford comma; two self-test cases (fixture ok_oxford, and the empty case).

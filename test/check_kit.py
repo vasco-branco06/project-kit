@@ -75,7 +75,7 @@ def mandatory_names(root):
     except OSError:
         return []
     m = re.search(r"always the (.+?), not counted", text)
-    return [f"{n}.md" for n in re.split(r",\s*|\s+and\s+", m.group(1))] if m else []
+    return [f"{n}.md" for n in re.split(r",\s*(?:and\s+)?|\s+and\s+", m.group(1))] if m else []
 
 
 SETUP_AGENTS = tuple(mandatory_names(ROOT))
@@ -312,6 +312,8 @@ def check_folder(folder, strict=False):
             continue
         if not (folder / p).is_file():
             errors.append(f"read order file missing: {p}")
+    if not SETUP_AGENTS:
+        errors.append("templates/core/CLAUDE.md names no mandatory agents")
     agents = folder / ".claude" / "agents"
     if not agents.is_dir():
         errors.append(f"missing folder .claude/agents with the mandatory agents: {', '.join(SETUP_AGENTS)}")
@@ -488,6 +490,18 @@ def project_checks():
                      "agent builder.md: report section lacks Status:")
     report("mandatory agents", mandatory_errors() + ([] if SETUP_AGENTS else ["no mandatory agents"]),
            mandatory_errors(fx / "bad_mandatory"), "template missing for mandatory agent builder.md")
+    names = mandatory_names(fx / "ok_oxford")
+    print(f"mandatory names, Oxford comma: {'PASS' if names == ['reviewer.md', 'evaluator.md', 'researcher.md'] else 'FAIL ' + repr(names)}")
+    failed += names != ["reviewer.md", "evaluator.md", "researcher.md"]
+    kept = SETUP_AGENTS
+    globals()["SETUP_AGENTS"] = ()
+    try:
+        errs = check_folder(fx / "ok_unit_template")
+    finally:
+        globals()["SETUP_AGENTS"] = kept
+    named = any("names no mandatory agents" in e for e in errs)
+    print(f"folder check with no mandatory agents named: {'FAILS as expected' if named else 'WRONG, no error'}")
+    failed += not named
     for args, code, text in (([], 2, "give a FOLDER"), (["--help"], 0, "--strict FOLDER"),
                              (["no-such-folder"], 2, "not a folder"), (["--bogus"], 2, "unrecognized arguments"),
                              ([str(fx / "bad_strict"), "--strict"], 1, "strict: 'n/a until' left in")):
