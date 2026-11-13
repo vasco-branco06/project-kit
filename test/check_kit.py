@@ -31,7 +31,6 @@ STANDARDS = {"code": "code-standards.md"}
 MARKER = "<!-- read-order -->"
 SKIP_DIRS = {"node_modules", ".venv", "venv", "__pycache__", ".worktrees", ".git"}
 AGENT_KEYS = ("name", "description", "model")
-SETUP_AGENTS = ("reviewer.md", "evaluator.md", "researcher.md")
 
 FILLERS = {}
 for _skill, _names in {
@@ -57,9 +56,21 @@ TOOLS_REQUIRED = {"reviewer", "researcher"}
 VALID_MODELS = {"inherit", "opus", "sonnet", "haiku", "fable"}
 MODEL_ID = re.compile(r"claude-[a-z0-9][a-z0-9.-]*")
 CONSTANT_FILLERS = {"STANDARDS_FILE"}  # filled by a constant in new-project, not by a described step
-MANDATORY = {"reviewer.md", "evaluator.md", "researcher.md"}
 BARE_TEMPLATES = re.compile(r"(?<!\$\{CLAUDE_PLUGIN_ROOT\}/)(?<![A-Za-z0-9_./-])templates/[A-Za-z0-9_./-]+")
 VERSION = re.compile(r"\b\d+\.\d+\.\d+\b")
+
+
+def mandatory_names(root):
+    """File names of the mandatory agents, read from the one place the kit names them: 'always the A, B and C, not counted' in templates/core/CLAUDE.md."""
+    try:
+        text = (Path(root) / "templates" / "core" / "CLAUDE.md").read_text(encoding="utf-8")
+    except OSError:
+        return []
+    m = re.search(r"always the (.+?), not counted", text)
+    return [f"{n}.md" for n in re.split(r",\s*|\s+and\s+", m.group(1))] if m else []
+
+
+SETUP_AGENTS = tuple(mandatory_names(ROOT))
 
 
 def read_order(entry):
@@ -251,12 +262,11 @@ def bare_path_errors(root):
     return errors
 
 
-def mandatory_errors(setup=SETUP_AGENTS, root=ROOT):
-    """Exactly reviewer, evaluator and researcher are mandatory, and their templates exist."""
-    errors = []
-    if set(setup) != MANDATORY or len(setup) != len(MANDATORY):
-        errors.append(f"mandatory agents are {sorted(setup)}, expected {sorted(MANDATORY)}")
-    errors += [f"template missing for mandatory agent {a}" for a in sorted(MANDATORY)
+def mandatory_errors(root=ROOT):
+    """The mandatory agents named in templates/core/CLAUDE.md exist as templates."""
+    names = mandatory_names(root)
+    errors = [] if names else ["templates/core/CLAUDE.md names no mandatory agents"]
+    errors += [f"template missing for mandatory agent {a}" for a in names
                if not (Path(root) / "templates" / "agents" / a).is_file()]
     return errors
 
@@ -402,8 +412,8 @@ def project_checks():
            "agent builder.md: name 'wrongname' != file name")
     failed += expect("agent status bad fixture", agent_errors(fx / "bad_status" / "builder.md", full=True),
                      "agent builder.md: report section lacks Status:")
-    report("mandatory agents", mandatory_errors(), mandatory_errors(SETUP_AGENTS + ("builder.md",)),
-           "mandatory agents are")
+    report("mandatory agents", mandatory_errors() + ([] if SETUP_AGENTS else ["no mandatory agents"]),
+           mandatory_errors(fx / "bad_mandatory"), "template missing for mandatory agent builder.md")
     report("strict", fixture_errors("bad_strict"), fixture_errors("bad_strict", strict=True),
            "strict: 'n/a until' left in")
     return failed
