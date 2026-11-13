@@ -19,6 +19,6 @@ Talk to the owner in the language they use. One question per turn, with a recomm
 
 ## Rules
 
-- A pane never writes `context/`; the blinding rule and the briefs of `run` apply unchanged.
+- A pane writes `context/` only where its brief names it, like any worker; the blinding rule and the briefs of `run` apply unchanged.
 - The model of each pane is the one the plan names, passed explicitly.
 - Never put keys or secrets in a pane command or its log.

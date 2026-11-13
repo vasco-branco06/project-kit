@@ -119,3 +119,4 @@ One line per fix of a rule or template: date, model name, what changed and why.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: organize names the settings and hooks question (step 6), new-project points to the always-ask sentence in Who decides, and folder-plan asks the owner to place source material in inputs/.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: research-first step 7 has a worker append the stack ADR to context/decisions.md when the skill runs outside run.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: research-first step 7 has a worker append the stack ADR to context/decisions.md when the skill runs outside run.
+- 2026-11-13 | claude-sonnet-5-5 | Unreleased: terminal-panes: a pane writes context/ only where its brief names it, like any worker.
