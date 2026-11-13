@@ -60,7 +60,8 @@ BLIND_WORDS = re.compile(r"\b(tests?|evals?|rubrics?|scores?|checklists?)\b", re
 BLIND_FILES = {"templates/agents/builder.md", "templates/agents/tester.md"}  # the builder and the visitor never see the evaluator's vocabulary
 TOOLS_REQUIRED = {"reviewer", "researcher"}
 VALID_MODELS = {"inherit", "opus", "sonnet", "haiku", "fable"}
-MODEL_ID = re.compile(r"claude-[a-z0-9][a-z0-9.-]*")
+MODEL_ID = re.compile(r"claude-(?=[a-z0-9.-]*\d)(?=[a-z0-9.-]*(?:opus|sonnet|haiku|fable))[a-z0-9.-]+")  # a family name and a version, as in claude-sonnet-5-5
+REPORT_HEADING = re.compile(r"^(?:#+\s*report\b.*|report\b.*:)\s*$", re.I | re.M)  # '## Report' or a 'Report ...:' line, not prose
 CONSTANT_FILLERS = {"STANDARDS_FILE"}  # filled by a constant in new-project, not by a described step
 BARE_TEMPLATES = re.compile(r"(?<!\$\{CLAUDE_PLUGIN_ROOT\}/)(?<![A-Za-z0-9_-])templates/[A-Za-z0-9_./-]+")  # any other prefix is wrong too
 PLUGIN_FILE = re.compile(r"\$\{CLAUDE_PLUGIN_ROOT\}/((?:scripts|test)/[A-Za-z0-9_./-]+)")
@@ -100,35 +101,36 @@ def read_order(entry):
 
 
 def agent_errors(path, full=False):
-    """Frontmatter keys; with full=True also the schema: name == file stem, valid model, tools, Status:."""
+    """Every agent file: frontmatter keys, name == file stem, valid model. With full=True (a role with a template) also tools and Status:."""
     path = Path(path)
     try:
-        text = path.read_text(encoding="utf-8-sig").replace("\r\n", "\n")
+        text = path.read_text(encoding="utf-8-sig")
     except UnicodeDecodeError:
         return [f"agent {path.name} is not UTF-8 text"]
-    m = re.match(r"---\n(.*?)\n---", text, re.S)
-    if not m:
+    fm, body = frontmatter(text)
+    if fm is None:
         return [f"agent without frontmatter: {path.name}"]
-    fm = {k.strip(): v.strip() for k, _, v in (l.partition(":") for l in m.group(1).splitlines()) if _}
     errors = [f"agent {path.name} lacks {k}" for k in AGENT_KEYS if not fm.get(k)]
+    if fm.get("name") and fm["name"] != path.stem:
+        errors.append(f"agent {path.name}: name {fm['name']!r} != file name")
+    if fm.get("model") and fm["model"] not in VALID_MODELS and not MODEL_ID.fullmatch(fm["model"]):
+        errors.append(f"agent {path.name}: model {fm['model']!r} not in {sorted(VALID_MODELS)} or a claude-... id")
     if full:
-        if fm.get("name") and fm["name"] != path.stem:
-            errors.append(f"agent {path.name}: name {fm['name']!r} != file name")
-        if fm.get("model") and fm["model"] not in VALID_MODELS and not MODEL_ID.fullmatch(fm["model"]):
-            errors.append(f"agent {path.name}: model {fm['model']!r} not in {sorted(VALID_MODELS)}")
         if path.stem in TOOLS_REQUIRED and "tools" not in fm:
             errors.append(f"agent {path.name} lacks tools")
-        report = re.split(r"^#*\s*report\b.*$", text[m.end():], maxsplit=1, flags=re.I | re.M)
+        report = REPORT_HEADING.split(body, maxsplit=1)
         if len(report) < 2 or "Status:" not in report[1]:
             errors.append(f"agent {path.name}: report section lacks Status:")
     return errors
 
 
 def frontmatter(text):
-    m = re.match(r"---\n(.*?)\n---", text.replace("\r\n", "\n"), re.S)
+    """(keys, text after the frontmatter), or (None, text) without frontmatter. YAML quotes around a value are removed."""
+    m = re.match(r"---\n(.*?)\n---", text, re.S)
     if not m:
-        return None
-    return {k.strip(): v.strip() for k, _, v in (l.partition(":") for l in m.group(1).splitlines()) if _}
+        return None, text
+    pairs = (l.partition(":") for l in m.group(1).splitlines())
+    return {k.strip(): v.strip().strip("\"'") for k, sep, v in pairs if sep}, text[m.end():]
 
 
 def load_json(path, keys):
@@ -136,6 +138,8 @@ def load_json(path, keys):
         data = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, ValueError) as e:
         return None, [f"{path.name}: {e}"]
+    if not isinstance(data, dict):
+        return None, [f"{path.name} is not a JSON object"]
     return data, [f"{path.name} lacks {k}" for k in keys if not data.get(k)]
 
 
@@ -146,7 +150,11 @@ def plugin_errors(root):
     errors += errs
     market, errs = load_json(meta / "marketplace.json", ("name", "description", "plugins"))
     errors += errs
-    for entry in (market or {}).get("plugins") or []:
+    entries = (market or {}).get("plugins") or []
+    if not isinstance(entries, list) or not all(isinstance(e, dict) for e in entries):
+        errors.append("marketplace.json plugins is not a list of objects")
+        entries = []
+    for entry in entries:
         errors += [f"marketplace plugin lacks {k}" for k in ("name", "source", "description") if not entry.get(k)]
         if plugin and entry.get("name") != plugin.get("name"):
             errors.append(f"marketplace plugin {entry.get('name')} != plugin.json name {plugin.get('name')}")
@@ -154,7 +162,8 @@ def plugin_errors(root):
     if not skills:
         errors.append("no skills found")
     for s in skills:
-        text, fm = s.read_text(encoding="utf-8"), frontmatter(s.read_text(encoding="utf-8"))
+        text = s.read_text(encoding="utf-8")
+        fm, _ = frontmatter(text)
         label = f"skill {s.parent.name}"
         if fm is None:
             errors.append(f"{label} has no frontmatter")
@@ -209,7 +218,7 @@ def version_errors(root):
         lines = (root / "CHANGELOG.md").read_text(encoding="utf-8").splitlines()
         changelog = [m.group(1) for m in map(RELEASE.search, lines) if m][-1]
         plugin = json.loads((root / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8"))["version"]
-    except (OSError, ValueError, KeyError, IndexError) as e:
+    except (OSError, ValueError, KeyError, IndexError, TypeError) as e:
         return [f"version check: {type(e).__name__} {e}"]
     if changelog != plugin:
         errors.append(f"CHANGELOG last version {changelog} != plugin.json {plugin}")
@@ -217,7 +226,9 @@ def version_errors(root):
         market = json.loads((root / ".claude-plugin" / "marketplace.json").read_text(encoding="utf-8"))
     except (OSError, ValueError):
         return errors
-    for v in [market.get("version")] + [p.get("version") for p in market.get("plugins") or []]:
+    if not isinstance(market, dict) or not isinstance(market.get("plugins") or [], list):
+        return errors  # plugin_errors reports the shape
+    for v in [market.get("version")] + [p.get("version") for p in market.get("plugins") or [] if isinstance(p, dict)]:
         if v and v != plugin:
             errors.append(f"marketplace.json version {v} != plugin.json {plugin}")
     return errors
@@ -229,7 +240,7 @@ def changelog_errors(root):
     try:
         plugin = json.loads((root / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8"))["version"]
         lines = (root / "CHANGELOG.md").read_text(encoding="utf-8").splitlines()
-    except (OSError, ValueError, KeyError) as e:
+    except (OSError, ValueError, KeyError, TypeError) as e:
         return [f"changelog check: {type(e).__name__} {e}"]
     release = re.compile(rf"\|\s*{re.escape(plugin)}:")
     for l in lines:
@@ -250,7 +261,7 @@ def vocabulary_errors(root):
         if rel == "skills/run/SKILL.md":
             continue
         if rel == "templates/agents/evaluator.md":
-            text = text.replace("\r\n", "\n").split("\n---", 1)[-1]
+            text = text.split("\n---", 1)[-1]
         for m in sorted(set(w.lower() for w in MODEL_WORDS.findall(text))):
             errors.append(f"model name {m!r} outside the allowed places: {rel}")
         if rel in BLIND_FILES:
@@ -293,7 +304,14 @@ def check_folder(folder, strict=False):
         return ["entry file CLAUDE.md is not UTF-8 text"]
     if not order:
         errors.append("entry file has no read order")
-    errors += [f"read order file missing: {p}" for p in order if not (folder / p).is_file()]
+    for p in order:
+        try:
+            (folder / p).resolve().relative_to(folder.resolve())
+        except ValueError:
+            errors.append(f"read order path leaves the folder: {p}")
+            continue
+        if not (folder / p).is_file():
+            errors.append(f"read order file missing: {p}")
     agents = folder / ".claude" / "agents"
     if not agents.is_dir():
         errors.append(f"missing folder .claude/agents with the mandatory agents: {', '.join(SETUP_AGENTS)}")
@@ -386,13 +404,21 @@ def self_test():
                           ("bad_skill_name", "skill x: name 'other' != folder"),
                           ("bad_skill_desc", "skill x lacks description"),
                           ("bad_skill_ref", "skill x references missing templates/missing/file.md"),
-                          ("bad_skill_script", "skill x references missing scripts/missing.py")):
+                          ("bad_skill_script", "skill x references missing scripts/missing.py"),
+                          ("bad_json_list", "plugin.json is not a JSON object"),
+                          ("bad_plugins_list", "marketplace.json plugins is not a list of objects")):
         failed += expect(fixture, plugin_errors(FIXTURES / fixture), text)
     for fixture, text in (("bad_unfilled", "unfilled placeholder {{OWNER_NAME}}"),
                           ("bad_readorder", "read order file missing: context/missing-file.md"),
                           ("bad_agent", "agent builder.md lacks model")):
         failed += expect(fixture, fixture_errors(fixture), text)
     failed += expect("bad_utf16", fixture_errors("bad_utf16"), "entry file CLAUDE.md is not UTF-8 text")
+    failed += expect("bad_agent_other", fixture_errors("bad_agent_other"), "agent visitor-1.md: name 'somebody-else' != file name")
+    failed += expect("bad_readorder_outside", fixture_errors("bad_readorder_outside"),
+                     "read order path leaves the folder: ../bad_noagents/CLAUDE.md")
+    ok = agent_errors(FIXTURES / "ok_quoted" / "builder.md", full=True)
+    print(f"ok_quoted (quoted frontmatter values): {'PASS' if not ok else 'FAIL ' + '; '.join(ok)}")
+    failed += bool(ok)
     failed += expect("bad_utf16_agent", agent_errors(FIXTURES / "bad_utf16_agent" / "builder.md", full=True),
                      "agent builder.md is not UTF-8 text")
     ok = agent_errors(FIXTURES / "ok_bom" / "builder.md", full=True)
@@ -454,7 +480,9 @@ def project_checks():
     report("agent schema", schema, agent_errors(fx / "bad_schema" / "builder.md", full=True),
            "agent builder.md: name 'wrongname' != file name")
     for fixture, text in (("bad_empty_model", "agent builder.md lacks model"),
-                          ("bad_empty_description", "agent builder.md lacks description")):
+                          ("bad_empty_description", "agent builder.md lacks description"),
+                          ("bad_model", "agent builder.md: model 'claude-banana' not in"),
+                          ("bad_report_prose", "agent builder.md: report section lacks Status:")):
         failed += expect(fixture, agent_errors(fx / fixture / "builder.md", full=True), text)
     failed += expect("agent status bad fixture", agent_errors(fx / "bad_status" / "builder.md", full=True),
                      "agent builder.md: report section lacks Status:")
