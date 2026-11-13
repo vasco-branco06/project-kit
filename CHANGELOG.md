@@ -105,3 +105,4 @@ One line per fix of a rule or template: date, model name, what changed and why.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: organize: an existing CLAUDE.md, AGENTS.md or context file is listed in the manifest as moved to _archive/ before new ones are written, and an existing .gitignore gets only the missing template lines appended.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: organize and folder-plan: a stays in place destination, a never-move list (.git, dependency folders, .env files) and never opening .env files.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: organize: in a git repository it runs git status after go 1 and asks the owner to commit or stash uncommitted work before anything moves.
+- 2026-11-13 | claude-sonnet-5-5 | Unreleased: organize step 9 drops the clause that added _archive/ and PDF rules to .gitignore (the core template has no _archive/ rule since an earlier release and already holds the PDF rules).
