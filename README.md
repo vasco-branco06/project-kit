@@ -85,7 +85,7 @@ Some plugins run a hook after every file write that removes metadata keys from M
 
 - `scripts/freeze_tests.py --freeze` and `--verify` write and check the SHA-256 hashes of `work/tests/` in a project; the evaluator uses them.
 - `scripts/merge_sources.py` copies rows from `work/sources-*.md` into `context/source-log.md` without duplicates.
-- `scripts/release.sh X.Y.Z "message" MODEL_NAME` bumps `plugin.json`, adds the change log line, restores missing `model:` lines in the agent templates, runs the self-test, commits and tags. The release line must say that scenarios were run on an ISO date (for example "scenarios 1 to 7 run on 2026-11-13"), in the message or in a release line written by hand in `CHANGELOG.md` before running it; otherwise the self-test fails and the files are restored. It stops if any file other than the ones it edits is changed or untracked, and it never pushes: it prints the push command. See `CONTRIBUTING.md` and `SECURITY.md`.
+- `bash scripts/release.sh X.Y.Z "message" MODEL_NAME` bumps `plugin.json`, adds the change log line, restores missing `model:` lines in the agent templates, runs the self-test, commits and tags. The release line must say that scenarios were run on an ISO date (for example "scenarios 1 to 7 run on 2026-11-13"), in the message or in a release line written by hand in `CHANGELOG.md` before running it; otherwise the self-test fails and the files are restored. It stops if any file other than the ones it edits is changed or untracked, and it never pushes: it prints the push command. See `CONTRIBUTING.md` and `SECURITY.md`.
 
 ## Privacy
 

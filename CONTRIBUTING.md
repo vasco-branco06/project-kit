@@ -23,7 +23,7 @@ The kit is Markdown, JSON and a few scripts that use only the Python standard li
 Only the owner releases. Running the script by hand is the owner's approval of the release commit and tag it makes; it asks nothing more.
 
 ```
-scripts/release.sh X.Y.Z "what changed and why" MODEL_NAME
+bash scripts/release.sh X.Y.Z "what changed and why" MODEL_NAME
 ```
 
 The release line of `X.Y.Z` in `CHANGELOG.md` must say that scenarios were run: it needs the word `scenario` or `scenarios`, then `run on`, `pass on` or `passed on` and an ISO date (for example `scenarios 1 to 7 run on 2026-11-13`), and no `not run`. The self-test fails and the script restores its files otherwise. Put that wording in the message, or write the release line in `CHANGELOG.md` yourself first (`- DATE | MODEL | X.Y.Z: ...`): the script keeps an existing line for that version and adds no second one.

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Release helper for project-kit.
-# Usage: scripts/release.sh X.Y.Z "what changed and why" MODEL_NAME
+# Usage: bash scripts/release.sh X.Y.Z "what changed and why" MODEL_NAME
 # Bumps plugin.json, adds the dated CHANGELOG line, restores model lines in the agent
 # templates, runs the self-test, commits and tags. It never pushes: it prints the command.
 # Running it by hand is the owner's approval of that commit and tag. It stops if any
@@ -14,7 +14,7 @@
 set -euo pipefail
 
 if [ "$#" -ne 3 ]; then
-  echo "usage: $0 X.Y.Z \"message\" MODEL_NAME" >&2
+  echo "usage: bash scripts/release.sh X.Y.Z \"message\" MODEL_NAME" >&2
   exit 2
 fi
 VERSION="$1"; MSG="$2"; MODEL="$3"
