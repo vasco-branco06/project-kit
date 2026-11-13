@@ -70,6 +70,7 @@ Some plugins run a hook after every file write that removes metadata keys from M
 - Two credit rows have no verified address (agentic-council and the JavaScript Mastery playbook); see `CREDITS.md`.
 - Semantic Versioning is not cited: semver.org could not be fetched on 2026-11-10 because of a certificate error.
 - The autocompact values 40 and 60 are our choice, not measured or taken from the docs.
+- The claim that the native agent-team split panes of Claude Code do not work in Windows Terminal (code.claude.com/docs/en/agent-teams) has no recorded read date.
 - Windows Terminal panes, tmux, OpenCode and freellmapi have not been run by the kit's tests; the skills describe them from their documentation.
 - The behaviour scenarios are run as desk checks by agents that read the kit's files, or as real sessions where `test/scenarios.md` requires one. `CHANGELOG.md` records what was run for each release.
 
