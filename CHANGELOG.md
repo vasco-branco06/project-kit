@@ -162,3 +162,4 @@ One line per fix of a rule or template: date, model name, what changed and why.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: the code type-rules Tests section points to CLAUDE.md and the evaluator template for the evaluator, freeze, visitor and evidence rules instead of restating them.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: check_kit drops the two sample-builder lines that had no effect on any check (chose dropping over adding a fixture, the smaller change).
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: terminal-panes step 2 has the coordinator put a timeout in the brief of the worker that opens the panes, the one step 4 waits for.
+- 2026-11-13 | claude-sonnet-5-5 | Unreleased: external-models Limits says the step 2 approval also covers the second-opinion check that research-first asks for, whose output is evidence for the ADR and never a verdict.

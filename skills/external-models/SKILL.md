@@ -17,7 +17,7 @@ Talk to the owner in the language they use. One question per turn, with a recomm
 
 ## Limits
 
-- An external model is only a builder-type worker. The evaluator and the reviewer always stay on Anthropic.
+- An external model is only a builder-type worker. The evaluator and the reviewer always stay on Anthropic. The one other use is the second-opinion check on a stack decision that `research-first` asks for; the step 2 approval covers it and its output is evidence for the ADR, never a verdict.
 - External models are outside the small, mid, strong and strongest ladder. For an external unit a failed done check, a report without evidence, or a provider error or empty output (rate limit, invalid key, timeout) is the one failure: nothing is resent to the external model, and the unit goes to a mid Anthropic worker, with the failure history in its brief; its failure count restarts at zero (the exception to the `run` rule that resends a report without evidence once).
 
 ## Keys
