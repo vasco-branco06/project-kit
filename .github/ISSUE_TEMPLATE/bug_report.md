@@ -20,6 +20,6 @@ Steps, or the prompt you gave the run skill:
 - OS:
 
 **Test output**
-Result of `python -I test/check_kit.py <your folder>`, if the problem is in a generated folder.
+Result of `python -I "${CLAUDE_PLUGIN_ROOT}/test/check_kit.py" <your folder>` (`${CLAUDE_PLUGIN_ROOT}` is the folder the plugin is installed in), if the problem is in a generated folder.
 
 Do not paste keys, tokens, passwords or personal data. Security problems: see `SECURITY.md`.

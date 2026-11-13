@@ -19,7 +19,7 @@ Talk to the owner in the language they use. Ask one question per turn, with your
 8. Fill the entry file and the context files as `new-project` does (for code, the stack too, as its step 5), from the old files, showing them together for go 2 as `new-project` does, and writing only what the owner approves. Do not copy old rules silently: ask which still apply.
 9. For code projects or repositories, create `.gitignore` from `${CLAUDE_PLUGIN_ROOT}/templates/core/.gitignore` (adding `_archive/` and PDFs outside `inputs/` and `outputs/`) and offer `git init` without a remote.
 10. Write the mandatory agents (`${CLAUDE_PLUGIN_ROOT}/templates/core/CLAUDE.md`, not the old project file) as `new-project` does, after go 1; if one already exists in `.claude/agents/`, ask, never overwrite. Old fixed agents of the folder go to the archive only after the settings question.
-11. Check that the manifest matches the final tree and run the placeholder test when Python is available. Tell the owner to start work with `/project-kit:run`.
+11. Check that the manifest matches the final tree and run `python -I "${CLAUDE_PLUGIN_ROOT}/test/check_kit.py" <folder>` on the folder when Python is available. Tell the owner to start work with `/project-kit:run`.
 
 ## Rules
 
