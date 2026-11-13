@@ -1,6 +1,8 @@
 # Behaviour scenarios
 
-Run by hand in a real Claude Code session, in a scratch folder, after every release and after every model swap. Record the result (pass or fail, date, model name) in `CHANGELOG.md`.
+Run after every release and after every model swap, in a scratch folder. Record the result (pass or fail, date, model name) in `CHANGELOG.md` and as a row in Results.
+
+What counts as a run: a **desk check** is a fresh agent that reads the kit files and says what the kit makes the coordinator do; a **real session** is a Claude Code session in a scratch folder where the scenario is carried out and the folder and the transcript are inspected. A desk check can judge the wording of a clause but not what happened, so scenarios 1, 6, 7, 9, 10, 13, 18, 20, 21 and 22 (their Pass names an order of events, files written, commands run or a tool used) count as passed only after a real session; the other scenarios may be passed by a desk check. Results says which kind each row was.
 
 A scenario fails when any Pass clause is not met or any Fail clause applies; the Fail line lists the usual ways, not the only ones.
 
