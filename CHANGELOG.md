@@ -101,3 +101,4 @@ One line per fix of a rule or template: date, model name, what changed and why.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: run: the merge_sources step moves from section 7 to the acceptance line in section 6, and the section 3 bullet is split so the n/a until the plan replacement applies to architecture.md only.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: run handoff: notes that autocompact may fire before 600000 tokens and that no context size is assumed (chose the note over stating a size, which has no source).
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: run plan fields now include risks, so run and ai-workflow-rules share one field list.
+- 2026-11-13 | claude-sonnet-5-5 | Unreleased: run plan: for a big decision the plan names the prototype or measurement worker, its tools and its command.

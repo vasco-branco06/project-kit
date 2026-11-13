@@ -40,7 +40,7 @@ You are the coordinator. You only coordinate: plan, write briefs, verify and mer
 Write `work/plan-YYYYMMDD-HHMM.md` (local time) with:
 - Goal, context, expected end result.
 - Units (code: one visible result, one system boundary, one session; build order: dependencies, security, backend, interface shells, real data; packages only when needed), each with its done check. For code, also `context/specs/00-build-plan.md` (replace the whole placeholder row with the real units); for other work, `work/briefs/<unit>.md` per unit (goal, deliverable, done check).
-- Stack with pinned versions and reasons, the invariants and how to run the app (code projects).
+- Stack with pinned versions and reasons, the invariants and how to run the app (code projects). For a big decision, also the prototype or measurement `research-first` requires: the general worker that builds it, its tools and its command.
 - The model of each unit and why.
 - Number of subagents; builders, blind visitors for screens and any other roles (for example a source-finder that gathers content sources), each with a reason, and which units run in parallel, with an optional item for terminal panes when two or more do (`terminal-panes` skill; only if the owner asks or says go to it, never under "decide and go"). Parallel only when units share no files and no state; the coordinator never verifies alone.
 - Worktrees: yes only when two or more workers write code in parallel in a git repository; otherwise no, with the reason.
