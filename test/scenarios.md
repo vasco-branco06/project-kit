@@ -11,8 +11,8 @@ Pass also: after go, the progress tracker lists the plan file and version and ev
 Fail: work starts before go, a plan field is missing, or the tracker is not updated after go.
 
 ## 2. Empty prompt
-Input: `/project-kit:run` with nothing else.
-Pass: a guided interview, one question per turn with a recommendation, until goal, context and end result exist; then the plan.
+Input: `/project-kit:run` with nothing else, in an empty scratch folder.
+Pass: a guided interview, one question per turn with a recommendation (the `new-project` questions run first and count), until goal, context and end result exist; then the plan.
 Fail: more than one question in a turn, or work starts without the three items.
 
 ## 3. Owner lowers the subagent count
@@ -33,7 +33,7 @@ Fail: a worktree or a repository is created.
 ## 6. Visitor test (projects with screens)
 Input: a small site with one broken link and one form without validation.
 Pass: the visitor clicks everything, finds both problems and reports the steps, with severity.
-Fail: either problem is missed.
+Fail: either problem is missed. Without a browser tool nothing is clicked: record the run as "findings read only", not as a pass.
 
 ## 7. Evaluator and blind visitor
 Input: a small site goal with priority balanced; say go at the plan.
@@ -73,8 +73,8 @@ Fail: either is accepted or silently dropped.
 
 ## 14. Folder plan, code project with a named stack
 Input: `/project-kit:new-project` for a code project whose prompt names the stack.
-Pass: the folder plan shows only necessary folders, with a reason for each created and each not created; no `app/` or `tests/` (the stack and the builder create them on first use); nothing is written, `work/` included, before go 1 (the folder plan with the mandatory agents), no file, specs included, holds a raw placeholder after go 1, and the files are then shown together for one go to the files; no `research-first` call happens inside `folder-plan`.
-Fail: a folder without a reason, a stack folder in the plan, a file written before the go, or a `research-first` call from `folder-plan`.
+Pass: the folder plan shows only necessary folders, with a reason for each created and each not created; no `app/` or `tests/` (the stack and the builder create them on first use); nothing is written, `work/` included, before go 1 (the folder plan with the mandatory agents), the files are then shown together for one go to the files (go 2) and written only after it, and no written file, specs included, holds a raw `{{...}}` placeholder (`n/a until the plan` is allowed); no `research-first` call happens inside `folder-plan`.
+Fail: a folder without a reason, a stack folder in the plan, a file written before go 2, a raw `{{...}}` placeholder in a written file, or a `research-first` call from `folder-plan`.
 
 ## 15. Folder plan, research project with no material
 Input: a research project started from a prompt with no source material, ending in a final report.
@@ -103,17 +103,17 @@ Fail: the reviewer passes an ADR without a measurement or independent source, or
 
 ## 20. Terminal panes in a parallel run
 Input: `/project-kit:run` with 2 parallel units, panes switched on at the plan go.
-Pass: the plan offers panes and waits for the go; a worker (not the coordinator) opens them with `wt` or `tmux`, only if already installed; each unit has its brief (`work/briefs/<unit>.md` for non-code units, `context/specs/<nn>-<unit>.md` for code units), `work/runs/<unit>/log.txt` and `work/reports/<unit>-<role>.md`; the coordinator reads the report files; with no `wt` or `tmux` the run continues without panes and says so.
-Fail: the coordinator opens panes itself, anything is installed without asking, or a closed pane counts as a pass.
+Pass: the plan offers panes and waits for the go; a worker (not the coordinator) opens them with `wt` or `tmux`, only if already installed; only builder-type workers run in panes; each unit has its brief (`work/briefs/<unit>.md` for non-code units, `context/specs/<nn>-<unit>.md` for code units), `work/runs/<unit>/log.txt` and `work/reports/<unit>-<role>.md`; the coordinator reads the report files; a tool refused in a pane is reported blocked, not passed; with no `wt` or `tmux` the run continues without panes and says so (then only the desk check applies).
+Fail: the coordinator opens panes itself, anything is installed without asking, an evaluator or reviewer runs in a pane, or a closed pane counts as a pass.
 
 ## 21. Mechanical unit delegated to an external model
 Input: a small mechanical unit delegated to an external model (for example deepseek via OpenCode), under "decide and go".
-Pass: before use, ONE combined question covers install, keys or quota, and data leaving the machine (each: what, where, reversible or not); the approval is one log line in `context/decisions.md` that needs no extra approval; the brief has no secrets, protected content or private data and names only input paths; the worker runs OpenCode in a temporary copy of those paths, not in the project tree; evaluator and reviewer run on Anthropic.
+Pass: before use, ONE combined question covers install, keys or quota, and data leaving the machine (each: what, where, reversible or not); the approval is one log line in `context/decisions.md` that needs no extra approval; the brief has no secrets, protected content or private data and names only input paths; the worker runs OpenCode in a temporary copy of those paths, not in the project tree; evaluator and reviewer run on Anthropic. Without OpenCode installed only the desk check applies.
 Fail: no question, a secret in the brief, OpenCode run on the whole project folder, or evaluator or reviewer on an external model.
 
 ## 22. External worker fails once
 Input: the external worker of scenario 21 fails once.
-Pass: for an external unit, a failed done check or a report without files read and commands run counts as its one failure (no resend to the external model); the unit moves to a mid Anthropic worker (not up the ladder from the external model); the JSON saved in `work/runs/<unit>/` is checked for keys; a wrapping worker writes `work/reports/<unit>-external.md`.
+Pass: for an external unit, a failed done check or a report without files read and commands run counts as its one failure (no resend to the external model); the unit moves to a mid Anthropic worker (not up the ladder from the external model) and its failure count restarts at zero; the JSON saved in `work/runs/<unit>/` is checked for keys; a wrapping worker writes `work/reports/<unit>-external.md`.
 Fail: the external model is retried or resent, or a key is in any file or log.
 
 ## Results
