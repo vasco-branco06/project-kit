@@ -175,3 +175,4 @@ One line per fix of a rule or template: date, model name, what changed and why.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: CONTRIBUTING version-bump rule says every released content change, so it agrees with the owner folding many Unreleased lines into one release line.
 - 2026-11-13 | claude-haiku-5-5 | Unreleased: the code sample no longer carries the writing standards file, which new-project does not copy for code; the sample build drops it.
 - 2026-11-13 | claude-haiku-5-5 | Unreleased: the two earlier changelog lines that named release lines by position now name them by date and first words.
+- 2026-11-13 | claude-haiku-5-5 | Unreleased: the external-models step that copies files back names the same worker as the one that deletes the temporary copy.
