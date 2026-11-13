@@ -84,3 +84,4 @@ One line per fix of a rule or template: date, model name, what changed and why.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: scenarios.md adds scenario 23 (decide and go) and scenario 24 (coordinator only), each with Pass and Fail clauses and not run yet (no Results row), and lists the behaviours still without a scenario under Not covered yet; README says scenarios 1 to 24.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: merge_sources self-test: the BOM case now puts the BOM before a data row, so the assert fails when utf-8-sig is reverted (checked on a deleted scratch copy).
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: the C-099 line no longer holds a dotted version number: the actions are pinned by the tag named in ci.yml.
+- 2026-11-13 | claude-sonnet-5-5 | Unreleased: README Scripts and release: freeze_tests.py and merge_sources.py are written with the python -I form.
