@@ -167,3 +167,4 @@ One line per fix of a rule or template: date, model name, what changed and why.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: decisions.md keeps the Measurement or prototype field at n/a and moves its hint into the opening sentence.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: terminal-panes drops the stale evaluator write note, and the scenario, core CLAUDE.md and README lines on the blind visitor now also name its evidence folder, as run does.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: run and evaluator.md say the verify before a test fix must list nothing, and only after the fix is that file the one change before the re-freeze.
+- 2026-11-13 | claude-sonnet-5-5 | Unreleased: ai-workflow-rules Environment check points to section 2 of run and to the test commands check after the stack is chosen in section 3.

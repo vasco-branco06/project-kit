@@ -22,7 +22,7 @@ It works end to end, the invariants hold, the progress tracker can be updated, t
 A correction brief says what behaviour was expected, what happened, and that only that point changes. It never contains test code or checklist lines.
 
 ## Environment check
-As section 2 of the `run` skill says; anything missing is stated in the plan.
+As section 2 of the `run` skill says, and the check of the test commands right after the stack is chosen in section 3; anything missing is stated in the plan.
 
 ## Evaluator rules
 Never name this section in a builder, visitor, reviewer or researcher brief. Only the evaluator reads or writes `work/tests/`; a visitor writes only in `work/evidence-incoming/<unit>/`.
