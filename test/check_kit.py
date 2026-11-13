@@ -217,18 +217,20 @@ def version_errors(root):
 
 
 def changelog_errors(root):
-    """A CHANGELOG line for the current version says scenarios were run or passed on a date, not 'not run'."""
+    """The CHANGELOG release line of the current version says scenarios were run or passed on an ISO date, not 'not run'."""
     root = Path(root)
     try:
         plugin = json.loads((root / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8"))["version"]
         lines = (root / "CHANGELOG.md").read_text(encoding="utf-8").splitlines()
     except (OSError, ValueError, KeyError) as e:
         return [f"changelog check: {type(e).__name__} {e}"]
+    release = re.compile(rf"\|\s*{re.escape(plugin)}:")
     for l in lines:
-        if (plugin in l and re.search(r"scenarios?\b", l, re.I) and re.search(r"\b(run|passed|pass) on\b", l, re.I)
+        if (release.search(l) and re.search(r"scenarios?\b", l, re.I)
+                and re.search(r"\b(run|passed|pass) on \d{4}-\d{2}-\d{2}\b", l, re.I)
                 and not re.search(r"\bnot (yet )?run\b", l, re.I)):
             return []
-    return [f"CHANGELOG has no line with {plugin} saying scenarios were run or passed on a date (and not 'not run')"]
+    return [f"CHANGELOG has no release line for {plugin} saying scenarios were run or passed on an ISO date (and not 'not run')"]
 
 
 def vocabulary_errors(root):
@@ -415,7 +417,9 @@ def project_checks():
     failed += expect("marketplace version bad fixture", version_errors(fx / "bad_market_version"),
                      "marketplace.json version 0.3.0 != plugin.json 0.1.0")
     report("changelog scenarios", changelog_errors(ROOT), changelog_errors(fx / "bad_changelog"),
-           "CHANGELOG has no line with 0.2.0")
+           "CHANGELOG has no release line for 0.2.0")
+    for fixture in ("bad_changelog_date", "bad_changelog_notrun", "bad_changelog_version"):
+        failed += expect(fixture, changelog_errors(fx / fixture), "CHANGELOG has no release line for 0.2.0")
     report("vocabulary", vocabulary_errors(ROOT), vocabulary_errors(fx / "bad_vocab"),
            "model name 'sonnet' outside the allowed places: skills/x/SKILL.md")
     failed += expect("blinding word bad fixture", vocabulary_errors(fx / "bad_blind"),
