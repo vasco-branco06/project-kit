@@ -17,7 +17,6 @@ You are the coordinator. You only coordinate: plan, write briefs, verify and mer
 - Check the environment once, before planning, and put the result in the plan:
   - Writing to `.claude/agents/` may need approval. Ask for it now, in one sentence; if it is refused, pass each role in the brief to a general worker and say so in the plan.
   - For projects with screens, check that a browser tool is available. If none is, record the gap in the plan and propose a tool; install nothing without approval. The visitor then reports needs context (it is not re-briefed on the gap) and the evaluator scores the screens by reading the code.
-  - Check that the commands the tests will need (for example the test runner of the chosen stack) are allowed in this session; ask once for the ones that are not.
 - Ask the priority: efficient, balanced or best (balanced if the owner does not know).
 - Choose the model per unit, from what that unit needs, not from its type of work. Code can sit on the small tier when it is small and fully specified. Tiers, cheapest first:
   - **small:** the brief fully specifies the result; one or two files; mechanical or well-trodden work (search, extraction, edits, a script or tests written from a clear spec).
@@ -34,6 +33,7 @@ You are the coordinator. You only coordinate: plan, write briefs, verify and mer
 ## 3. Research (every project)
 - Before the plan, brief the `researcher` once per question set (at most four at a time, as `research-first` step 2 says) on its scope (`CLAUDE.md`), built from the owner's measurable requirements; its findings are in `work/research-*.md`, which the plan links. Code stack: if the prompt names one, use it.
 - Otherwise follow the `research-first` skill (candidates compared and scored as its step 5 says). Stack, language and architecture decisions follow its Decision standard; a worker appends the stack ADR when the plan is approved (under "decide and go", right after it). Pick one and pin the versions, with reasons. The stack, versions, reasons, at least four invariants (each with a command that fails when it is broken: test, lint or import check; one with no such command gets a `[soft]` prefix; the reviewer runs them) and the run-the-app line appear in the plan below. After the owner's go, a worker (never you) writes them to `context/architecture.md` and the source rows to `context/source-log.md`, replacing any `n/a until the plan`, as `research-first` step 7 says. Once they have written them, run `python -I "${CLAUDE_PLUGIN_ROOT}/test/check_kit.py" --strict <project folder>` (when Python is available); any marker it still lists elsewhere is left for a worker to fill; markers left in `context/ui-context.md` are reported to the owner, not treated as a failure.
+- Right after the stack is chosen and before the plan, check that the commands its tests will need (for example the test runner) are allowed in this session; ask once for the ones that are not.
 
 ## 4. One-page plan
 Write `work/plan-YYYYMMDD-HHMM.md` (local time) with:
