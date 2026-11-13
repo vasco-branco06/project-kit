@@ -140,3 +140,4 @@ One line per fix of a rule or template: date, model name, what changed and why.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: reviewer.md leaves work/tests/ out of its temporary copy and never opens, copies or runs it; run and ai-workflow-rules extend the never-name-it rule to reviewer and researcher briefs.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: builder.md sends commit, push, install, network, spending and secrets to the coordinator.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: tester.md limits the visitor to the address and the evidence folder named in its brief; its tools stay inherited for the browser.
+- 2026-11-13 | claude-sonnet-5-5 | Unreleased: evaluator.md runs --verify before fixing a wrong test and re-freezes only when it lists nothing but that file (run section 6 says the same); any other changed, missing or added line goes to the coordinator.
