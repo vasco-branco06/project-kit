@@ -30,7 +30,7 @@ Fail: a worktree or a repository is created.
 
 ## 6. Visitor test (projects with screens)
 Input: a small site with one broken link and one form without validation.
-Pass: the tester clicks everything, finds both problems and reports the steps, with severity.
+Pass: the visitor clicks everything, finds both problems and reports the steps, with severity.
 Fail: either problem is missed.
 
 ## 7. Evaluator and blind visitor
