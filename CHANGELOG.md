@@ -86,3 +86,4 @@ One line per fix of a rule or template: date, model name, what changed and why.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: the C-099 line no longer holds a dotted version number: the actions are pinned by the tag named in ci.yml.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: README Scripts and release: freeze_tests.py and merge_sources.py are written with the python -I form.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: evaluator.md: an added: line from --verify means a new test file, which needs a new freeze.
+- 2026-11-13 | claude-sonnet-5-5 | Unreleased: README: the scenarios are run as desk checks by agents that read the kit's files, or as real sessions where test/scenarios.md requires one (Not verified and Tests lines).

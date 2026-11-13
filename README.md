@@ -71,14 +71,14 @@ Some plugins run a hook after every file write that removes metadata keys from M
 - Semantic Versioning is not cited: semver.org could not be fetched on 2026-11-10 because of a certificate error.
 - The autocompact values 40 and 60 are our choice, not measured or taken from the docs.
 - Windows Terminal panes, tmux, OpenCode and freellmapi have not been run by the kit's tests; the skills describe them from their documentation.
-- The behaviour scenarios are run by hand, by agents that read the kit's files. `CHANGELOG.md` records what was run for each release.
+- The behaviour scenarios are run as desk checks by agents that read the kit's files, or as real sessions where `test/scenarios.md` requires one. `CHANGELOG.md` records what was run for each release.
 
 ## Tests
 
 - The test script needs Python 3.8 or later and nothing else (standard library only).
 - `python -I test/check_kit.py --self-test` builds a sample folder per project type and checks that no placeholder is left, every file in the read order exists, every agent has name, description and model, and the mandatory agents exist; bad fixtures must fail. It also checks the plugin: `plugin.json` and `marketplace.json` parse and carry their keys, versions agree with the change log, every `SKILL.md` has frontmatter with `name` equal to its folder and a description, and every `templates/` path a skill mentions exists. The project checks listed in the script header (filler map for placeholders, vocabulary, agent schema and others) run last, each with a bad fixture.
 - `python -I test/check_kit.py <folder>` checks a real folder; add `--strict` to also flag "n/a until" left in it.
-- `test/scenarios.md` holds scenarios 1 to 24, run by hand after each release and each model swap.
+- `test/scenarios.md` holds scenarios 1 to 24, run as desk checks by agents that read the kit's files, or as real sessions where `test/scenarios.md` requires one, after each release and each model swap.
 - CI (`.github/workflows/ci.yml`) runs the self-test on Linux and Windows for every push and pull request, runs `claude plugin validate` only where the claude CLI exists, and on a `v*` tag checks that the tag equals the `plugin.json` version.
 
 ## Scripts and release
