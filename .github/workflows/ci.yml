@@ -3,7 +3,7 @@ name: ci
 on:
   push:
     tags: ["v*"]
-    branches: ["**"]
+    branches: ["main"]
   pull_request:
 
 permissions:
@@ -20,18 +20,18 @@ jobs:
       run:
         shell: bash
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v4.2.2
+      - uses: actions/setup-python@v5.3.0
         with:
-          python-version: "3.x"
+          python-version: "3.12"
       - name: Self-test
         run: python -I test/check_kit.py --self-test
-      - name: claude plugin validate (only if the claude CLI exists)
+      - name: claude plugin validate (skipped on hosted runners, which have no claude CLI)
         run: |
           if command -v claude >/dev/null 2>&1; then
             claude plugin validate . --strict
           else
-            echo "claude CLI not installed on this runner, skipped"
+            echo "skipped: no claude CLI on this runner; run claude plugin validate . --strict locally"
           fi
       - name: Tag matches plugin.json version
         if: startsWith(github.ref, 'refs/tags/v')
