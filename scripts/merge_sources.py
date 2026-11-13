@@ -105,7 +105,7 @@ def self_test():
         assert merge(root) == 0
         text = (root / "context" / "source-log.md").read_text(encoding="utf-8")
         assert text.count("url2") == 1 and "| (none yet) |" not in text and "| C 2022 | url3 |" in text and "url4" not in text and "url5" in text
-        (root / "work" / "sources-c.md").write_bytes(b"\xef\xbb\xbf" + (head + "| E 2024 | url6 |\n").encode("utf-8"))
+        (root / "work" / "sources-c.md").write_bytes(b"\xef\xbb\xbf" + "| E 2024 | url6 |\n".encode("utf-8"))  # the BOM sits before a data row
         assert merge(root) == 1  # a BOM must not hide the first row
         (root / "work" / "sources-c.md").write_bytes((head + "| caf\xe9 2024 | url7 |\n").encode("cp1252"))
         try:
