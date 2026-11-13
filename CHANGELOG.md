@@ -108,3 +108,4 @@ One line per fix of a rule or template: date, model name, what changed and why.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: organize step 9 drops the clause that added _archive/ and PDF rules to .gitignore (the core template has no _archive/ rule since an earlier release and already holds the PDF rules).
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: new-project step 9 and organize step 9 name the dotfiles .gitignore and .gitattributes (LF, needed for frozen hashes) from the core templates, written for code only; other types get neither (kept today's code-only rule, the smaller change).
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: new-project step 8: ui-context.md is written to context/ui-context.md and a ninth line for it is added to the read order in CLAUDE.md, so it is read.
+- 2026-11-13 | claude-sonnet-5-5 | Unreleased: new-project step 8: a type file with the same path as a core file (the code architecture.md) replaces the core one.
