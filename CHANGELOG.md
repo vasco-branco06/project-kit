@@ -89,3 +89,4 @@ One line per fix of a rule or template: date, model name, what changed and why.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: README: the scenarios are run as desk checks by agents that read the kit's files, or as real sessions where test/scenarios.md requires one (Not verified and Tests lines).
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: the scenarios.md Results line now says the rows of the last release instead of a dotted version number.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: check_kit vocabulary check: the Results exemption in scenarios.md ends at the next ## heading; fixture bad_vocab_after_results added with its expected text.
+- 2026-11-13 | claude-sonnet-5-5 | Unreleased: README Tests: the placeholder scan covers CLAUDE.md, context/ and work/.
