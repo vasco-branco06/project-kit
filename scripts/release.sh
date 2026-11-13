@@ -6,6 +6,11 @@
 # Running it by hand is the owner's approval of that commit and tag. It stops if any
 # file other than the ones it edits is changed or untracked.
 # If the self-test or any step fails, the files it edited are restored.
+# The self-test needs the release line of X.Y.Z in CHANGELOG.md to contain "scenario" or
+# "scenarios" and "run on", "pass on" or "passed on" followed by an ISO date (YYYY-MM-DD), and
+# not "not run". So the message must say it, for example "... scenarios 1 to 7 run on 2026-11-13".
+# Or write that release line by hand first ("- DATE | MODEL | X.Y.Z: ..."); the script keeps an
+# existing line for X.Y.Z and does not add a second one.
 set -euo pipefail
 
 if [ "$#" -ne 3 ]; then

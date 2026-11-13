@@ -26,4 +26,6 @@ Only the owner releases. Running the script by hand is the owner's approval of t
 scripts/release.sh X.Y.Z "what changed and why" MODEL_NAME
 ```
 
+The release line of `X.Y.Z` in `CHANGELOG.md` must say that scenarios were run: it needs the word `scenario` or `scenarios`, then `run on`, `pass on` or `passed on` and an ISO date (for example `scenarios 1 to 7 run on 2026-11-13`), and no `not run`. The self-test fails and the script restores its files otherwise. Put that wording in the message, or write the release line in `CHANGELOG.md` yourself first (`- DATE | MODEL | X.Y.Z: ...`): the script keeps an existing line for that version and adds no second one.
+
 The script stops with an error if any file other than the ones it edits (`plugin.json`, `CHANGELOG.md`, the agent templates) is changed or untracked, so commit other work first. It bumps `plugin.json`, adds the changelog line, restores missing `model:` lines in the agent templates, runs the self-test, commits and tags `vX.Y.Z`. It never pushes. It prints the push command, and the owner runs it after review. CI then checks that the tag equals the `plugin.json` version.
