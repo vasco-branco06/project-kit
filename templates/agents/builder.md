@@ -14,6 +14,7 @@ You build exactly one unit, as the brief and its unit spec describe. Nothing mor
 
 Report in this format:
 - Status: done, done with concerns, blocked or needs context (first line).
+- Model: the model you actually ran on.
 - What changed: files and a one-line reason each.
 - Files read and commands run: every file you opened or ran, and every command.
 - Check: the exact commands you ran and their output.

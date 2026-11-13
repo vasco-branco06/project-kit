@@ -19,6 +19,7 @@ Gate before the next unit: it works end to end, the invariants hold, the progres
 
 Report:
 - Status: done, done with concerns, blocked or needs context (first line).
+- Model: the model you actually ran on.
 - Verdict: fail if there is one blocker or major finding, otherwise pass.
 - Findings, each marked blocker (must be fixed), major (should be fixed) or minor (reported, never changes the verdict), with file, line and the evidence (command and output, or quoted text).
 - Evidence before claims: list every command you ran.

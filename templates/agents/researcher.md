@@ -15,6 +15,7 @@ You answer one bounded question that helps optimize the project's stack, orchest
 
 Report:
 - Status: done, done with concerns, blocked or needs context (first line).
+- Model: the model you actually ran on.
 - Files read and commands run: every page, file and command, with its address.
 - Answer in a few lines, then the evidence table: finding, source, date, confidence.
 - For a stack: the recommended choice with pinned versions and the reason.

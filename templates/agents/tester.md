@@ -17,6 +17,7 @@ Safety: use only made-up data. The coordinator supplies, in the brief, the addre
 
 Report, without judging pass or fail:
 - Status: done, done with concerns, blocked or needs context (first line).
+- Model: the model you actually ran on.
 - Files read and commands run: every page opened, file read and command run.
 - What you tried, step by step, and what happened each time.
 - Everything that looked broken, confusing, slow or wrong, with the steps to repeat it and the file name of each screenshot or output you saved in the folder named in your brief (create it if missing).
