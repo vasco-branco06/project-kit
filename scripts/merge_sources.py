@@ -14,7 +14,8 @@ from pathlib import Path
 
 
 def norm(line):
-    return re.sub(r"\s+", " ", line.strip())
+    """Whitespace collapsed and no spaces around pipes, so '|B 2021|u|' equals '| B 2021 | u |'."""
+    return re.sub(r" ?\| ?", "|", re.sub(r"\s+", " ", line.strip()))
 
 
 def is_separator(line):
@@ -77,8 +78,16 @@ def merge(root):
                 seen.add(norm(r))
                 new.append(r)
     if new:
-        lines = [l for l in lines if not placeholder(l)] + new
-        log.write_text("\n".join(lines) + "\n", encoding="utf-8")
+        lines = [l for l in lines if not placeholder(l)]
+        at = len(lines)  # no table: append at the end
+        for i, line in enumerate(lines):
+            if line.strip().startswith("|") and i + 1 < len(lines) and is_separator(lines[i + 1]):
+                at = i + 2
+                while at < len(lines) and lines[at].strip().startswith("|"):
+                    at += 1
+                break
+        lines[at:at] = new
+        log.write_bytes(("\n".join(lines) + "\n").encode("utf-8"))  # LF on every OS
     return len(new)
 
 
@@ -104,6 +113,18 @@ def self_test():
             raise AssertionError("a cp1252 file must be reported")
         except ValueError as e:
             assert "sources-c.md" in str(e)
+    with tempfile.TemporaryDirectory() as tmp:  # spacing, position and line endings
+        root = Path(tmp)
+        (root / "context").mkdir()
+        (root / "work").mkdir()
+        head = "| Citation | Where |\n|---|---|\n"
+        (root / "context" / "source-log.md").write_bytes(("# Log\n\n" + head + "| B 2021 | url2 |\n\n## Notes\nfooter text\n").encode("utf-8"))
+        (root / "work" / "sources-a.md").write_bytes((head + "|B  2021|url2|\n|C 2022|url3|\n").encode("utf-8"))
+        assert merge(root) == 1  # same cells with other spacing are one row
+        raw = (root / "context" / "source-log.md").read_bytes()
+        assert b"\r" not in raw
+        text = raw.decode("utf-8")
+        assert text.index("|C 2022|url3|") < text.index("## Notes")  # inside the table, not after the notes
     print("merge_sources self-test PASS")
 
 

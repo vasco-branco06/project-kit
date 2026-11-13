@@ -4,7 +4,7 @@ Usage:
   python -I scripts/freeze_tests.py --freeze [PROJECT_ROOT]   write work/tests/HASHES.txt (exit 2 if work/ or the test files are missing)
   python -I scripts/freeze_tests.py --verify [PROJECT_ROOT]   exit 1 listing changed, missing or added files
   python -I scripts/freeze_tests.py --self-test
-PROJECT_ROOT defaults to ".". Files are read and hashed in binary, so CRLF cannot change a hash.
+PROJECT_ROOT defaults to ".". Files are hashed as raw bytes, with no newline translation, so any line-ending change is reported as changed.
 HASHES.txt lines: "<sha256>  <path relative to work/tests>"; the first line is "# frozen YYYY-MM-DD".
 """
 import hashlib
