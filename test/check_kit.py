@@ -8,7 +8,7 @@ Usage:
 Exit code 0 = pass, 1 = failures, 2 = usage error (bad option, no folder, not a folder).
 
 Checks: the entry file has a read order and every file in it exists; no placeholder
-in double braces (any spacing or case) is left in any text file (skipped: dependency and hidden folders, inputs/,
+in double braces (any spacing or case) is left in CLAUDE.md, context/ and work/ (skipped: dependency and hidden folders, inputs/,
 work/tests/, binary files and context/specs/_unit-template.md); every agent file has name, description and model; .claude/agents exists and holds reviewer, evaluator and researcher.
 Plugin check (--self-test): plugin.json and marketplace.json parse and have their keys,
 every SKILL.md has frontmatter with name == folder name and a description, and every
@@ -334,8 +334,9 @@ def check_folder(folder, strict=False):
         if b"\0" in data:  # binary file
             continue
         text = data.decode("utf-8", errors="ignore")
-        for m in UNFILLED.findall(text):
-            errors.append(f"unfilled placeholder {m} in {rel.as_posix()}")
+        if rel.parts[0] in ("context", "work") or rel.as_posix() == "CLAUDE.md":  # template syntax in project source is not an unfilled placeholder
+            for m in UNFILLED.findall(text):
+                errors.append(f"unfilled placeholder {m} in {rel.as_posix()}")
         if strict and "n/a until" in text.lower():
             errors.append(f"strict: 'n/a until' left in {rel.as_posix()}")
     return errors
@@ -427,11 +428,14 @@ def self_test():
     print(f"ok_bom (UTF-8 BOM agent): {'PASS' if not ok else 'FAIL ' + '; '.join(ok)}")
     failed += bool(ok)
     for fixture, text in (("bad_placeholder_spaced", "unfilled placeholder {{ owner_name }} in"),
-                          ("bad_placeholder_ext", "unfilled placeholder {{GOAL}} in notes.yml"),
-                          ("bad_placeholder_underscore", "unfilled placeholder {{GOAL}} in _notes.md")):
+                          ("bad_placeholder_ext", "unfilled placeholder {{GOAL}} in context/notes.yml"),
+                          ("bad_placeholder_underscore", "unfilled placeholder {{GOAL}} in context/_notes.md")):
         failed += expect(fixture, fixture_errors(fixture), text)
     ok = fixture_errors("ok_unit_template")
     print(f"ok_unit_template (unfilled unit template): {'PASS' if not ok else 'FAIL ' + '; '.join(ok)}")
+    failed += bool(ok)
+    ok = fixture_errors("ok_jinja")
+    print(f"ok_jinja (template syntax in src/): {'PASS' if not ok else 'FAIL ' + '; '.join(ok)}")
     failed += bool(ok)
     failed += expect("bad_noagents", fixture_errors("bad_noagents", agents=False), "missing folder .claude/agents")
     for script in ("freeze_tests.py", "merge_sources.py"):
