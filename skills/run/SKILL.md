@@ -46,6 +46,7 @@ Write `work/plan-YYYYMMDD-HHMM.md` (local time) with:
 - Worktrees: yes only when two or more workers write code in parallel in a git repository; otherwise no, with the reason.
 - Test plan: the evaluator (strongest tier, section 2) writes the code tests and, for every unit, a hidden rubric of 3 to 6 criteria (`checklist.md`) after the go, and evaluates the results; one blind visitor (two or more with different profiles under the best priority); every test the owner named, unchanged. `outputs/` is created at the first final deliverable; tests, fixtures and samples never go in it.
 - Cost estimate: low, medium or high, with the reason. No token cap.
+- Risks: the main ones, one line each.
 
 Show it and wait for one go. Right after the go, record the plan file, its version and who approved it in the Plans table of `context/progress-tracker.md`, and add every unit to the Units table with status planned; log each status change as it happens, without waiting. The owner may change any choice, including the number of builders, which never goes below one worker that produces the deliverable; a changed plan becomes a new version and needs a new go.
 
