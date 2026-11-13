@@ -17,6 +17,7 @@ The kit is Markdown, JSON and a few scripts that use only the Python standard li
 - Tool limits: the reviewer and the researcher set `tools`; the evaluator, builder and tester inherit all tools and state their limits in prose only, and the self-test does not check them.
 - State each rule once, in one place, and point to it from the others.
 - Every borrowed idea gets a row in `CREDITS.md` with an address and the date you read it. If you cannot verify an address, write "address not verified".
+- Reuse ideas only: no other plugin's gates, no hooks into every subagent and no dependency on another plugin.
 - No keys, tokens, passwords or personal data in any file or fixture.
 
 ## Release
