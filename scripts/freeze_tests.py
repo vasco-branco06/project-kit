@@ -2,7 +2,7 @@
 
 Usage:
   python -I scripts/freeze_tests.py --freeze [PROJECT_ROOT]   write work/tests/HASHES.txt
-  python -I scripts/freeze_tests.py --verify [PROJECT_ROOT]   exit 1 listing changed or missing files
+  python -I scripts/freeze_tests.py --verify [PROJECT_ROOT]   exit 1 listing changed, missing or added files
   python -I scripts/freeze_tests.py --self-test
 PROJECT_ROOT defaults to ".". Files are read and hashed in binary, so CRLF cannot change a hash.
 HASHES.txt lines: "<sha256>  <path relative to work/tests>"; the first line is "# frozen YYYY-MM-DD".
@@ -20,7 +20,7 @@ LINE = re.compile(r"([0-9a-fA-F]{64})\s+\*?(\S.*)")
 
 def hashes(tests):
     return {f.relative_to(tests).as_posix(): hashlib.sha256(f.read_bytes()).hexdigest()
-            for f in sorted(tests.rglob("*")) if f.is_file() and f.name != "HASHES.txt"}
+            for f in sorted(tests.rglob("*")) if f.is_file() and f != tests / "HASHES.txt"}
 
 
 def freeze(root):
@@ -48,7 +48,8 @@ def verify(root):
             bad.append(f"malformed: {line.strip()[:80]}")
     now = hashes(tests)
     return (bad + [f"missing: {n}" for n in frozen if n not in now]
-            + [f"changed: {n}" for n in frozen if n in now and now[n] != frozen[n]])
+            + [f"changed: {n}" for n in frozen if n in now and now[n] != frozen[n]]
+            + [f"added: {n}" for n in now if n not in frozen])
 
 
 def self_test():
@@ -69,6 +70,12 @@ def self_test():
         with open(t / "HASHES.txt", "a", encoding="utf-8") as f:
             f.write("a.txt abc\nnot a hash line\n")
         assert verify(tmp) == ["malformed: a.txt abc", "malformed: not a hash line"]
+        (t / "HASHES.txt").unlink()
+        freeze(tmp)
+        (t / "c.txt").write_bytes(b"three\n")
+        (t / "sub").mkdir()
+        (t / "sub" / "HASHES.txt").write_bytes(b"nested\n")
+        assert verify(tmp) == ["added: c.txt", "added: sub/HASHES.txt"]  # files added after the freeze
         (t / "HASHES.txt").unlink()
         assert verify(tmp) == ["HASHES.txt missing: run --freeze first"]
     print("freeze_tests self-test PASS")
