@@ -41,7 +41,7 @@ Fail: any of these is missing.
 
 ## 8. Research before building
 Input: `/project-kit:research-first` with "a small site with a contact form", in a scratch project.
-Pass: the researcher is briefed per question; `work/research-*.md` has two or three approaches, a recommendation with pinned versions, GitHub candidates with licence, use and last commit date, and an evidence table where every row has a source address and a date; before the go the coordinator writes only `work/research-*.md` (the researcher may write its own `work/reports/<unit>.md` and `work/sources-<role>.md`); after the go only `context/architecture.md` and `context/source-log.md` are created or updated, by a worker (plus open questions in the progress tracker if it exists).
+Pass: the researcher is briefed per question; `work/research-*.md` has two or three approaches, a recommendation with pinned versions, GitHub candidates with licence, use and last commit date, and an evidence table where every row has a source address and a date; before the go the coordinator writes only `work/research-*.md` (the researcher may write its own `work/reports/<unit>-researcher.md` and `work/sources-<role>.md`); after the go only `context/architecture.md` and `context/source-log.md` are created or updated, by a worker (plus open questions in the progress tracker if it exists).
 Fail: a claim without source or date, a repository suggested without its licence, the coordinator writing anything before the go other than `work/research-*.md`, a worker writing other files after the go, or sources fetched only through summaries.
 
 ## 9. Evaluator process check
@@ -101,7 +101,7 @@ Fail: the reviewer passes an ADR without a measurement or independent source, or
 
 ## 20. Terminal panes in a parallel run
 Input: `/project-kit:run` with 2 parallel units, panes switched on at the plan go.
-Pass: the plan offers panes and waits for the go; a worker (not the coordinator) opens them with `wt` or `tmux`, only if already installed; each unit has its brief (`work/briefs/<unit>.md` for non-code units, `context/specs/<nn>-<unit>.md` for code units), `work/runs/<unit>/log.txt` and `work/reports/<unit>.md`; the coordinator reads the report files; with no `wt` or `tmux` the run continues without panes and says so.
+Pass: the plan offers panes and waits for the go; a worker (not the coordinator) opens them with `wt` or `tmux`, only if already installed; each unit has its brief (`work/briefs/<unit>.md` for non-code units, `context/specs/<nn>-<unit>.md` for code units), `work/runs/<unit>/log.txt` and `work/reports/<unit>-<role>.md`; the coordinator reads the report files; with no `wt` or `tmux` the run continues without panes and says so.
 Fail: the coordinator opens panes itself, anything is installed without asking, or a closed pane counts as a pass.
 
 ## 21. Mechanical unit delegated to an external model
@@ -111,7 +111,7 @@ Fail: no question, a secret in the brief, OpenCode run on the whole project fold
 
 ## 22. External worker fails once
 Input: the external worker of scenario 21 fails once.
-Pass: for an external unit, a failed done check or a report without files read and commands run counts as its one failure (no resend to the external model); the unit moves to a mid Anthropic worker (not up the ladder from the external model); the JSON saved in `work/runs/<unit>/` is checked for keys; a wrapping worker writes `work/reports/<unit>.md`.
+Pass: for an external unit, a failed done check or a report without files read and commands run counts as its one failure (no resend to the external model); the unit moves to a mid Anthropic worker (not up the ladder from the external model); the JSON saved in `work/runs/<unit>/` is checked for keys; a wrapping worker writes `work/reports/<unit>-external.md`.
 Fail: the external model is retried or resent, or a key is in any file or log.
 
 ## Results
