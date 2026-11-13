@@ -1,6 +1,6 @@
 ---
 name: folder-plan
-description: Decide which folders a project needs before any are created, with a reason for each folder made and each one left out. Use when creating or organizing a project, before writing files.
+description: Decide which folders a project needs and return the plan, with a reason for each folder made and each one left out, to the skill that called it (new-project, organize or run). Creates nothing.
 ---
 
 # folder-plan
@@ -18,8 +18,8 @@ Talk to the owner in the language they use. One question per turn, with a recomm
    - `_archive/` only when something is moved (`organize`), never in a new project.
    - `.worktrees/` never now: a worker creates it when it is needed.
    - `context/features/` only for sites and apps; `context/specs/` only for code.
-3. Show the proposed tree with the reasons in the chat (for `organize`, together with the manifest) and wait for go 1. Write nothing before it, `work/` included.
-4. After go 1, create only those folders (not `outputs/`). A folder needed later is created on first use by the coordinator or the worker whose brief names the path; a folder neither in the plan nor named in a brief is not created.
+3. Return the proposed tree with the reasons to the caller, which shows it in the chat (for `organize`, together with the manifest) and owns go 1. Nothing is written before go 1, `work/` included.
+4. After go 1 the caller creates only those folders (not `outputs/`). A folder needed later is created on first use by the coordinator or the worker whose brief names the path; a folder neither in the plan nor named in a brief is not created.
 
 ## Rules
 
