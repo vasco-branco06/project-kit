@@ -253,7 +253,7 @@ def changelog_errors(root):
 
 def vocabulary_errors(root):
     """Model names only in skills/run/SKILL.md and the evaluator template's frontmatter; scanned: skills/ and templates/ *.md and
-    test/scenarios.md except its Results table, which names the model of each run (README, CONTRIBUTING and scripts are not). Blinding words flagged in builder.md and tester.md."""
+    test/scenarios.md except its Results section (up to the next "## " heading), which names the model of each run (README, CONTRIBUTING and scripts are not). Blinding words flagged in builder.md and tester.md."""
     root, errors = Path(root), []
     for f in sorted(list((root / "skills").rglob("*.md")) + list((root / "templates").rglob("*.md"))):
         rel = f.relative_to(root).as_posix()
@@ -269,7 +269,7 @@ def vocabulary_errors(root):
                 errors.append(f"blinding word {w!r} in {rel}")
     scen = root / "test" / "scenarios.md"
     if scen.is_file():
-        for part in re.split(r"(?m)^## (?=\d+\. |Results\b)", scen.read_text(encoding="utf-8")):
+        for part in re.split(r"(?m)^## ", scen.read_text(encoding="utf-8")):
             if part.startswith("Results"):
                 continue
             for m in sorted(set(w.lower() for w in MODEL_WORDS.findall(part))):
@@ -478,6 +478,7 @@ def project_checks():
     for fixture, text in (("bad_blind", "blinding word 'rubric' in templates/agents/builder.md"),
                           ("bad_blind_tester", "blinding word 'checklists' in templates/agents/tester.md"),
                           ("bad_vocab_scenario", "model name 'haiku' outside the allowed places: test/scenarios.md"),
+                          ("bad_vocab_after_results", "model name 'haiku' outside the allowed places: test/scenarios.md 'Notes'"),
                           ("bad_vocab_evaluator", "model name 'opus' outside the allowed places: templates/agents/evaluator.md")):
         failed += expect(fixture, vocabulary_errors(fx / fixture), text)
     ok = vocabulary_errors(fx / "ok_vocab_results")
