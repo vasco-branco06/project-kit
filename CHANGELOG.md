@@ -177,3 +177,4 @@ One line per fix of a rule or template: date, model name, what changed and why.
 - 2026-11-13 | claude-haiku-5-5 | Unreleased: the two earlier changelog lines that named release lines by position now name them by date and first words.
 - 2026-11-13 | claude-haiku-5-5 | Unreleased: the external-models step that copies files back names the same worker as the one that deletes the temporary copy.
 - 2026-11-13 | claude-haiku-5-5 | Unreleased: OD-10 (OPEN-1): the worker that runs OpenCode is on the small tier, in external-models step 3 and in scenario 21 Pass and Fail.
+- 2026-11-13 | claude-haiku-5-5 | Unreleased: external-models step 4 now ends the running worker list after the settings check, and the sentence that the step 5 worker deletes the temporary copy stands on its own right after that list.
