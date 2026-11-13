@@ -414,7 +414,7 @@ def self_test():
 
 
 def project_checks():
-    """New checks, run last: each runs on the plugin (must pass) and on a bad fixture (must fail)."""
+    """New checks, run last: each runs on the plugin (must pass) and on a bad fixture (must fail with its expected text)."""
     fx, failed = FIXTURES, 0
 
     def report(name, errs, bad, text):
@@ -424,8 +424,8 @@ def project_checks():
 
     report("placeholder fillers", placeholder_errors(ROOT), placeholder_errors(fx / "bad_placeholder"),
            "placeholder {{NOT_A_REAL_FILLER}} in templates/core/CLAUDE.md has no filler")
-    report("placeholder named in skill", [], placeholder_errors(fx / "bad_filler"),
-           "1 placeholders in templates/core/CLAUDE.md neither named")
+    failed += expect("placeholder named in skill bad fixture", placeholder_errors(fx / "bad_filler"),
+                     "1 placeholders in templates/core/CLAUDE.md neither named")  # the plugin side runs in 'placeholder fillers'
     report("version", version_errors(ROOT), version_errors(fx / "bad_version"),
            "CHANGELOG last version 0.2.0 != plugin.json 0.1.0")
     ok = version_errors(fx / "ok_unreleased")
@@ -458,8 +458,10 @@ def project_checks():
                      "agent builder.md: report section lacks Status:")
     report("mandatory agents", mandatory_errors() + ([] if SETUP_AGENTS else ["no mandatory agents"]),
            mandatory_errors(fx / "bad_mandatory"), "template missing for mandatory agent builder.md")
-    report("strict", fixture_errors("bad_strict"), fixture_errors("bad_strict", strict=True),
-           "strict: 'n/a until' left in")
+    off = fixture_errors("bad_strict")
+    print(f"bad_strict without --strict: {'PASS' if not off else 'FAIL ' + '; '.join(off)}")
+    failed += bool(off)
+    failed += expect("bad_strict with --strict", fixture_errors("bad_strict", strict=True), "strict: 'n/a until' left in")
     failed += expect("strict, other case", fixture_errors("bad_strict_case", strict=True), "strict: 'n/a until' left in")
     return failed
 
