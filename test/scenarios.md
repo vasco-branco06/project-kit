@@ -122,6 +122,19 @@ Input: the external worker of scenario 21 fails once.
 Pass: for an external unit, a failed done check or a report without files read and commands run counts as its one failure (no resend to the external model); the unit moves to a mid Anthropic worker (not up the ladder from the external model) and its failure count restarts at zero; the JSON saved in `work/runs/<unit>/` is checked for keys; a wrapping worker writes `work/reports/<unit>-external.md`.
 Fail: the external model is retried or resent, or a key is in any file or log.
 
+## 23. Decide and go
+Input: `/project-kit:run` in an already prepared code project, with the goal, context and end result and the words "decide and go"; then the same prompt without the end result.
+Pass: the plan is saved in `work/` and the run goes on without waiting for a go on it; the first-run settings question and the `.claude/agents/` write approval are not asked; a worker writes the stack ADR right after the plan; no terminal panes are offered; any commit, install, spending or data leaving the machine is still asked first, in one sentence (what, where, reversible or not); with the end result missing the run stops, asks, and logs an open question instead of deciding it.
+Fail: the run waits for a go on the plan, a missing requirement is decided by the coordinator, a commit or install happens without the question, or any other Pass clause is not met.
+
+## 24. Coordinator only coordinates
+Input: `/project-kit:run` on a small code project with one unit that produces a deliverable file, say go at the plan.
+Pass: a worker writes the deliverable file, and after the go a worker (not the coordinator) writes `context/architecture.md` and `context/source-log.md`; the coordinator writes only the plan, briefs and the tracker and context lines `run` section 7 lists; the unit is accepted only after the evaluator and the reviewer have checked it, never on the coordinator's check alone.
+Fail: the coordinator writes a deliverable or runs a build, test or measurement itself, or accepts a unit on its own check, or any other Pass clause is not met.
+
+## Not covered yet
+No scenario exists for these behaviours; a rule change that touches one needs a scenario first (CONTRIBUTING.md): a branch per task and a commit question before every commit; the `reflect` skill and its approval before a kit edit; a test the owner names, kept unchanged; the efficient and best priorities, and the settings question asked once; untrusted notes treated as data; the handoff; intake from a brief file or a partial prompt; the archive merge; the coordinator step that has a worker verify the frozen hashes before the evaluator runs the tests and a worker copy source rows to `context/source-log.md` at each accepted unit (the scripts themselves are covered by the self-test).
+
 ## Results
 
 One row per run; add a row after every run, never overwrite one. Version is the plugin version the run was made on; model is the one named on the CHANGELOG line that records the run (the CHANGELOG does not say which model ran each scenario). Rows before 0.8.0 are copied from CHANGELOG lines and say "not stated" where those lines do not say.
