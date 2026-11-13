@@ -41,8 +41,8 @@ Fail: any of these is missing.
 
 ## 8. Research before building
 Input: `/project-kit:research-first` with "a small site with a contact form", in a scratch project.
-Pass: the researcher is briefed per question; `work/research-*.md` has two or three approaches, a recommendation with pinned versions, GitHub candidates with licence, use and last commit date, and an evidence table where every row has a source address and a date; before the go the coordinator writes only `work/research-*.md` (the researcher may write its own `work/reports/<unit>-researcher.md` and `work/sources-<role>.md`); after the go only `context/architecture.md` and `context/source-log.md` are created or updated, by a worker (plus open questions in the progress tracker if it exists).
-Fail: a claim without source or date, a repository suggested without its licence, the coordinator writing anything before the go other than `work/research-*.md`, a worker writing other files after the go, or sources fetched only through summaries.
+Pass: the researcher is briefed per question; `work/research-*.md` has two or three approaches, a recommendation with pinned versions, GitHub candidates with licence, use and last commit date, and an evidence table where every row has a source address and a date; before the go the only findings file the coordinator writes is `work/research-*.md` (besides the plan, briefs and tracker as `run` says; the researcher may write its own `work/reports/<unit>-researcher.md` and `work/sources-<role>.md`); after the go only `context/architecture.md` and `context/source-log.md` are created or updated, by a worker (plus open questions in the progress tracker if it exists).
+Fail: a claim without source or date, a repository suggested without its licence, the coordinator writing a findings file other than `work/research-*.md` before the go, a worker writing other files after the go, or sources fetched only through summaries.
 
 ## 9. Evaluator process check
 Input: a unit whose builder report names a file it never opened (seed it in a scratch run).

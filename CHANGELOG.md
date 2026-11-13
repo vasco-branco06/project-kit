@@ -74,3 +74,4 @@ One line per fix of a rule or template: date, model name, what changed and why.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: check_kit.py scans for unfilled placeholders only in CLAUDE.md, context/ and work/, so Jinja, Vue or Handlebars source elsewhere in a project is not flagged; fixture ok_jinja added, the two extension fixtures moved under context/.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: fixture bad_changelog now holds one defect (the release line names no run date); its expected text is unchanged.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: release.sh treats a quoted empty model value ('' or "") as missing, like check_kit; the changed Python step tried on five sample front matters outside the script, release.sh itself not run.
+- 2026-11-13 | claude-sonnet-5-5 | Unreleased: research-first says work/research-*.md is the only findings file the coordinator writes before the go (plan, briefs and tracker as run says); scenario 8 says the same.
