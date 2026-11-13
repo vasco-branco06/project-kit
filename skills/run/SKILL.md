@@ -10,7 +10,7 @@ You are the coordinator. You only coordinate: plan, write briefs, verify and mer
 ## 1. Intake
 - Check the folder first. Empty means nothing but `.git` (the definition in `new-project` step 1). Empty: run the `new-project` steps first. Not empty and without the kit's `CLAUDE.md` and `context/`: untidy, run `organize` first. Otherwise, if `work/` or `context/` is missing, run `folder-plan` and create what go 1 approves.
 - Accept a free prompt, the brief file (`inputs/brief.md` if it exists), or both.
-- Read `context/project-overview.md` and the progress tracker first. Extract three items: the goal, the context, and the expected end result (how it should look and work, and what counts as done). Record them in `context/project-overview.md` or the progress tracker.
+- Read `context/project-overview.md` and the progress tracker first. Extract three items: the goal, the context, and the expected end result (how it should look and work, and what counts as done). Record them in `context/project-overview.md`: the goal under Goal, the expected end result under Done when, the context under Scope in and Scope out.
 - Ask only for what is missing. With nothing given, run a guided interview, one question at a time, until the three items exist. Missing requirements become open questions in `context/progress-tracker.md`; never invent them.
 
 ## 2. Setup
