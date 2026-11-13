@@ -96,3 +96,4 @@ One line per fix of a rule or template: date, model name, what changed and why.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: run section 6: the escalation rules are five numbered steps; the first failure on the strongest tier stops (the count the old line implied); a recurring workaround is the same bypass of the cause in two attempts.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: run section 2: the priority and tier criteria stay here; each unit's model is chosen when the units are written in section 4.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: run section 4: a refused permission, commit or plan go leaves the affected unit planned and the coordinator asks the owner what to do next.
+- 2026-11-13 | claude-sonnet-5-5 | Unreleased: run: the strongest tier under the best priority no longer promises a review of the plan, which no step performs (chose dropping the words over adding a plan-review step, the smaller change).
