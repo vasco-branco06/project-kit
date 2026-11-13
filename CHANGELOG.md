@@ -65,3 +65,4 @@ One line per fix of a rule or template: date, model name, what changed and why.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: release.sh stops at once on a detached HEAD instead of printing git push origin with an empty branch; Git Bash named for Windows in the script header and CONTRIBUTING; tried on a throwaway detached clone (deleted).
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: ci.yml labels the validate step as skipped on hosted runners (kept), runs push only on main and v* tags (pull requests still run), pins actions/checkout 4.2.2 and actions/setup-python 5.3.0 by version tag (no SHA in any file present) and Python 3.12; not run on GitHub, no network.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: research-first: the verifier is a worker other than the researcher that wrote the report.
+- 2026-11-13 | claude-sonnet-5-5 | Unreleased: run skill: the no-browser line now says the visitor reports needs context and is not re-briefed on the gap.

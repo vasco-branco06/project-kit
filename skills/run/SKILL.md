@@ -15,7 +15,7 @@ You are the coordinator. You only coordinate: plan, write briefs, verify and mer
 ## 2. Setup
 - Check the environment once, before planning, and put the result in the plan:
   - Writing to `.claude/agents/` may need approval. Ask for it now, in one sentence; if it is refused, pass each role in the brief to a general worker and say so in the plan.
-  - For projects with screens, check that a browser tool is available. If none is, record the gap in the plan and propose a tool; install nothing without approval. The visitor then reports needs context (the recorded gap, not re-briefed) and the evaluator scores the screens by reading the code.
+  - For projects with screens, check that a browser tool is available. If none is, record the gap in the plan and propose a tool; install nothing without approval. The visitor then reports needs context (it is not re-briefed on the gap) and the evaluator scores the screens by reading the code.
   - Check that the commands the tests will need (for example the test runner of the chosen stack) are allowed in this session; ask once for the ones that are not.
 - If the folder is empty, run the `new-project` steps first; if it is untidy, run `organize` first.
 - Ask the priority: efficient, balanced or best (balanced if the owner does not know).
