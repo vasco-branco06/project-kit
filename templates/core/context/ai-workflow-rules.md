@@ -25,7 +25,7 @@ A correction brief says what behaviour was expected, what happened, and that onl
 As section 2 of the `run` skill says; anything missing is stated in the plan.
 
 ## Evaluator rules
-Never name this section in a builder or visitor brief. Only the evaluator reads or writes `work/tests/`; a visitor writes only in `work/evidence-incoming/<unit>/`.
+Never name this section in a builder, visitor, reviewer or researcher brief. Only the evaluator reads or writes `work/tests/`; a visitor writes only in `work/evidence-incoming/<unit>/`.
 
 ## Safety
 Subagents never decide for the coordinator. Ask before anything destructive, external or hard to reverse.
