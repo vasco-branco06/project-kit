@@ -1,6 +1,6 @@
 ---
 name: organize
-description: Reorganize an existing project folder into the project-kit structure with a dry-run manifest, moving nothing until approved and deleting nothing. Use for folders that already have files.
+description: Reorganize an existing project folder into the project-kit structure with a dry-run manifest, moving nothing until approved and deleting only zero-byte files and empty folders the owner approves by name. Use for folders that already have files.
 ---
 
 # organize
