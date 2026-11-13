@@ -24,7 +24,7 @@ The kit is Markdown, JSON and a few scripts that use only the Python standard li
 
 Only the owner releases. Running the script by hand is the owner's approval of the release commit and tag it makes; it asks nothing more.
 
-Bump the version on every content change: installed copies update only when the version changes, so two different contents must never share one version number. Release each change with `release.sh` under a new `X.Y.Z`.
+Bump the version on every released content change: installed copies update only when the version changes, so two different contents must never share one version number. Release each change with `release.sh` under a new `X.Y.Z`.
 
 ```
 bash scripts/release.sh X.Y.Z "what changed and why" MODEL_NAME

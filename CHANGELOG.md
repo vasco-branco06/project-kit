@@ -172,3 +172,4 @@ One line per fix of a rule or template: date, model name, what changed and why.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: the earlier changelog line for the source-log ownership reversal says the last and an earlier release line instead of version numbers.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: the earlier changelog line for the past-line corrections names the release lines by position instead of version numbers.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: README Not verified gives the agent-teams address with its scheme, the same as terminal-panes and CREDITS.
+- 2026-11-13 | claude-sonnet-5-5 | Unreleased: CONTRIBUTING version-bump rule says every released content change, so it agrees with the owner folding many Unreleased lines into one release line.
