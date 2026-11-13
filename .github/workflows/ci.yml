@@ -1,0 +1,43 @@
+name: ci
+
+on:
+  push:
+    tags: ["v*"]
+    branches: ["**"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Self-test
+        run: python -I test/check_kit.py --self-test
+      - name: claude plugin validate (only if the claude CLI exists)
+        run: |
+          if command -v claude >/dev/null 2>&1; then
+            claude plugin validate . --strict
+          else
+            echo "claude CLI not installed on this runner, skipped"
+          fi
+      - name: Tag matches plugin.json version
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          version=$(python -I -c "import json; print(json.load(open('.claude-plugin/plugin.json'))['version'])")
+          if [ "${GITHUB_REF_NAME#v}" != "$version" ]; then
+            echo "tag $GITHUB_REF_NAME does not match plugin.json version $version"
+            exit 1
+          fi

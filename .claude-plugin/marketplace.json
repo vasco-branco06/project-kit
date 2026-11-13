@@ -1,12 +1,14 @@
 {
   "name": "project-kit",
-  "description": "Marketplace for the project-kit plugin, a general model for organizing any project.",
+  "description": "Marketplace for the project-kit plugin: a multi-agent kit that plans, coordinates, verifies and escalates, plus folder setup for research, academic, code and general projects.",
   "owner": { "name": "vasco-branco06" },
   "plugins": [
     {
       "name": "project-kit",
       "source": "./",
-      "description": "General model for organizing any project (research, academic, code or general), plus a run skill that coordinates multi-agent work."
+      "description": "Multi-agent kit: a coordinator plans the work, runs worker subagents, verifies every result and escalates failures. Also sets up or reorganizes project folders (research, academic, code or general).",
+      "homepage": "https://github.com/vasco-branco06/project-kit",
+      "category": "productivity"
     }
   ]
 }

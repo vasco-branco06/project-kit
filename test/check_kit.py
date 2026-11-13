@@ -11,10 +11,14 @@ in double braces is left (dependency, hidden and work/tests folders are skipped)
 Plugin check (--self-test): plugin.json and marketplace.json parse and have their keys,
 every SKILL.md has frontmatter with name == folder name and a description, and every
 templates/ path a skill mentions exists.
+Project checks (--self-test, run last, each with a bad fixture under test/fixtures): placeholder
+filler map, version alignment, changelog scenario record, vocabulary, bare templates/ paths,
+agent schema, mandatory agent set. `--strict FOLDER` also flags "n/a until" in a generated folder.
 """
 import json
 import re
 import shutil
+import subprocess
 import sys
 import tempfile
 from pathlib import Path
@@ -27,6 +31,34 @@ MARKER = "<!-- read-order -->"
 SKIP_DIRS = {"node_modules", ".venv", "venv", "__pycache__", ".worktrees", ".git"}
 AGENT_KEYS = ("name", "description", "model")
 SETUP_AGENTS = ("reviewer.md", "evaluator.md", "researcher.md")
+
+FILLERS = {}
+for _skill, _names in {
+    "new-project": "DATE MODEL_NAME PROJECT_NAME PROJECT_TYPE WORK_LANGUAGE CITATION_STYLE STYLE_GUIDE "
+    "STANDARDS_FILE DECIDED_BY GOAL DONE_CHECKS SCOPE_IN SCOPE_OUT OWNER_RULES OWNER_TESTS PAGE_LIMIT "
+    "TEACHER_GUIDE CURRENT_PHASE NEXT_STEPS FIRST_DECISION_TITLE DECISION_CONTEXT DECISION_OPTIONS "
+    "DECISION_TAKEN DECISION_TRADEOFFS DECISION_SOURCES DECISION_EVIDENCE DECISION_REJECTED "
+    "DECISION_INVALIDATION DECISION_REVERSIBILITY "
+    "COMPONENTS_AND_ICONS LOOK_AND_TONE SPACING_AND_RADIUS TOKEN_NAME TOKEN_USE TOKEN_LIGHT TOKEN_DARK "
+    "TYPOGRAPHY LAYOUT_PATTERNS",
+    "run": "FRAMEWORK FRAMEWORK_REASON FRAMEWORK_VERSION HOSTING HOSTING_REASON HOSTING_VERSION LANGUAGE "
+    "LANGUAGE_REASON LANGUAGE_VERSION LINTER LINTER_REASON LINTER_VERSION PACKAGE_MANAGER PACKAGE_REASON "
+    "PACKAGE_VERSION TEST_TOOL TEST_REASON TEST_VERSION TEST_COMMAND BUILD_COMMAND CHECK_COMMAND "
+    "LINT_COMMAND TYPES_COMMAND START_COMMAND STOP_COMMAND READY_SIGNAL ISOLATION INVARIANTS COMPONENTS "
+    "DATA_FLOW CONSTRAINTS FIRST_UNIT_ID FIRST_UNIT_NAME FIRST_UNIT_DEPENDS "
+    "FIRST_UNIT_CHECK UNIT_ID UNIT_NAME UNIT_GOAL UNIT_DESIGN UNIT_IMPLEMENTATION UNIT_DEPENDENCIES "
+    "UNIT_VERIFY",
+}.items():
+    FILLERS.update({n: _skill for n in _names.split()})  # placeholder -> skill whose step fills it
+MODEL_WORDS = re.compile(r"\b(haiku|sonnet|opus|fable)\b", re.I)
+BLIND_WORDS = re.compile(r"\b(test|tests|eval|rubric|score|checklist)\b", re.I)
+TOOLS_REQUIRED = {"reviewer", "researcher"}
+VALID_MODELS = {"inherit", "opus", "sonnet", "haiku", "fable"}
+MODEL_ID = re.compile(r"claude-[a-z0-9][a-z0-9.-]*")
+CONSTANT_FILLERS = {"STANDARDS_FILE"}  # filled by a constant in new-project, not by a described step
+MANDATORY = {"reviewer.md", "evaluator.md", "researcher.md"}
+BARE_TEMPLATES = re.compile(r"(?<!\$\{CLAUDE_PLUGIN_ROOT\}/)(?<![A-Za-z0-9_./-])templates/[A-Za-z0-9_./-]+")
+VERSION = re.compile(r"\b\d+\.\d+\.\d+\b")
 
 
 def read_order(entry):
@@ -48,13 +80,26 @@ def read_order(entry):
     return out
 
 
-def agent_errors(path):
-    text = path.read_text(encoding="utf-8")
-    m = re.match(r"---\n(.*?)\n---", text.replace("\r\n", "\n"), re.S)
+def agent_errors(path, full=False):
+    """Frontmatter keys; with full=True also the schema: name == file stem, valid model, tools, Status:."""
+    path = Path(path)
+    text = path.read_text(encoding="utf-8").replace("\r\n", "\n")
+    m = re.match(r"---\n(.*?)\n---", text, re.S)
     if not m:
         return [f"agent without frontmatter: {path.name}"]
-    keys = {l.split(":", 1)[0].strip() for l in m.group(1).splitlines() if ":" in l}
-    return [f"agent {path.name} lacks {k}" for k in AGENT_KEYS if k not in keys]
+    fm = {k.strip(): v.strip() for k, _, v in (l.partition(":") for l in m.group(1).splitlines()) if _}
+    errors = [f"agent {path.name} lacks {k}" for k in AGENT_KEYS if k not in fm]
+    if full:
+        if fm.get("name") and fm["name"] != path.stem:
+            errors.append(f"agent {path.name}: name {fm['name']!r} != file name")
+        if fm.get("model") and fm["model"] not in VALID_MODELS and not MODEL_ID.fullmatch(fm["model"]):
+            errors.append(f"agent {path.name}: model {fm['model']!r} not in {sorted(VALID_MODELS)}")
+        if path.stem in TOOLS_REQUIRED and "tools" not in fm:
+            errors.append(f"agent {path.name} lacks tools")
+        report = re.split(r"^#*\s*report\b.*$", text[m.end():], maxsplit=1, flags=re.I | re.M)
+        if len(report) < 2 or "Status:" not in report[1]:
+            errors.append(f"agent {path.name}: report section lacks Status:")
+    return errors
 
 
 def frontmatter(text):
@@ -102,7 +147,120 @@ def plugin_errors(root):
     return errors
 
 
-def check_folder(folder):
+def mentions(text, rel):
+    """True if text names the template file (path relative to its layer, or its file name) or a parent folder below the top."""
+    parts = Path(rel).parts
+    names = {rel, parts[-1]} | {"/".join(parts[:i]) + "/" for i in range(2, len(parts))}
+    return any(n in text for n in names)
+
+
+def placeholder_errors(root, fillers=FILLERS):
+    """Every {{X}} in templates/ has a filler skill that exists and names X or the template file holding it."""
+    root, errors, texts, unnamed = Path(root), [], {}, {}
+    for f in sorted((root / "templates").rglob("*")):
+        if f.is_file() and f.suffix in {".md", ".txt", ".json", ""}:
+            rel = f.relative_to(root / "templates").as_posix()
+            layer_rel = rel.split("/", 1)[1] if "/" in rel else rel
+            for m in sorted(set(PLACEHOLDER.findall(f.read_text(encoding="utf-8", errors="ignore")))):
+                name, skill = m[2:-2], fillers.get(m[2:-2])
+                if skill is None:
+                    errors.append(f"placeholder {m} in templates/{rel} has no filler")
+                    continue
+                if name in CONSTANT_FILLERS or not (root / "skills").is_dir():
+                    continue
+                path = root / "skills" / skill / "SKILL.md"
+                if skill not in texts:
+                    texts[skill] = path.read_text(encoding="utf-8") if path.is_file() else None
+                if texts[skill] is None:
+                    errors.append(f"placeholder {m}: filler skill {skill} not found")
+                elif name not in texts[skill] and not mentions(texts[skill], layer_rel):
+                    unnamed.setdefault((f"templates/{rel}", skill), []).append(m)
+    errors += [f"{len(v)} placeholders in {k[0]} neither named nor is the file mentioned in skill {k[1]}: {' '.join(v)}"
+               for k, v in sorted(unnamed.items())]
+    return errors
+
+
+def version_errors(root):
+    """Version of the last CHANGELOG line that has one == plugin.json (== marketplace.json if given)."""
+    root, errors = Path(root), []
+    try:
+        lines = [l for l in (root / "CHANGELOG.md").read_text(encoding="utf-8").splitlines() if VERSION.search(l)]
+        changelog = VERSION.search(lines[-1]).group(0)
+        plugin = json.loads((root / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8"))["version"]
+    except (OSError, ValueError, KeyError, IndexError) as e:
+        return [f"version check: {type(e).__name__} {e}"]
+    if changelog != plugin:
+        errors.append(f"CHANGELOG last version {changelog} != plugin.json {plugin}")
+    try:
+        market = json.loads((root / ".claude-plugin" / "marketplace.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return errors
+    for v in [market.get("version")] + [p.get("version") for p in market.get("plugins") or []]:
+        if v and v != plugin:
+            errors.append(f"marketplace.json version {v} != plugin.json {plugin}")
+    return errors
+
+
+def changelog_errors(root):
+    """A CHANGELOG line for the current version says scenarios were run or passed on a date, not 'not run'."""
+    root = Path(root)
+    try:
+        plugin = json.loads((root / ".claude-plugin" / "plugin.json").read_text(encoding="utf-8"))["version"]
+        lines = (root / "CHANGELOG.md").read_text(encoding="utf-8").splitlines()
+    except (OSError, ValueError, KeyError) as e:
+        return [f"changelog check: {type(e).__name__} {e}"]
+    for l in lines:
+        if (plugin in l and re.search(r"scenarios?\b", l, re.I) and re.search(r"\b(run|passed|pass) on\b", l, re.I)
+                and not re.search(r"\bnot (yet )?run\b", l, re.I)):
+            return []
+    return [f"CHANGELOG has no line with {plugin} saying scenarios were run or passed on a date (and not 'not run')"]
+
+
+def vocabulary_errors(root):
+    """Model names only in run/SKILL.md, the evaluator frontmatter and scenario 4; blinding words flagged in builder.md."""
+    root, errors = Path(root), []
+    for f in sorted(list((root / "skills").rglob("*.md")) + list((root / "templates").rglob("*.md"))):
+        rel = f.relative_to(root).as_posix()
+        text = f.read_text(encoding="utf-8", errors="ignore")
+        if rel == "skills/run/SKILL.md":
+            continue
+        if rel == "templates/agents/evaluator.md":
+            text = text.replace("\r\n", "\n").split("\n---", 1)[-1]
+        for m in sorted(set(w.lower() for w in MODEL_WORDS.findall(text))):
+            errors.append(f"model name {m!r} outside the allowed places: {rel}")
+        if rel == "templates/agents/builder.md":
+            for w in sorted(set(w.lower() for w in BLIND_WORDS.findall(text))):
+                errors.append(f"blinding word {w!r} in {rel}")
+    scen = root / "test" / "scenarios.md"
+    if scen.is_file():
+        for part in re.split(r"(?m)^## (?=\d+\. )", scen.read_text(encoding="utf-8")):
+            if part.startswith("4. "):
+                continue
+            for m in sorted(set(w.lower() for w in MODEL_WORDS.findall(part))):
+                errors.append(f"model name {m!r} outside scenario 4: test/scenarios.md {part.splitlines()[0][:30]!r}")
+    return errors
+
+
+def bare_path_errors(root):
+    """A skill must write ${CLAUDE_PLUGIN_ROOT}/templates/..., never a bare templates/ path."""
+    root, errors = Path(root), []
+    for s in sorted((root / "skills").glob("*/SKILL.md")):
+        for ref in sorted(set(BARE_TEMPLATES.findall(s.read_text(encoding="utf-8")))):
+            errors.append(f"skill {s.parent.name}: bare path {ref}")
+    return errors
+
+
+def mandatory_errors(setup=SETUP_AGENTS, root=ROOT):
+    """Exactly reviewer, evaluator and researcher are mandatory, and their templates exist."""
+    errors = []
+    if set(setup) != MANDATORY or len(setup) != len(MANDATORY):
+        errors.append(f"mandatory agents are {sorted(setup)}, expected {sorted(MANDATORY)}")
+    errors += [f"template missing for mandatory agent {a}" for a in sorted(MANDATORY)
+               if not (Path(root) / "templates" / "agents" / a).is_file()]
+    return errors
+
+
+def check_folder(folder, strict=False):
     folder, errors = Path(folder), []
     entry = folder / "CLAUDE.md"
     if not entry.is_file():
@@ -114,17 +272,20 @@ def check_folder(folder):
     agents = folder / ".claude" / "agents"
     if agents.is_dir():
         errors += [f"mandatory agent missing: {a}" for a in SETUP_AGENTS if not (agents / a).is_file()]
+        known = {p.name for p in (ROOT / "templates" / "agents").glob("*.md")}
         for a in sorted(agents.glob("*.md")):
-            errors += agent_errors(a)
+            errors += agent_errors(a, full=a.name in known)
     for f in folder.rglob("*"):
         rel = f.relative_to(folder)
-        if SKIP_DIRS & set(rel.parts) or rel.parts[:2] == ("work", "tests"):
+        if SKIP_DIRS & set(rel.parts) or rel.parts[:2] == ("work", "tests") or rel.parts[0] == "inputs":
             continue
         if any(p.startswith(".") and p != ".claude" for p in rel.parts[:-1]):
             continue
         if f.is_file() and f.suffix in {".md", ".txt", ".json", ""} and not f.name.startswith("_"):
             for m in PLACEHOLDER.findall(f.read_text(encoding="utf-8", errors="ignore")):
                 errors.append(f"unfilled placeholder {m} in {f.relative_to(folder)}")
+            if strict and "n/a until" in f.read_text(encoding="utf-8", errors="ignore"):
+                errors.append(f"strict: 'n/a until' left in {f.relative_to(folder)}")
     return errors
 
 
@@ -174,15 +335,47 @@ def self_test():
         bad = check_folder(ROOT / "test" / "fixtures" / fixture)
         print(f"{fixture}: {'FAILS as expected' if bad else 'UNEXPECTEDLY PASSES'}")
         failed += not bad
+    for script in ("freeze_tests.py", "merge_sources.py"):
+        r = subprocess.run([sys.executable, "-I", str(ROOT / "scripts" / script), "--self-test"],
+                           capture_output=True, text=True)
+        print(f"{script} self-test: {'PASS' if r.returncode == 0 else 'FAIL ' + (r.stderr or r.stdout).strip()[-200:]}")
+        failed += r.returncode != 0
+    failed += project_checks()
     return 1 if failed else 0
+
+
+def project_checks():
+    """New checks, run last: each runs on the plugin (must pass) and on a bad fixture (must fail)."""
+    fx, failed = ROOT / "test" / "fixtures", 0
+
+    def report(name, errs, bad):
+        nonlocal failed
+        print(f"{name}: {'PASS' if not errs else 'FAIL ' + '; '.join(errs)}")
+        print(f"{name} bad fixture: {'FAILS as expected' if bad else 'UNEXPECTEDLY PASSES'}")
+        failed += bool(errs) + (not bad)
+
+    report("placeholder fillers", placeholder_errors(ROOT), placeholder_errors(fx / "bad_placeholder"))
+    report("placeholder named in skill", [], placeholder_errors(fx / "bad_filler"))
+    report("version", version_errors(ROOT), version_errors(fx / "bad_version"))
+    report("changelog scenarios", changelog_errors(ROOT), changelog_errors(fx / "bad_changelog"))
+    report("vocabulary", vocabulary_errors(ROOT), vocabulary_errors(fx / "bad_vocab"))
+    report("bare templates path", bare_path_errors(ROOT), bare_path_errors(fx / "bad_barepath"))
+    schema = [e for a in sorted((ROOT / "templates" / "agents").glob("*.md")) for e in agent_errors(a, full=True)]
+    report("agent schema", schema, agent_errors(fx / "bad_schema" / "builder.md", full=True))
+    report("mandatory agents", mandatory_errors(), mandatory_errors(SETUP_AGENTS + ("builder.md",)))
+    strict_bad = check_folder(fx / "bad_strict", strict=True)
+    report("strict", check_folder(fx / "bad_strict"), strict_bad)
+    return failed
 
 
 if __name__ == "__main__":
     if sys.argv[1:] == ["--self-test"]:
         sys.exit(self_test())
-    if len(sys.argv) != 2:
+    strict = sys.argv[1:2] == ["--strict"]
+    args = sys.argv[2:] if strict else sys.argv[1:]
+    if len(args) != 1:
         print(__doc__)
         sys.exit(2)
-    errs = check_folder(sys.argv[1])
+    errs = check_folder(args[0], strict=strict)
     print("\n".join(errs) or "PASS")
     sys.exit(1 if errs else 0)

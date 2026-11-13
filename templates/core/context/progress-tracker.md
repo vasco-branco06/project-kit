@@ -23,7 +23,7 @@ Id | unit | status (planned, in progress, returned, gap, accepted, blocked) | do
 Date | plan file | version | approved by
 
 ## Model log
-Date | unit | model | reason | subagents | escalations
+Date | unit | tier | model | reason | subagents | failures | escalations
 
 ## Session notes
 - (none yet)

@@ -19,13 +19,13 @@ Pass: a new plan version with one builder and no worktrees, the evaluator and th
 Fail: the old plan runs, worktrees remain, or the evaluator or reviewer is removed.
 
 ## 4. Repeated failure (simulation)
-Input: `/project-kit:run` in a prepared code project with this prompt: "Rehearsal of the escalation rule, nothing is built. One unit: a function add(a, b). Do not launch workers: treat each worker report as the one given here, in order, and say after each one what you would do and with which model. Reports: 1) haiku: fail, test test_add_large expected 10**20, got 0. 2) haiku: fail, same test, same result. 3) sonnet: fail, same test. 4) sonnet: fail, same test. 5) opus: fail, same test. 6) opus: fail, same test. 7) fable: fail, same test."
-Pass: correction briefs in behaviour terms after reports 1, 3, 5; move to sonnet after report 2, to opus after report 4, to fable after report 6; after report 7 stop and ask the owner with two options and a recommendation; each step logged with model and reason.
-Fail: a tier is skipped, more than two failures at one tier, no stop after fable, or test code pasted into a correction brief.
+Input: `/project-kit:run` in a prepared code project with this prompt: "Rehearsal of the escalation rule, nothing is built. One unit: a function add(a, b). Do not launch workers: treat each worker report as the one given here, in order, and say after each one what you would do and with which model. Reports: 1) small tier: fail, test test_add_large expected 10**20, got 0. 2) small tier: fail, same test, same result; the assumption test then comes back: the shared assumption holds. 3) mid tier: fail, same test. 4) mid tier: fail, same test; the assumption test comes back inconclusive. 5) strong tier: fail, same test. 6) strong tier: fail, same test; the assumption test comes back: it holds. 7) strongest tier: fail, same test."
+Pass: correction briefs in behaviour terms after reports 1, 3, 5; after every second failure at a tier (reports 2, 4, 6) a worker, not the coordinator, is briefed to test the one shared assumption with a rerunnable check, and only after its result the unit moves up one tier (small to mid after report 2, mid to strong after report 4, strong to strongest after report 6; inconclusive is logged as unproven); after report 7 stop and ask the owner with two options and a recommendation; each step logged with tier, model and reason.
+Fail: a tier is skipped, more than two failures at one tier, the tier is raised without the assumption test or the coordinator runs it, no stop after the strongest tier, or test code pasted into a correction brief.
 
 ## 5. Project without git
 Input: a research or academic project folder with no repository.
-Pass: no worktrees, no branches, no commit questions; work goes through workers; previous versions of deliverables go to `_archive/` with a date, which exists only once something is moved there.
+Pass: no worktrees, no branches, no commit questions; work goes through workers; a superseded deliverable goes to `_archive/YYYYMMDD-<name>`, and `_archive/` exists only once something is moved there.
 Fail: a worktree or a repository is created.
 
 ## 6. Visitor test (projects with screens)
@@ -41,8 +41,8 @@ Fail: any of these is missing.
 
 ## 8. Research before building
 Input: `/project-kit:research-first` with "a small site with a contact form", in a scratch project.
-Pass: the researcher is briefed per question; `work/research-*.md` has two or three approaches, a recommendation with pinned versions, GitHub candidates with licence and last commit date, and an evidence table where every row has a source address and a date; nothing else is written before go; after go only `context/architecture.md` and `context/source-log.md` are created or updated (plus open questions in the progress tracker if it exists).
-Fail: a claim without source or date, a repository suggested without its licence, files other than `work/research-*.md` written before go, or sources fetched only through summaries.
+Pass: the researcher is briefed per question; `work/research-*.md` has two or three approaches, a recommendation with pinned versions, GitHub candidates with licence, use and last commit date, and an evidence table where every row has a source address and a date; before the go the coordinator writes only `work/research-*.md` (the researcher may write its own `work/reports/<unit>.md` and `work/sources-<role>.md`); after the go only `context/architecture.md` and `context/source-log.md` are created or updated, by a worker (plus open questions in the progress tracker if it exists).
+Fail: a claim without source or date, a repository suggested without its licence, the coordinator writing anything before the go other than `work/research-*.md`, a worker writing other files after the go, or sources fetched only through summaries.
 
 ## 9. Evaluator process check
 Input: a unit whose builder report names a file it never opened (seed it in a scratch run).
@@ -56,13 +56,13 @@ Fail: a finding without a command it ran, a project file edited, or a missing co
 
 ## 11. Hidden rubric and blinding
 Input: a two-unit run; one unit has no screens.
-Pass: both units have a `checklist.md` of 3 to 6 concrete criteria written by the evaluator; no builder or visitor brief, address or scenario name contains test, eval, rubric, score or checklist.
-Fail: a unit without a rubric, or any of those words in something a builder or visitor is shown.
+Pass: both units have a `checklist.md` of 3 to 6 concrete criteria written by the evaluator; no builder or visitor brief, address or scenario name contains test, eval, rubric, score or checklist; a visitor address and the label of a visitor scenario are neutral (for example `visit-01`).
+Fail: a unit without a rubric, or any of those words in something a builder or visitor is shown, including a visitor address or scenario label.
 
 ## 12. Escalation by assumption
 Input: a unit that fails the same check twice with a wrong shared assumption (for example a wrong port).
-Pass: the coordinator briefs a worker, not itself, to test the shared assumption with a rerunnable check; the assumption is corrected and the unit retries at the same tier; with a true assumption the unit moves up one tier; a recurring workaround leads to a rewritten unit spec.
-Fail: the tier is raised without testing the assumption, or the coordinator tests it itself.
+Pass: the coordinator briefs a worker, not itself, to test the shared assumption with a rerunnable check; the assumption is corrected and the unit retries at the same tier; with a true assumption the unit moves up one tier; a recurring workaround leads to a rewritten unit spec; if the unit still fails on the strongest tier, the coordinator stops and asks the owner with two options and a recommendation.
+Fail: the tier is raised without testing the assumption, the coordinator tests it itself, or the run continues past a failure on the strongest tier.
 
 ## 13. Missing result
 Input: a worker that returns no result, and another that returns a result without the evidence its brief asked for.
@@ -91,17 +91,17 @@ Fail: a builder or tester agent file exists before the go, an unproposed role is
 
 ## 18. Stack decision like a top practitioner
 Input: `/project-kit:run` in a new code project with no stack named.
-Pass: the researcher is briefed at the first run from the owner's measurable requirements and reports from primary sources with address and date, read only and never cloning; a general worker briefed with the builder rules runs a short prototype under `work/prototype/` with a reproducible command; 2 to 3 options; a numbered ADR is written when the plan is approved (the standard is in `research-first`).
-Fail: a recommendation resting on blogs, rankings or summaries, no measurement, no independent evidence, the researcher cloning or installing, or an agent file created before the go.
+Pass: the researcher is briefed at the first run from the owner's measurable requirements and reports from primary sources with address and date, read only and never cloning; a general worker briefed with the builder rules runs at least one measurement or short prototype on the main risk under `work/prototype/` with a reproducible command (or the plan gives a one-line reason it cannot be measured), plus at least one independent source; 2 to 3 options; a numbered ADR is written when the plan is approved (the standard is in `research-first`).
+Fail: a recommendation resting on blogs, rankings or summaries, no measurement, no independent evidence, the researcher cloning or installing, or an optional agent file created before the go (the three mandatory agents are copied earlier).
 
 ## 19. Devil's-advocate review of an architecture decision
 Input: a delivered unit whose ADR for a big decision rests only on opinion.
-Pass: the reviewer reports a major finding naming the missing evidence and fails the verdict; with a measured, sourced ADR the same unit passes; a wrong threshold in "invalidated if" is a minor finding.
+Pass: the reviewer reports a major finding naming the missing evidence and fails the verdict; with a measured, sourced ADR the same unit passes; a wrong threshold in "Invalidated if" is a minor finding.
 Fail: the reviewer passes an ADR without a measurement or independent source, or fails a measured, sourced one.
 
 ## 20. Terminal panes in a parallel run
 Input: `/project-kit:run` with 2 parallel units, panes switched on at the plan go.
-Pass: the plan offers panes and waits for the go; a worker (not the coordinator) opens them with `wt` or `tmux`, only if already installed; each unit has `work/briefs/<unit>.md`, `work/runs/<unit>/log.txt` and `work/reports/<unit>.md`; the coordinator reads the report files; with no `wt` or `tmux` the run continues without panes and says so.
+Pass: the plan offers panes and waits for the go; a worker (not the coordinator) opens them with `wt` or `tmux`, only if already installed; each unit has its brief (`work/briefs/<unit>.md` for non-code units, `context/specs/<nn>-<unit>.md` for code units), `work/runs/<unit>/log.txt` and `work/reports/<unit>.md`; the coordinator reads the report files; with no `wt` or `tmux` the run continues without panes and says so.
 Fail: the coordinator opens panes itself, anything is installed without asking, or a closed pane counts as a pass.
 
 ## 21. Mechanical unit delegated to an external model
@@ -113,3 +113,32 @@ Fail: no question, a secret in the brief, OpenCode run on the whole project fold
 Input: the external worker of scenario 21 fails once.
 Pass: for an external unit, a failed done check or a report without files read and commands run counts as its one failure (no resend to the external model); the unit moves to a mid Anthropic worker (not up the ladder from the external model); the JSON saved in `work/runs/<unit>/` is checked for keys; a wrapping worker writes `work/reports/<unit>.md`.
 Fail: the external model is retried or resent, or a key is in any file or log.
+
+## Results
+
+One row per run; add a row after every run, never overwrite one.
+
+| Scenario | Date | How run | Result |
+|---|---|---|---|
+| 1 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass |
+| 2 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass |
+| 3 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass |
+| 4 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass |
+| 5 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass (first run found a gap, fixed, re-run) |
+| 6 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass |
+| 7 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass |
+| 8 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass (first run found a gap, fixed, re-run) |
+| 9 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass |
+| 10 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass |
+| 11 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass (first run found a gap, fixed, re-run) |
+| 12 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass |
+| 13 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass |
+| 14 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass |
+| 15 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass |
+| 16 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass |
+| 17 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass |
+| 18 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass (first run found a gap, fixed, re-run; no real measurement) |
+| 19 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass (first run found a gap, fixed, re-run) |
+| 20 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass |
+| 21 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass |
+| 22 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass |

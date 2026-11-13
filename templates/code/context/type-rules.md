@@ -8,12 +8,12 @@ Applies to apps, sites, scripts, data and machine learning, and system architect
 - Only the coordinator merges. Nobody writes another session checkout. Ask the owner before any commit; the first commit of a new repository included.
 
 ## Stack
-- If the owner names a stack, use it. Otherwise a researcher compares two or three candidates in official documentation and current versions, against the goal, the end result, zero extra cost, maintenance and what the owner already uses. Record the choice in `architecture.md` with pinned versions and a reason for each.
+- If the owner names a stack, use it. Otherwise the choice follows the Decision standard of the plugin skill `research-first`: researched from primary sources, measured, recorded as an ADR in `decisions.md`, with pinned versions and a reason for each in `architecture.md`.
 
 ## Units and specs
 - Each unit has a spec in `specs/` made from `specs/_unit-template.md`; the build plan lives in `specs/00-build-plan.md`.
 
-## Tests
+## Tests (evaluator and coordinator; never named in a builder brief)
 - Once every unit has a spec, the evaluator (strongest tier) writes the code tests and, for every unit, a hidden rubric of 3 to 6 criteria (`checklist.md`), adds every test the owner named unchanged, and freezes them by hash in `work/tests/` before any build. Each test has a pass and a fail outcome.
 - The builder never sees the evaluator tests; it may write its own tests in the code folders, never in `outputs/`.
 - For screens, one blind visitor (two or more with different profiles under the best priority) gets only the address and the purpose of the product, clicks everything and tries to break it with the browser tool already available; the evaluator scores its report against the hidden checklist.

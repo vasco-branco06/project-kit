@@ -1,7 +1,14 @@
 .env
 .env.*
+!.env.example
 *.local
 .worktrees/
+node_modules/
+.venv/
+__pycache__/
+.DS_Store
 *.pdf
+!inputs/*.pdf
+!inputs/**/*.pdf
 !outputs/*.pdf
 !outputs/**/*.pdf
