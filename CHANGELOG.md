@@ -159,3 +159,4 @@ One line per fix of a rule or template: date, model name, what changed and why.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: scenario 8 lists the stack ADR appended to context/decisions.md among the writes a worker may make after the go.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: external-models step 4 deletes the temporary copy after step 5 has copied the produced files back, not right after the run.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: the earlier ui-context.md changelog line names the WCAG contrast criterion without its number, so no line holds a dotted number.
+- 2026-11-13 | claude-sonnet-5-5 | Unreleased: the code type-rules Tests section points to CLAUDE.md and the evaluator template for the evaluator, freeze, visitor and evidence rules instead of restating them.
