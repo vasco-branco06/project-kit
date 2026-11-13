@@ -3,7 +3,7 @@
 Usage:
   python -I scripts/merge_sources.py [PROJECT_ROOT]   (default ".")
   python -I scripts/merge_sources.py --self-test
-A row is a table line starting with "|"; header, separator and "(none yet)" rows are skipped, and
+A row is a table line starting with "|"; header, separator and rows whose first cell is "(none yet)" are skipped, and
 the "(none yet)" row of the log is dropped once real rows are added. A row whose cell count differs from the
 log header is skipped and printed to stderr. Exit 2 if the log is missing.
 """
@@ -26,6 +26,11 @@ def cells(line):
     return [c.strip() for c in line.strip().strip("|").split("|")]
 
 
+def placeholder(line):
+    """True for a table row whose first cell is exactly "(none yet)"."""
+    return line.strip().startswith("|") and cells(line)[0] == "(none yet)"
+
+
 def width(lines):
     """Cell count of the first table header in lines, or None if there is no table."""
     for i, line in enumerate(lines):
@@ -39,7 +44,7 @@ def rows(path):
     out = []
     for i, line in enumerate(lines):
         s = line.strip()
-        if not s.startswith("|") or is_separator(s) or "(none yet)" in s:
+        if not s.startswith("|") or is_separator(s) or placeholder(s):
             continue
         if i + 1 < len(lines) and is_separator(lines[i + 1]):
             continue  # header row
@@ -64,7 +69,7 @@ def merge(root):
                 seen.add(norm(r))
                 new.append(r)
     if new:
-        lines = [l for l in lines if "(none yet)" not in l] + new
+        lines = [l for l in lines if not placeholder(l)] + new
         log.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return len(new)
 
@@ -77,12 +82,12 @@ def self_test():
         head = "| Citation | Where |\n|---|---|\n"
         (root / "context" / "source-log.md").write_text("# Log\n\n" + head + "| (none yet) | |\n", encoding="utf-8")
         (root / "work" / "sources-a.md").write_text(head + "| A 2020 | url1 |\n| B 2021 | url2 |\n", encoding="utf-8")
-        (root / "work" / "sources-b.md").write_text(head + "| B  2021 | url2 |\n| C 2022 | url3 |\n", encoding="utf-8")
+        (root / "work" / "sources-b.md").write_text(head + "| B  2021 | url2 |\n| C 2022 | url3 |\n| Doc on (none yet) pages | url5 |\n", encoding="utf-8")
         (root / "work" / "sources-c.md").write_text(head + "| D 2023 | url4 | extra |\n", encoding="utf-8")
-        assert merge(root) == 3  # the 3-cell row is skipped
+        assert merge(root) == 4  # the 3-cell row is skipped; the row that only mentions "(none yet)" is kept
         assert merge(root) == 0
         text = (root / "context" / "source-log.md").read_text(encoding="utf-8")
-        assert text.count("url2") == 1 and "(none yet)" not in text and "| C 2022 | url3 |" in text and "url4" not in text
+        assert text.count("url2") == 1 and "| (none yet) |" not in text and "| C 2022 | url3 |" in text and "url4" not in text and "url5" in text
     print("merge_sources self-test PASS")
 
 

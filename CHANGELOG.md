@@ -56,3 +56,4 @@ One line per fix of a rule or template: date, model name, what changed and why.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: freeze_tests --verify now lists files added after the freeze (a nested HASHES.txt included) as added; self-test case in freeze_tests.py.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: freeze_tests --verify fails on a HASHES.txt that lists no files, and --freeze refuses (exit 2) when work/ or the test files are missing; self-test cases in freeze_tests.py.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: merge_sources skips and prints (stderr) source rows whose cell count differs from the log header, so the researcher.md promise holds (kept the promise, did not drop it); self-test case in merge_sources.py.
+- 2026-11-13 | claude-sonnet-5-5 | Unreleased: merge_sources drops and skips only a table row whose first cell is exactly (none yet); a real row that mentions it is kept; self-test case in merge_sources.py.
