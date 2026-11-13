@@ -57,7 +57,7 @@ Fail: a finding without a command it ran, a project file edited, or a missing co
 ## 11. Hidden rubric and blinding
 Input: a two-unit run; one unit has no screens.
 Pass: both units have a `checklist.md` of 3 to 6 concrete criteria written by the evaluator; no builder or visitor brief, address or scenario name contains test, eval, rubric, score or checklist; a visitor address and the label of a visitor scenario are neutral (for example `visit-01`).
-Fail: a unit without a rubric, or any of those words in something a builder or visitor is shown, including a visitor address or scenario label.
+Fail: a unit without a rubric, or any of those words in something a builder or visitor is shown, including a visitor address or scenario label. File, folder and agent names (tester, work/tests) and substrings inside other words or commands (unittest) are not covered, as in `run` section 5.
 
 ## 12. Escalation by assumption
 Input: a unit that fails the same check twice with a wrong shared assumption (for example a wrong port).
