@@ -1,4 +1,4 @@
-"""Placeholder test for project-kit. Standard library only.
+"""Placeholder test for project-kit. Standard library only; needs Python 3.8 or later.
 
 Usage:
   python -I test/check_kit.py FOLDER       check one generated folder
