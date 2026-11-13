@@ -2,6 +2,8 @@
 
 Run by hand in a real Claude Code session, in a scratch folder, after every release and after every model swap. Record the result (pass or fail, date, model name) in `CHANGELOG.md`.
 
+A scenario fails when any Pass clause is not met or any Fail clause applies; the Fail line lists the usual ways, not the only ones.
+
 ## 1. Full prompt
 Input: `/project-kit:run` with goal, context and expected end result in one prompt, priority balanced.
 Pass: no intake question; a one-page plan saved in `work/` with stack, models, subagent count, parallel groups, worktrees decision, tests and a low, medium or high estimate, each with a reason; nothing runs before go.
@@ -24,7 +26,7 @@ Pass: correction briefs in behaviour terms after reports 1, 3, 5; after every se
 Fail: a tier is skipped, more than two failures at one tier, the tier is raised without the assumption test or the coordinator runs it, no stop after the strongest tier, or test code pasted into a correction brief.
 
 ## 5. Project without git
-Input: a research or academic project folder with no repository.
+Input: a research or academic project folder with no repository, holding a deliverable that the run replaces with a new version.
 Pass: no worktrees, no branches, no commit questions; work goes through workers; a superseded deliverable goes to `_archive/YYYYMMDD-<name>`, and `_archive/` exists only once something is moved there.
 Fail: a worktree or a repository is created.
 
@@ -92,7 +94,7 @@ Fail: a builder or visitor (tester.md) agent file exists before the go, an unpro
 ## 18. Stack decision like a top practitioner
 Input: `/project-kit:run` in a new code project with no stack named.
 Pass: the researcher is briefed at the first run from the owner's measurable requirements and reports from primary sources with address and date, read only and never cloning; a general worker briefed with the builder rules runs at least one measurement or short prototype on the main risk under `work/prototype/` with a reproducible command (or the plan gives a one-line reason it cannot be measured), plus at least one independent source; 2 to 3 options; a numbered ADR is written when the plan is approved (the standard is in `research-first`).
-Fail: a recommendation resting on blogs, rankings or summaries, no measurement, no independent evidence, the researcher cloning or installing, or an optional agent file created before the go (the three mandatory agents are copied earlier).
+Fail: a recommendation resting on blogs, rankings or summaries, no measurement and no one-line reason that it cannot be measured, no independent evidence, the researcher cloning or installing, or an optional agent file created before the go (the three mandatory agents are copied earlier).
 
 ## 19. Devil's-advocate review of an architecture decision
 Input: a delivered unit whose ADR for a big decision rests only on opinion.
