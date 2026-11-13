@@ -349,6 +349,8 @@ def build_sample(kind, dest):
     for layer in ("core", kind):
         if (t / layer).is_dir():
             shutil.copytree(t / layer, dest, dirs_exist_ok=True)
+    if kind == "code":  # new-project copies the writing standards for the other types only
+        (Path(dest) / "context" / "writing-and-evidence-standards.md").unlink()
     (Path(dest) / ".claude" / "agents").mkdir(parents=True, exist_ok=True)
     for a in SETUP_AGENTS:
         shutil.copy(t / "agents" / a, Path(dest) / ".claude" / "agents" / a)

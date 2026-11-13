@@ -10,7 +10,7 @@
 - Order: dependencies first, security before features, backend before wiring the interface, interface shells before real data, install packages only when needed.
 
 ## Missing requirements
-Never invent behaviour. Record an open question in the progress tracker and ask the owner.
+The rule is in the General rules of `CLAUDE.md`.
 
 ## Protected files
 Workers never edit `inputs/`, generated code, vendor code or anything outside the paths in their brief.
@@ -22,7 +22,7 @@ It works end to end, the invariants hold, the progress tracker can be updated, t
 A correction brief says what behaviour was expected, what happened, and that only that point changes. It never contains test code or checklist lines.
 
 ## Environment check
-Before planning: approval to write `.claude/agents/`, a browser tool for projects with screens, and the commands the tests need. Anything missing is stated in the plan.
+As section 2 of the `run` skill says; anything missing is stated in the plan.
 
 ## Evaluator rules
 Never name this section in a builder or visitor brief. Only the evaluator reads or writes `work/tests/`; a visitor writes only in `work/evidence-incoming/<unit>/`.
