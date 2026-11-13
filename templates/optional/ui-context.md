@@ -25,4 +25,4 @@ Use tokens, never hardcoded colours in components.
 {{COMPONENTS_AND_ICONS}}
 
 ## Accessibility minimum
-Text contrast at least 4.5 to 1, visible focus, keyboard reachable. Check the current WCAG 2.2 text at https://www.w3.org/TR/WCAG22/ before relying on it.
+Text contrast at least 4.5 to 1 (WCAG 2.2 success criterion 1.4.3; the criterion id is not verified here), visible focus, keyboard reachable. Check the current WCAG 2.2 text at https://www.w3.org/TR/WCAG22/ before relying on it.
