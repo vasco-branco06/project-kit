@@ -21,5 +21,5 @@ Report:
 - Status: done, done with concerns, blocked or needs context (first line).
 - Model: the model you actually ran on.
 - Verdict: fail if there is one blocker or major finding, otherwise pass.
-- Findings, each marked blocker (must be fixed), major (should be fixed) or minor (reported, never changes the verdict), with file, line and the evidence (command and output, or quoted text).
+- Findings, each marked blocker (must be fixed), major (must be fixed to pass) or minor (reported, never changes the verdict), with file, line and the evidence (command and output, or quoted text).
 - Files read and commands run: every file you opened and every command you ran; evidence before claims.
