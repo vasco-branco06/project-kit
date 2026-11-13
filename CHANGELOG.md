@@ -165,3 +165,4 @@ One line per fix of a rule or template: date, model name, what changed and why.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: external-models Limits says the step 2 approval also covers the second-opinion check that research-first asks for, whose output is evidence for the ADR and never a verdict.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: README Not verified lists the Windows dialog name and steps for setting a key in external-models as unchecked.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: decisions.md keeps the Measurement or prototype field at n/a and moves its hint into the opening sentence.
+- 2026-11-13 | claude-sonnet-5-5 | Unreleased: terminal-panes drops the stale evaluator write note, and the scenario, core CLAUDE.md and README lines on the blind visitor now also name its evidence folder, as run does.

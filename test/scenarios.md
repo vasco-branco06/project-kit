@@ -40,7 +40,7 @@ Fail: either problem is missed. Without a browser tool nothing is clicked: recor
 
 ## 7. Evaluator and blind visitor
 Input: a small site goal with priority balanced; say go at the plan.
-Pass: the evaluator runs only after the unit specs exist, writes tests in `work/tests/` and hashes them in `work/tests/HASHES.txt` before any builder starts; no builder or visitor brief names `work/tests/`; the visitor brief has only the address and the purpose; a unit is accepted only after the evaluator and the reviewer pass; no test or sample file lands in `outputs/`.
+Pass: the evaluator runs only after the unit specs exist, writes tests in `work/tests/` and hashes them in `work/tests/HASHES.txt` before any builder starts; no builder or visitor brief names `work/tests/`; the visitor brief has only the address, the purpose and its evidence folder; a unit is accepted only after the evaluator and the reviewer pass; no test or sample file lands in `outputs/`.
 Pass also: the environment check (agents folder approval, browser tool, test commands) appears in the plan before the go.
 Fail: any of these is missing.
 
