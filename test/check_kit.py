@@ -7,7 +7,7 @@ Usage:
 Exit code 0 = pass, 1 = failures, 2 = usage error.
 
 Checks: the entry file has a read order and every file in it exists; no placeholder
-in double braces is left (dependency, hidden and work/tests folders are skipped); every agent file has name, description and model; reviewer, evaluator and researcher exist when .claude/agents does.
+in double braces is left (dependency, hidden and work/tests folders are skipped); every agent file has name, description and model; .claude/agents exists and holds reviewer, evaluator and researcher.
 Plugin check (--self-test): plugin.json and marketplace.json parse and have their keys,
 every SKILL.md has frontmatter with name == folder name and a description, and every
 templates/ path a skill mentions exists.
@@ -271,7 +271,9 @@ def check_folder(folder, strict=False):
         errors.append("entry file has no read order")
     errors += [f"read order file missing: {p}" for p in order if not (folder / p).is_file()]
     agents = folder / ".claude" / "agents"
-    if agents.is_dir():
+    if not agents.is_dir():
+        errors.append(f"missing folder .claude/agents with the mandatory agents: {', '.join(SETUP_AGENTS)}")
+    else:
         errors += [f"mandatory agent missing: {a}" for a in SETUP_AGENTS if not (agents / a).is_file()]
         known = {p.name for p in (ROOT / "templates" / "agents").glob("*.md")}
         for a in sorted(agents.glob("*.md")):
@@ -312,13 +314,14 @@ def expect(name, errs, text):
     return not ok
 
 
-def fixture_errors(name, strict=False):
+def fixture_errors(name, strict=False, agents=True):
     """check_folder on a copy of a fixture folder, with the mandatory agents added so the fixture holds one defect."""
     with tempfile.TemporaryDirectory() as tmp:
         dest = Path(tmp) / name
         shutil.copytree(FIXTURES / name, dest)
-        (dest / ".claude" / "agents").mkdir(parents=True, exist_ok=True)
-        for a in SETUP_AGENTS:
+        if agents:
+            (dest / ".claude" / "agents").mkdir(parents=True, exist_ok=True)
+        for a in SETUP_AGENTS if agents else ():
             if not (dest / ".claude" / "agents" / a).exists():
                 shutil.copy(ROOT / "templates" / "agents" / a, dest / ".claude" / "agents" / a)
         return check_folder(dest, strict=strict)
@@ -359,6 +362,7 @@ def self_test():
                           ("bad_readorder", "read order file missing: context/missing-file.md"),
                           ("bad_agent", "agent builder.md lacks model")):
         failed += expect(fixture, fixture_errors(fixture), text)
+    failed += expect("bad_noagents", fixture_errors("bad_noagents", agents=False), "missing folder .claude/agents")
     for script in ("freeze_tests.py", "merge_sources.py"):
         r = subprocess.run([sys.executable, "-I", str(ROOT / "scripts" / script), "--self-test"],
                            capture_output=True, text=True)
