@@ -7,7 +7,8 @@ Usage:
 Exit code 0 = pass, 1 = failures, 2 = usage error.
 
 Checks: the entry file has a read order and every file in it exists; no placeholder
-in double braces is left (dependency, hidden and work/tests folders are skipped); every agent file has name, description and model; .claude/agents exists and holds reviewer, evaluator and researcher.
+in double braces (any spacing or case) is left in any text file (skipped: dependency and hidden folders, inputs/,
+work/tests/, binary files and context/specs/_unit-template.md); every agent file has name, description and model; .claude/agents exists and holds reviewer, evaluator and researcher.
 Plugin check (--self-test): plugin.json and marketplace.json parse and have their keys,
 every SKILL.md has frontmatter with name == folder name and a description, and every
 templates/ path a skill mentions (and every ${CLAUDE_PLUGIN_ROOT}/scripts/ or test/ path) exists.
@@ -27,6 +28,8 @@ ROOT = Path(__file__).resolve().parent.parent
 FIXTURES = ROOT / "test" / "fixtures"
 TYPES = ("research", "academic", "code", "general")
 PLACEHOLDER = re.compile(r"\{\{[A-Z0-9_]+\}\}")
+UNFILLED = re.compile(r"\{\{\s*\w+\s*\}\}")  # also {{ goal }} and lower case
+UNIT_TEMPLATE = "context/specs/_unit-template.md"  # the one file that stays unfilled in a project (new-project step 9)
 STANDARDS = {"code": "code-standards.md"}
 MARKER = "<!-- read-order -->"
 SKIP_DIRS = {"node_modules", ".venv", "venv", "__pycache__", ".worktrees", ".git"}
@@ -303,11 +306,16 @@ def check_folder(folder, strict=False):
             continue
         if any(p.startswith(".") and p != ".claude" for p in rel.parts[:-1]):
             continue
-        if f.is_file() and f.suffix in {".md", ".txt", ".json", ""} and not f.name.startswith("_"):
-            for m in PLACEHOLDER.findall(f.read_text(encoding="utf-8", errors="ignore")):
-                errors.append(f"unfilled placeholder {m} in {f.relative_to(folder)}")
-            if strict and "n/a until" in f.read_text(encoding="utf-8", errors="ignore"):
-                errors.append(f"strict: 'n/a until' left in {f.relative_to(folder)}")
+        if not f.is_file() or rel.as_posix() == UNIT_TEMPLATE:
+            continue
+        data = f.read_bytes()
+        if b"\0" in data:  # binary file
+            continue
+        text = data.decode("utf-8", errors="ignore")
+        for m in UNFILLED.findall(text):
+            errors.append(f"unfilled placeholder {m} in {rel}")
+        if strict and "n/a until" in text:
+            errors.append(f"strict: 'n/a until' left in {rel}")
     return errors
 
 
@@ -387,6 +395,13 @@ def self_test():
                      "agent builder.md is not UTF-8 text")
     ok = agent_errors(FIXTURES / "ok_bom" / "builder.md", full=True)
     print(f"ok_bom (UTF-8 BOM agent): {'PASS' if not ok else 'FAIL ' + '; '.join(ok)}")
+    failed += bool(ok)
+    for fixture, text in (("bad_placeholder_spaced", "unfilled placeholder {{ owner_name }} in"),
+                          ("bad_placeholder_ext", "unfilled placeholder {{GOAL}} in notes.yml"),
+                          ("bad_placeholder_underscore", "unfilled placeholder {{GOAL}} in _notes.md")):
+        failed += expect(fixture, fixture_errors(fixture), text)
+    ok = fixture_errors("ok_unit_template")
+    print(f"ok_unit_template (unfilled unit template): {'PASS' if not ok else 'FAIL ' + '; '.join(ok)}")
     failed += bool(ok)
     failed += expect("bad_noagents", fixture_errors("bad_noagents", agents=False), "missing folder .claude/agents")
     for script in ("freeze_tests.py", "merge_sources.py"):
