@@ -24,6 +24,7 @@ import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+FIXTURES = ROOT / "test" / "fixtures"
 TYPES = ("research", "academic", "code", "general")
 PLACEHOLDER = re.compile(r"\{\{[A-Z0-9_]+\}\}")
 STANDARDS = {"code": "code-standards.md"}
@@ -304,6 +305,25 @@ def build_sample(kind, dest):
             f.write_text(PLACEHOLDER.sub("sample", txt), encoding="utf-8")
 
 
+def expect(name, errs, text):
+    """A bad fixture must fail with exactly one error, and that error must contain text."""
+    ok = len(errs) == 1 and text in errs[0]
+    print(f"{name}: {'FAILS as expected' if ok else 'WRONG, got ' + (repr(errs) if errs else 'no error')}")
+    return not ok
+
+
+def fixture_errors(name, strict=False):
+    """check_folder on a copy of a fixture folder, with the mandatory agents added so the fixture holds one defect."""
+    with tempfile.TemporaryDirectory() as tmp:
+        dest = Path(tmp) / name
+        shutil.copytree(FIXTURES / name, dest)
+        (dest / ".claude" / "agents").mkdir(parents=True, exist_ok=True)
+        for a in SETUP_AGENTS:
+            if not (dest / ".claude" / "agents" / a).exists():
+                shutil.copy(ROOT / "templates" / "agents" / a, dest / ".claude" / "agents" / a)
+        return check_folder(dest, strict=strict)
+
+
 def self_test():
     failed = 0
     with tempfile.TemporaryDirectory() as tmp:
@@ -328,13 +348,17 @@ def self_test():
     errs = plugin_errors(ROOT)
     print(f"plugin: {'PASS' if not errs else 'FAIL ' + '; '.join(errs)}")
     failed += bool(errs)
-    bad = plugin_errors(ROOT / "test" / "fixtures" / "bad_plugin")
-    print(f"bad_plugin: {'FAILS as expected (' + str(len(bad)) + ' errors)' if bad else 'UNEXPECTEDLY PASSES'}")
-    failed += not bad
-    for fixture in ("bad_unfilled", "bad_agent"):
-        bad = check_folder(ROOT / "test" / "fixtures" / fixture)
-        print(f"{fixture}: {'FAILS as expected' if bad else 'UNEXPECTEDLY PASSES'}")
-        failed += not bad
+    for fixture, text in (("bad_plugin_json", "plugin.json lacks description"),
+                          ("bad_marketplace_entry", "marketplace plugin lacks source"),
+                          ("bad_marketplace_name", "marketplace plugin other != plugin.json name k"),
+                          ("bad_skill_name", "skill x: name 'other' != folder"),
+                          ("bad_skill_desc", "skill x lacks description"),
+                          ("bad_skill_ref", "skill x references missing templates/missing/file.md")):
+        failed += expect(fixture, plugin_errors(FIXTURES / fixture), text)
+    for fixture, text in (("bad_unfilled", "unfilled placeholder {{OWNER_NAME}}"),
+                          ("bad_readorder", "read order file missing: context/missing-file.md"),
+                          ("bad_agent", "agent builder.md lacks model")):
+        failed += expect(fixture, fixture_errors(fixture), text)
     for script in ("freeze_tests.py", "merge_sources.py"):
         r = subprocess.run([sys.executable, "-I", str(ROOT / "scripts" / script), "--self-test"],
                            capture_output=True, text=True)
@@ -346,25 +370,38 @@ def self_test():
 
 def project_checks():
     """New checks, run last: each runs on the plugin (must pass) and on a bad fixture (must fail)."""
-    fx, failed = ROOT / "test" / "fixtures", 0
+    fx, failed = FIXTURES, 0
 
-    def report(name, errs, bad):
+    def report(name, errs, bad, text):
         nonlocal failed
         print(f"{name}: {'PASS' if not errs else 'FAIL ' + '; '.join(errs)}")
-        print(f"{name} bad fixture: {'FAILS as expected' if bad else 'UNEXPECTEDLY PASSES'}")
-        failed += bool(errs) + (not bad)
+        failed += bool(errs) + expect(f"{name} bad fixture", bad, text)
 
-    report("placeholder fillers", placeholder_errors(ROOT), placeholder_errors(fx / "bad_placeholder"))
-    report("placeholder named in skill", [], placeholder_errors(fx / "bad_filler"))
-    report("version", version_errors(ROOT), version_errors(fx / "bad_version"))
-    report("changelog scenarios", changelog_errors(ROOT), changelog_errors(fx / "bad_changelog"))
-    report("vocabulary", vocabulary_errors(ROOT), vocabulary_errors(fx / "bad_vocab"))
-    report("bare templates path", bare_path_errors(ROOT), bare_path_errors(fx / "bad_barepath"))
+    report("placeholder fillers", placeholder_errors(ROOT), placeholder_errors(fx / "bad_placeholder"),
+           "placeholder {{NOT_A_REAL_FILLER}} in templates/core/CLAUDE.md has no filler")
+    report("placeholder named in skill", [], placeholder_errors(fx / "bad_filler"),
+           "1 placeholders in templates/core/CLAUDE.md neither named")
+    report("version", version_errors(ROOT), version_errors(fx / "bad_version"),
+           "CHANGELOG last version 0.2.0 != plugin.json 0.1.0")
+    failed += expect("marketplace version bad fixture", version_errors(fx / "bad_market_version"),
+                     "marketplace.json version 0.3.0 != plugin.json 0.1.0")
+    report("changelog scenarios", changelog_errors(ROOT), changelog_errors(fx / "bad_changelog"),
+           "CHANGELOG has no line with 0.2.0")
+    report("vocabulary", vocabulary_errors(ROOT), vocabulary_errors(fx / "bad_vocab"),
+           "model name 'sonnet' outside the allowed places: skills/x/SKILL.md")
+    failed += expect("blinding word bad fixture", vocabulary_errors(fx / "bad_blind"),
+                     "blinding word 'rubric' in templates/agents/builder.md")
+    report("bare templates path", bare_path_errors(ROOT), bare_path_errors(fx / "bad_barepath"),
+           "skill x: bare path templates/core/CLAUDE.md")
     schema = [e for a in sorted((ROOT / "templates" / "agents").glob("*.md")) for e in agent_errors(a, full=True)]
-    report("agent schema", schema, agent_errors(fx / "bad_schema" / "builder.md", full=True))
-    report("mandatory agents", mandatory_errors(), mandatory_errors(SETUP_AGENTS + ("builder.md",)))
-    strict_bad = check_folder(fx / "bad_strict", strict=True)
-    report("strict", check_folder(fx / "bad_strict"), strict_bad)
+    report("agent schema", schema, agent_errors(fx / "bad_schema" / "builder.md", full=True),
+           "agent builder.md: name 'wrongname' != file name")
+    failed += expect("agent status bad fixture", agent_errors(fx / "bad_status" / "builder.md", full=True),
+                     "agent builder.md: report section lacks Status:")
+    report("mandatory agents", mandatory_errors(), mandatory_errors(SETUP_AGENTS + ("builder.md",)),
+           "mandatory agents are")
+    report("strict", fixture_errors("bad_strict"), fixture_errors("bad_strict", strict=True),
+           "strict: 'n/a until' left in")
     return failed
 
 

@@ -1,9 +1,10 @@
 ---
 name: wrongname
 description: d
+model: inherit
 ---
 
 Build it.
 
 Report:
-- Answer in a line.
+- Status: done
