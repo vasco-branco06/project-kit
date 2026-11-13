@@ -121,3 +121,4 @@ One line per fix of a rule or template: date, model name, what changed and why.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: research-first step 7 has a worker append the stack ADR to context/decisions.md when the skill runs outside run.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: terminal-panes: a pane writes context/ only where its brief names it, like any worker.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: terminal-panes: the worker that opened the panes waits until every report file exists or the timeout its brief states, then returns the present and missing reports.
+- 2026-11-13 | claude-sonnet-5-5 | Unreleased: external-models step 4 names the restriction: shell tool denied, file access to the copy only, copy outside the project tree and deleted after the run, each setting verified and logged in the report, unverified parts marked.
