@@ -4,7 +4,7 @@ The kit has no server and no runtime dependencies. What can go wrong is narrow: 
 
 ## Reporting
 
-Do not post details in a public issue. Open an issue titled "Security contact request" with no details, and the owner will arrange a private channel. Do not include keys, tokens or personal data in any report.
+Do not post details in a public issue. Report privately through the repository's Security tab, "Report a vulnerability". Do not include keys, tokens or personal data in any report.
 
 ## Supported versions
 
