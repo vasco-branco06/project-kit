@@ -1,6 +1,6 @@
 # Decisions
 
-One entry per decision, append only, in ADR form (the Decision standard is in the `research-first` skill). 0001 is type, language and citation style; the stack ADR comes next. Write n/a where a field does not apply.
+One entry per decision, append only, in ADR form, except the one-line external model approval of the `external-models` skill, the only non-ADR entry (the Decision standard is in the `research-first` skill). 0001 is type, language and citation style; the stack ADR comes next. Write n/a where a field does not apply.
 
 ## 0001 {{FIRST_DECISION_TITLE}}
 - Date: {{DATE}}. Decided by: {{DECIDED_BY}}
