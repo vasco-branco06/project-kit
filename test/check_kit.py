@@ -79,7 +79,7 @@ def read_order(entry):
     Falls back to an English 'Read order' heading for folders made with version 0.1.
     """
     out, on = [], False
-    for line in entry.read_text(encoding="utf-8").splitlines():
+    for line in entry.read_text(encoding="utf-8-sig").splitlines():
         stripped = line.strip()
         if stripped == MARKER or stripped.lower() == "## read order":
             on = True
@@ -95,7 +95,10 @@ def read_order(entry):
 def agent_errors(path, full=False):
     """Frontmatter keys; with full=True also the schema: name == file stem, valid model, tools, Status:."""
     path = Path(path)
-    text = path.read_text(encoding="utf-8").replace("\r\n", "\n")
+    try:
+        text = path.read_text(encoding="utf-8-sig").replace("\r\n", "\n")
+    except UnicodeDecodeError:
+        return [f"agent {path.name} is not UTF-8 text"]
     m = re.match(r"---\n(.*?)\n---", text, re.S)
     if not m:
         return [f"agent without frontmatter: {path.name}"]
@@ -276,7 +279,10 @@ def check_folder(folder, strict=False):
     entry = folder / "CLAUDE.md"
     if not entry.is_file():
         return ["missing entry file CLAUDE.md"]
-    order = read_order(entry)
+    try:
+        order = read_order(entry)
+    except UnicodeDecodeError:
+        return ["entry file CLAUDE.md is not UTF-8 text"]
     if not order:
         errors.append("entry file has no read order")
     errors += [f"read order file missing: {p}" for p in order if not (folder / p).is_file()]
@@ -372,6 +378,12 @@ def self_test():
                           ("bad_readorder", "read order file missing: context/missing-file.md"),
                           ("bad_agent", "agent builder.md lacks model")):
         failed += expect(fixture, fixture_errors(fixture), text)
+    failed += expect("bad_utf16", fixture_errors("bad_utf16"), "entry file CLAUDE.md is not UTF-8 text")
+    failed += expect("bad_utf16_agent", agent_errors(FIXTURES / "bad_utf16_agent" / "builder.md", full=True),
+                     "agent builder.md is not UTF-8 text")
+    ok = agent_errors(FIXTURES / "ok_bom" / "builder.md", full=True)
+    print(f"ok_bom (UTF-8 BOM agent): {'PASS' if not ok else 'FAIL ' + '; '.join(ok)}")
+    failed += bool(ok)
     failed += expect("bad_noagents", fixture_errors("bad_noagents", agents=False), "missing folder .claude/agents")
     for script in ("freeze_tests.py", "merge_sources.py"):
         r = subprocess.run([sys.executable, "-I", str(ROOT / "scripts" / script), "--self-test"],
