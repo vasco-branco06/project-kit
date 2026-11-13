@@ -87,7 +87,7 @@ Fail: the manifest lists a destination folder that is not in the approved plan, 
 ## 17. Mandatory agents in a project without code
 Input: a project without code, from setup to the plan.
 Pass: after `new-project`, `.claude/agents/` has exactly reviewer, evaluator and researcher; the researcher brief names documentation, GitHub and reliable sources about method and format, never the project's content; the plan proposes other agents with a reason, and other roles are created only after the plan's go and only as it proposed.
-Fail: a builder or tester agent file exists before the go, an unproposed role is created, or the researcher is briefed to produce content.
+Fail: a builder or visitor (tester.md) agent file exists before the go, an unproposed role is created, or the researcher is briefed to produce content.
 
 ## 18. Stack decision like a top practitioner
 Input: `/project-kit:run` in a new code project with no stack named.

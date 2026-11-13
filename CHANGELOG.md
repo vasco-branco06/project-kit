@@ -67,3 +67,4 @@ One line per fix of a rule or template: date, model name, what changed and why.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: research-first: the verifier is a worker other than the researcher that wrote the report.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: run skill: the no-browser line now says the visitor reports needs context and is not re-briefed on the gap.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: evaluator report: with no browser, the evaluator scores the screens by reading the code (run section 2) and says so.
+- 2026-11-13 | claude-sonnet-5-5 | Unreleased: scenario 17 fail clause names the visitor (tester.md) agent file instead of tester.
