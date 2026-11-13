@@ -110,3 +110,4 @@ One line per fix of a rule or template: date, model name, what changed and why.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: new-project step 8: ui-context.md is written to context/ui-context.md and a ninth line for it is added to the read order in CLAUDE.md, so it is read.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: new-project step 8: a type file with the same path as a core file (the code architecture.md) replaces the core one.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: academic type-rules says record here and holds {{DELIVERABLE_FORMAT}}, filled from the new-project step 6 answer and added to the check_kit filler map (chose adding the placeholder over dropping the question).
+- 2026-11-13 | claude-sonnet-5-5 | Unreleased: organize step 1 also asks new-project step 6 (citation style, and for academic the deliverable format, page limit and teacher guide) for research and academic folders.
