@@ -69,7 +69,7 @@ Some plugins run a hook after every file write that removes metadata keys from M
 - Four credit rows have no verified address (agentic-council, the JavaScript Mastery playbook, the Methods row and the example tools row); see `CREDITS.md`.
 - Semantic Versioning is not cited: semver.org could not be fetched on 2026-11-10 because of a certificate error.
 - The autocompact values 40 and 60 are our choice, not measured or taken from the docs.
-- The claim that the native agent-team split panes of Claude Code do not work in Windows Terminal (code.claude.com/docs/en/agent-teams) has no recorded read date.
+- The claim that the native agent-team split panes of Claude Code do not work in Windows Terminal (https://code.claude.com/docs/en/agent-teams) has no recorded read date.
 - Neither install path (the marketplace add and install, and the local path) has been run, and the in-session forms were not checked. CI has never run. The result of `claude plugin validate` is the author's own report, not a CI result.
 - Windows Terminal panes, tmux, OpenCode and freellmapi have not been run by the kit's tests; the skills describe them from their documentation.
 - The Windows dialog name and click steps for setting an environment variable key in `external-models` (the "Edit environment variables for your account" dialog) were not checked on Windows.
