@@ -100,7 +100,7 @@ def agent_errors(path, full=False):
     if not m:
         return [f"agent without frontmatter: {path.name}"]
     fm = {k.strip(): v.strip() for k, _, v in (l.partition(":") for l in m.group(1).splitlines()) if _}
-    errors = [f"agent {path.name} lacks {k}" for k in AGENT_KEYS if k not in fm]
+    errors = [f"agent {path.name} lacks {k}" for k in AGENT_KEYS if not fm.get(k)]
     if full:
         if fm.get("name") and fm["name"] != path.stem:
             errors.append(f"agent {path.name}: name {fm['name']!r} != file name")
@@ -410,6 +410,9 @@ def project_checks():
     schema = [e for a in sorted((ROOT / "templates" / "agents").glob("*.md")) for e in agent_errors(a, full=True)]
     report("agent schema", schema, agent_errors(fx / "bad_schema" / "builder.md", full=True),
            "agent builder.md: name 'wrongname' != file name")
+    for fixture, text in (("bad_empty_model", "agent builder.md lacks model"),
+                          ("bad_empty_description", "agent builder.md lacks description")):
+        failed += expect(fixture, agent_errors(fx / fixture / "builder.md", full=True), text)
     failed += expect("agent status bad fixture", agent_errors(fx / "bad_status" / "builder.md", full=True),
                      "agent builder.md: report section lacks Status:")
     report("mandatory agents", mandatory_errors() + ([] if SETUP_AGENTS else ["no mandatory agents"]),
