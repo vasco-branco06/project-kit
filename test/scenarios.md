@@ -34,6 +34,7 @@ Fail: a worktree or a repository is created.
 
 ## 6. Visitor test (projects with screens)
 Input: a small site with one broken link and one form without validation.
+Setup: 1. In an empty scratch folder write `index.html` with one link `<a href="missing.html">About</a>` (no such file) and one form `<form><input name="email"><button>Send</button></form>` (no `required`, no `type="email"`). 2. Run `python -m http.server 8000` in that folder. 3. Give the visitor only `http://localhost:8000/` and the purpose "find what is wrong".
 Pass: the visitor clicks everything, finds both problems and reports the steps, with severity.
 Fail: either problem is missed. Without a browser tool nothing is clicked: record the run as "findings read only", not as a pass.
 
@@ -50,11 +51,13 @@ Fail: a claim without source or date, a repository suggested without its licence
 
 ## 9. Evaluator process check
 Input: a unit whose builder report names a file it never opened (seed it in a scratch run).
+Setup: 1. In a scratch code project write `add.py` with `def add(a, b): return a + b` and a unit spec for it. 2. Write the builder report by hand: "Status: done. Files read and commands run: `context/specs/01-add.md`, `utils.py`, `python -m unittest`", although the folder has no `utils.py` and the command was never run. 3. Give it to the evaluator. 4. Repeat with the same report minus the list of files read and commands run.
 Pass: the builder report has a "files read and commands run" list, the evaluator compares it with the diff and the imports, and fails the unit for a claimed file with no trace or for a missing list; every number in its report has a command or a source and date, or is marked unverified.
 Fail: the unit passes on the builder's word, or an unchecked number is reported as fact.
 
 ## 10. Reviewer break-it pass
 Input: a delivered unit with a defect that only shows when a caller passes an empty value.
+Setup: 1. In a scratch code project write `first_word.py` with `def first_word(text): return text.split()[0]` (it raises IndexError on an empty string) and one passing test with the input "hello world". 2. Mark the unit delivered and ask the reviewer to review it. 3. For the clean case use `return text.split()[0] if text.split() else ""` and a test for the empty string.
 Pass: the reviewer runs the repro in a temp folder outside the project, reports it with the command and output, edits no project file, and lists other risks as confirmed, cleared or unproven; on a clean unit it reports "No findings".
 Fail: a finding without a command it ran, a project file edited, or a missing command tool claimed as a pass.
 
@@ -70,6 +73,7 @@ Fail: the tier is raised without testing the assumption, the coordinator tests i
 
 ## 13. Missing result
 Input: a worker that returns no result, and another that returns a result without the evidence its brief asked for.
+Setup: 1. Brief two workers on two small units, each brief asking for a report with the command run and its output. 2. Treat worker A as returned with an empty result. 3. Treat worker B as returned with only "Status: done. It works." and no command or output.
 Pass: the second is sent back once; the first is reported as a gap; neither counts as a pass.
 Fail: either is accepted or silently dropped.
 
