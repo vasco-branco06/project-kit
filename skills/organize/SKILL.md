@@ -24,4 +24,4 @@ Talk to the owner in the language they use. Ask one question per turn, with your
 ## Rules
 
 - Never delete anything except what the owner approved by name. Never push. Never write secrets or real personal data.
-- Undo an organize run by moving items back using the manifest; the files the run created (context files, agents, `.gitignore`, `work/manifest.md`) stay, and each is removed only when the owner approves it by name.
+- Undo an organize run by moving items back using the manifest; the files the run created (context files, agents, `.gitignore`, `work/manifest.md`) stay in place, and the owner deletes them.
