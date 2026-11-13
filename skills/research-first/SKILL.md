@@ -22,7 +22,7 @@ Talk to the owner in the language they use. One question per turn, with a recomm
 
 ## Decision standard
 
-Stack, language and architecture decisions are made as the top practitioner would; research on them runs on the strong tier.
+Stack, language and architecture decisions are made as the top practitioner would; the researcher tier is set in `run` section 2.
 
 - Raw material only: the owner's requirements as measurable scenarios (stimulus, response, threshold) and real data; official docs, specs, RFCs, release notes; the dependency's history, cadence and open-issue counts read through the hosting API or raw files, never cloned (a read-only GET or query is read-only); maintainers from MAINTAINERS, CODEOWNERS and release authors; a moved repo's new address; public postmortems, official pricing pages, published advisories. Blogs, comparisons, rankings and AI summaries are leads, never evidence.
 - Required for a big decision (stack, language or architecture with more than one viable option): at least one measurement or a prototype on the main risk, built and run by a general worker under `work/prototype/` with a reproducible command; if the risk cannot be measured, the ADR says why in one line. The ADR also names one source independent of the assistant and the owner.
