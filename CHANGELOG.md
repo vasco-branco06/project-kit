@@ -173,3 +173,4 @@ One line per fix of a rule or template: date, model name, what changed and why.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: the earlier changelog line for the past-line corrections names the release lines by position instead of version numbers.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: README Not verified gives the agent-teams address with its scheme, the same as terminal-panes and CREDITS.
 - 2026-11-13 | claude-sonnet-5-5 | Unreleased: CONTRIBUTING version-bump rule says every released content change, so it agrees with the owner folding many Unreleased lines into one release line.
+- 2026-11-13 | claude-haiku-5-5 | Unreleased: the code sample no longer carries the writing standards file, which new-project does not copy for code; the sample build drops it.
