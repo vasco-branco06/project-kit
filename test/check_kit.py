@@ -14,7 +14,7 @@ every SKILL.md has frontmatter with name == folder name and a description, and e
 templates/ path a skill mentions (and every ${CLAUDE_PLUGIN_ROOT}/scripts/ or test/ path) exists.
 Project checks (--self-test, run last, each with a bad fixture under test/fixtures): placeholder
 filler map, version alignment, changelog scenario record, vocabulary, bare templates/ paths,
-agent schema, mandatory agent set. `--strict FOLDER` also flags "n/a until" in a generated folder.
+agent schema, mandatory agent set. `--strict FOLDER` also flags "n/a until" (any case) in a generated folder; `run` calls it after filling the plan.
 """
 import json
 import re
@@ -314,7 +314,7 @@ def check_folder(folder, strict=False):
         text = data.decode("utf-8", errors="ignore")
         for m in UNFILLED.findall(text):
             errors.append(f"unfilled placeholder {m} in {rel}")
-        if strict and "n/a until" in text:
+        if strict and "n/a until" in text.lower():
             errors.append(f"strict: 'n/a until' left in {rel}")
     return errors
 
@@ -460,6 +460,7 @@ def project_checks():
            mandatory_errors(fx / "bad_mandatory"), "template missing for mandatory agent builder.md")
     report("strict", fixture_errors("bad_strict"), fixture_errors("bad_strict", strict=True),
            "strict: 'n/a until' left in")
+    failed += expect("strict, other case", fixture_errors("bad_strict_case", strict=True), "strict: 'n/a until' left in")
     return failed
 
 
