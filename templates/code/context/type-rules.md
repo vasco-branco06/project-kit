@@ -21,7 +21,7 @@ Applies to apps, sites, scripts, data and machine learning, and system architect
 - The reviewer checks build, types, lint and tests with the commands recorded in `architecture.md`.
 - Do not install a test tool without the owner approval.
 - Each visitor saves screenshots and outputs in `work/evidence-incoming/<unit>/` and names them in its report; the evaluator moves them, with its own command outputs and exit codes, to `work/tests/<unit>/evidence/` and checks they still exist after cleanup, which removes instances and scratch files, never evidence.
-- Sites and apps only: keep one file per user-facing feature in `context/features/`, with four headings: sub-features, how a user reaches it, how to drive it (action, exact command, observable result), traps. The unit that creates a feature writes its file and a unit that changes it updates the file in the same unit; the brief names the file. The evaluator builds checklists from these files, never from one convenient entry point.
+- Sites and apps only: keep one file per user-facing feature in `context/features/`, with four headings: sub-features, how a user reaches it, how to drive it (action, exact command, observable result), traps. The unit that creates a feature writes its file and a unit that changes it updates the file in the same unit; the brief names the file (a write covered by the plan go, as listed in section 7 of the `run` skill). The evaluator builds checklists from these files, never from one convenient entry point.
 
 ## Specification
 - For a larger build, suggest the interview plugin (`/ite:start`) to produce a specification network.

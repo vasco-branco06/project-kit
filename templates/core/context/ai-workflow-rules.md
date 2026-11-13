@@ -16,7 +16,7 @@ Never invent behaviour. Record an open question in the progress tracker and ask 
 Workers never edit `inputs/`, generated code, vendor code or anything outside the paths in their brief.
 
 ## Before the next unit
-It works end to end, the invariants hold, the progress tracker is updated, the build passes. Update the progress tracker first (no wait); other context files need owner approval, except three: the `source-log.md` copy of accepted source rows, the ADR written at the plan go, and the one-line external-model approval in `decisions.md`.
+It works end to end, the invariants hold, the progress tracker is updated, the build passes. Update the progress tracker first (no wait); other context files need owner approval, except the writes listed in section 7 of the `run` skill.
 
 ## Corrections
 A correction brief says what behaviour was expected, what happened, and that only that point changes. It never contains test code or checklist lines.

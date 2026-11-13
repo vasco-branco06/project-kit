@@ -73,7 +73,7 @@ Show it and wait for one go. Right after the go, record the plan file, its versi
 
 ## 7. Merge and close
 - Merge task branches or worktrees after the tests pass; remove the worktrees. Ask before each commit. Without a git repository there are no branches, worktrees or commit questions, and a superseded deliverable is archived as the `_archive/` rule of `CLAUDE.md` says.
-- Update `context/progress-tracker.md` (units, status, models with reasons and number of subagents, escalations) without waiting; propose each edit to `context/decisions.md` and `context/known-issues.md` with evidence and wait for approval (the one-line external-model approval log is a log write, needing none).
+- Update `context/progress-tracker.md` (units, status, models with reasons and number of subagents, escalations) without waiting. Context writes that need no owner approval (the one list; other files point here): the tracker; two log writes, the `source-log.md` copy of accepted source rows and the one-line external-model approval in `decisions.md`; and, covered by the plan go, the stack ADR, `context/architecture.md`, `context/specs/` and the `context/features/` files. Every other edit to `context/` (`decisions.md`, `known-issues.md` and the rest) is proposed with evidence and waits for approval.
 - Report what was tested and what was not. At each accepted unit a worker runs `python "${CLAUDE_PLUGIN_ROOT}/scripts/merge_sources.py" .` to copy the source rows into `context/source-log.md`.
 - Close with the `reflect` skill.
 
