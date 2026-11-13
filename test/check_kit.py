@@ -253,7 +253,7 @@ def changelog_errors(root):
 
 def vocabulary_errors(root):
     """Model names only in skills/run/SKILL.md and the evaluator template's frontmatter; scanned: skills/ and templates/ *.md and
-    test/scenarios.md (README, CONTRIBUTING and scripts are not). Blinding words flagged in builder.md and tester.md."""
+    test/scenarios.md except its Results table, which names the model of each run (README, CONTRIBUTING and scripts are not). Blinding words flagged in builder.md and tester.md."""
     root, errors = Path(root), []
     for f in sorted(list((root / "skills").rglob("*.md")) + list((root / "templates").rglob("*.md"))):
         rel = f.relative_to(root).as_posix()
@@ -269,7 +269,9 @@ def vocabulary_errors(root):
                 errors.append(f"blinding word {w!r} in {rel}")
     scen = root / "test" / "scenarios.md"
     if scen.is_file():
-        for part in re.split(r"(?m)^## (?=\d+\. )", scen.read_text(encoding="utf-8")):
+        for part in re.split(r"(?m)^## (?=\d+\. |Results\b)", scen.read_text(encoding="utf-8")):
+            if part.startswith("Results"):
+                continue
             for m in sorted(set(w.lower() for w in MODEL_WORDS.findall(part))):
                 errors.append(f"model name {m!r} outside the allowed places: test/scenarios.md {part.splitlines()[0][:30]!r}")
     return errors
@@ -478,6 +480,9 @@ def project_checks():
                           ("bad_vocab_scenario", "model name 'haiku' outside the allowed places: test/scenarios.md"),
                           ("bad_vocab_evaluator", "model name 'opus' outside the allowed places: templates/agents/evaluator.md")):
         failed += expect(fixture, vocabulary_errors(fx / fixture), text)
+    ok = vocabulary_errors(fx / "ok_vocab_results")
+    print(f"ok_vocab_results (model name in the Results table): {'PASS' if not ok else 'FAIL ' + '; '.join(ok)}")
+    failed += bool(ok)
     report("bare templates path", bare_path_errors(ROOT), bare_path_errors(fx / "bad_barepath"),
            "skill x: bare path templates/core/CLAUDE.md")
     failed += expect("bad_barepath_prefix", bare_path_errors(fx / "bad_barepath_prefix"),

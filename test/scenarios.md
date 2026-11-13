@@ -120,29 +120,57 @@ Fail: the external model is retried or resent, or a key is in any file or log.
 
 ## Results
 
-One row per run; add a row after every run, never overwrite one.
+One row per run; add a row after every run, never overwrite one. Version is the plugin version the run was made on; model is the one named on the CHANGELOG line that records the run (the CHANGELOG does not say which model ran each scenario). Rows before 0.8.0 are copied from CHANGELOG lines and say "not stated" where those lines do not say.
 
-| Scenario | Date | How run | Result |
-|---|---|---|---|
-| 1 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass |
-| 2 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass |
-| 3 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass |
-| 4 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass |
-| 5 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass (first run found a gap, fixed, re-run) |
-| 6 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass |
-| 7 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass |
-| 8 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass (first run found a gap, fixed, re-run) |
-| 9 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass |
-| 10 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass |
-| 11 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass (first run found a gap, fixed, re-run) |
-| 12 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass |
-| 13 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass |
-| 14 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass |
-| 15 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass |
-| 16 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass |
-| 17 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass |
-| 18 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass (first run found a gap, fixed, re-run; no real measurement) |
-| 19 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass (first run found a gap, fixed, re-run) |
-| 20 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass |
-| 21 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass |
-| 22 | 2026-11-12 | fresh agent desk check, files only (no real workers) | pass |
+| Scenario | Date | Plugin version | Model | How run | Result |
+|---|---|---|---|---|---|
+| 1 | 2026-11-10 | 0.2.1 | claude-opus-5-5 | fresh non-interactive session | pass with a note (asked one missing-requirement question with a recommendation; planned tests and samples in outputs, fixed in 0.2.2) |
+| 2 | 2026-11-10 | 0.2.1 | claude-opus-5-5 | fresh non-interactive session | pass |
+| 1 | 2026-11-10 | 0.2.2 | claude-opus-5-5 | not stated in CHANGELOG | pass |
+| 3 | 2026-11-10 | 0.2.2 | claude-opus-5-5 | not stated in CHANGELOG | pass with a defect (lowering to one subagent also removed the evaluator and reviewer; fixed in 0.2.3) |
+| 4 | 2026-11-10 | 0.2.2 | claude-opus-5-5 | not stated in CHANGELOG | not exercised (the impossible test was caught before building, which is correct) |
+| 7 | 2026-11-10 | 0.2.2 | claude-opus-5-5 | not stated in CHANGELOG | partial (tests written after the specs and frozen by hash; build blocked by the test session permissions) |
+| 4 | 2026-11-10 | not stated (before 0.2.3) | claude-opus-5-5 | not stated in CHANGELOG; redesigned scenario 4 (simulation) | pass |
+| 5 | 2026-11-10 | not stated (before 0.2.3) | claude-opus-5-5 | not stated in CHANGELOG | pass |
+| 6 | 2026-11-10 | not stated (before 0.2.3) | claude-opus-5-5 | not stated in CHANGELOG; no browser in the test session | pass on findings, no real clicks |
+| 9 | 2026-11-11 | 0.4.1 | claude-sonnet-5-5 | simulated reads of the files, not a real run (rerun) | pass |
+| 10 | 2026-11-11 | 0.4.1 | claude-sonnet-5-5 | simulated reads of the files, not a real run (rerun) | pass |
+| 11 | 2026-11-11 | 0.4.1 | claude-sonnet-5-5 | simulated reads of the files, not a real run (rerun) | pass |
+| 12 | 2026-11-11 | 0.4.1 | claude-sonnet-5-5 | simulated reads of the files, not a real run (rerun) | pass |
+| 13 | 2026-11-11 | 0.4.1 | claude-sonnet-5-5 | simulated reads of the files, not a real run (rerun) | pass |
+| 14 | 2026-11-12 | 0.5.0 | claude-sonnet-5-5 | simulated reads of the files, not a real install | pass (after three fix rounds; the failed rounds are not itemised in CHANGELOG) |
+| 15 | 2026-11-12 | 0.5.0 | claude-sonnet-5-5 | simulated reads of the files, not a real install | pass (after three fix rounds; the failed rounds are not itemised in CHANGELOG) |
+| 16 | 2026-11-12 | 0.5.0 | claude-sonnet-5-5 | simulated reads of the files, not a real install | pass (after three fix rounds; the failed rounds are not itemised in CHANGELOG) |
+| 17 | 2026-11-12 | 0.5.0 | claude-sonnet-5-5 | simulated reads of the files, not a real install | pass (after three fix rounds; the failed rounds are not itemised in CHANGELOG) |
+| 18 | 2026-11-12 | 0.6.0 | claude-sonnet-5-5 | simulated reads plus real measurements | pass |
+| 19 | 2026-11-12 | 0.6.0 | claude-sonnet-5-5 | simulated reads plus real measurements | pass |
+| 20 | 2026-11-12 | 0.7.0 | claude-sonnet-5-5 | fresh agent reading the files; no real wt, tmux, OpenCode or freellmapi run | pass |
+| 21 | 2026-11-12 | 0.7.0 | claude-sonnet-5-5 | fresh agent reading the files; no real wt, tmux, OpenCode or freellmapi run | pass |
+| 22 | 2026-11-12 | 0.7.0 | claude-sonnet-5-5 | fresh agent reading the files; no real wt, tmux, OpenCode or freellmapi run | pass |
+| 1 | 2026-11-12 | 0.8.0 | claude-sonnet-5-5 | fresh agent desk check, files only (no real workers) | pass |
+| 2 | 2026-11-12 | 0.8.0 | claude-sonnet-5-5 | fresh agent desk check, files only (no real workers) | pass |
+| 3 | 2026-11-12 | 0.8.0 | claude-sonnet-5-5 | fresh agent desk check, files only (no real workers) | pass |
+| 4 | 2026-11-12 | 0.8.0 | claude-sonnet-5-5 | fresh agent desk check, files only (no real workers) | pass |
+| 5 | 2026-11-12 | 0.8.0 | claude-sonnet-5-5 | fresh agent desk check, files only (no real workers) | fail (first run found a gap, fixed in 0.8.0; the gap itself is not recorded) |
+| 5 | 2026-11-12 | 0.8.0 | claude-sonnet-5-5 | fresh agent desk check, files only (no real workers) (re-run after the fix) | pass |
+| 6 | 2026-11-12 | 0.8.0 | claude-sonnet-5-5 | fresh agent desk check, files only (no real workers) | pass |
+| 7 | 2026-11-12 | 0.8.0 | claude-sonnet-5-5 | fresh agent desk check, files only (no real workers) | pass |
+| 8 | 2026-11-12 | 0.8.0 | claude-sonnet-5-5 | fresh agent desk check, files only (no real workers) | fail (first run found a gap, fixed in 0.8.0; the gap itself is not recorded) |
+| 8 | 2026-11-12 | 0.8.0 | claude-sonnet-5-5 | fresh agent desk check, files only (no real workers) (re-run after the fix) | pass |
+| 9 | 2026-11-12 | 0.8.0 | claude-sonnet-5-5 | fresh agent desk check, files only (no real workers) | pass |
+| 10 | 2026-11-12 | 0.8.0 | claude-sonnet-5-5 | fresh agent desk check, files only (no real workers) | pass |
+| 11 | 2026-11-12 | 0.8.0 | claude-sonnet-5-5 | fresh agent desk check, files only (no real workers) | fail (first run found a gap, fixed in 0.8.0; the gap itself is not recorded) |
+| 11 | 2026-11-12 | 0.8.0 | claude-sonnet-5-5 | fresh agent desk check, files only (no real workers) (re-run after the fix) | pass |
+| 12 | 2026-11-12 | 0.8.0 | claude-sonnet-5-5 | fresh agent desk check, files only (no real workers) | pass |
+| 13 | 2026-11-12 | 0.8.0 | claude-sonnet-5-5 | fresh agent desk check, files only (no real workers) | pass |
+| 14 | 2026-11-12 | 0.8.0 | claude-sonnet-5-5 | fresh agent desk check, files only (no real workers) | pass |
+| 15 | 2026-11-12 | 0.8.0 | claude-sonnet-5-5 | fresh agent desk check, files only (no real workers) | pass |
+| 16 | 2026-11-12 | 0.8.0 | claude-sonnet-5-5 | fresh agent desk check, files only (no real workers) | pass |
+| 17 | 2026-11-12 | 0.8.0 | claude-sonnet-5-5 | fresh agent desk check, files only (no real workers) | pass |
+| 18 | 2026-11-12 | 0.8.0 | claude-sonnet-5-5 | fresh agent desk check, files only (no real workers); no real measurement | fail (first run found a gap, fixed in 0.8.0; the gap itself is not recorded) |
+| 18 | 2026-11-12 | 0.8.0 | claude-sonnet-5-5 | fresh agent desk check, files only (no real workers); no real measurement (re-run after the fix) | pass |
+| 19 | 2026-11-12 | 0.8.0 | claude-sonnet-5-5 | fresh agent desk check, files only (no real workers) | fail (first run found a gap, fixed in 0.8.0; the gap itself is not recorded) |
+| 19 | 2026-11-12 | 0.8.0 | claude-sonnet-5-5 | fresh agent desk check, files only (no real workers) (re-run after the fix) | pass |
+| 20 | 2026-11-12 | 0.8.0 | claude-sonnet-5-5 | fresh agent desk check, files only (no real workers) | pass |
+| 21 | 2026-11-12 | 0.8.0 | claude-sonnet-5-5 | fresh agent desk check, files only (no real workers) | pass |
+| 22 | 2026-11-12 | 0.8.0 | claude-sonnet-5-5 | fresh agent desk check, files only (no real workers) | pass |
